@@ -160,44 +160,28 @@ export const HomePage: React.FC = () => {
           </p>
 
           {/* Quick Search on Hero */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: '#181818',
-            border: '1px solid #292929',
-            borderRadius: '16px',
-            padding: '8px 12px 8px 18px',
-            maxWidth: '560px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
-            marginBottom: '20px'
-          }}>
-            <Search size={20} color="#A7A7A7" style={{ marginRight: '10px' }} />
-            <input 
-              type="text"
-              placeholder="Search products, brands, or local shops..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && searchQuery.trim()) {
-                  navigate('search', { q: searchQuery.trim() });
-                }
-              }}
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: '#fff',
-                fontSize: '15px',
-                outline: 'none'
-              }}
-            />
+          <div className="hero-search-box">
+            <div className="hero-search-input-row">
+              <Search size={20} color="#1DB954" style={{ marginRight: '10px', flexShrink: 0 }} />
+              <input 
+                type="text"
+                className="hero-search-input"
+                placeholder="Search products, brands, or local shops..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    navigate('search', { q: searchQuery.trim() });
+                  }
+                }}
+              />
+            </div>
             <button 
-              className="btn-primary"
+              className="btn-primary hero-search-btn"
               onClick={() => {
                 if (searchQuery.trim()) navigate('search', { q: searchQuery.trim() });
                 else navigate('stores');
               }}
-              style={{ padding: '10px 20px', borderRadius: '12px', fontSize: '14px' }}
             >
               Search
             </button>
