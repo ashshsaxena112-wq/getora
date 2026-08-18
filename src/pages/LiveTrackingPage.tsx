@@ -1,0 +1,213 @@
+import React from 'react';
+import { useGetora } from '../context/GetoraContext';
+import {
+  Clock,
+  MapPin,
+  Truck,
+  Phone,
+  CheckCircle2,
+  Store as StoreIcon,
+  Home,
+  ShieldCheck,
+  Star,
+  ChevronRight,
+  ArrowLeft,
+  Navigation,
+  Bike
+} from 'lucide-react';
+import { OrderStatus } from '../types';
+
+export const LiveTrackingPage: React.FC = () => {
+  const { viewParams, getOrderById, orders, navigate } = useGetora();
+  const orderId = viewParams.orderId;
+  const order = (orderId ? getOrderById(orderId) : null) || orders[0];
+
+  if (!order) {
+    return (
+      <div style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center', padding: '40px' }}>
+        <h2>No Active Order Found for Tracking</h2>
+        <p style={{ color: '#8E8E93', marginTop: '8px' }}>Place an order to track live delivery updates.</p>
+        <button className="btn-primary" onClick={() => navigate('orders')} style={{ marginTop: '20px' }}>
+          View Orders
+        </button>
+      </div>
+    );
+  }
+
+  const STATUS_STEPS: Array<{ key: OrderStatus; label: string }> = [
+    { key: 'placed', label: 'Order Placed' },
+    { key: 'accepted', label: 'Accepted by Store' },
+    { key: 'preparing', label: 'Packing Items' },
+    { key: 'ready_for_pickup', label: 'Ready for Pickup' },
+    { key: 'picked_up', label: 'Rider Picked Up' },
+    { key: 'out_for_delivery', label: 'Out for Delivery' },
+    { key: 'delivered', label: 'Delivered' }
+  ];
+
+  const currentStatus: OrderStatus = order.orderStatus || order.status || 'placed';
+
+  const getStepIndex = (status: OrderStatus) => {
+    return STATUS_STEPS.findIndex((s) => s.key === status);
+  };
+
+  const currentStepIdx = getStepIndex(currentStatus);
+
+  return (
+    <div className="live-tracking-page" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 16px 60px' }}>
+      {/* Back button & Order Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <button
+          onClick={() => navigate('orders')}
+          className="btn-secondary"
+          style={{ padding: '8px 14px', borderRadius: '8px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+        >
+          <ArrowLeft size={16} /> Back to Orders
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ color: '#8E8E93', fontSize: '13px' }}>Order:</span>
+          <span style={{ color: '#1DB954', fontWeight: 800, fontSize: '14px', fontFamily: 'monospace' }}>
+            {order.orderNumber}
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '28px' }}>
+        {/* Left Column: Live Status Timeline */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* ETA Card */}
+          <div
+            style={{
+              backgroundColor: '#141414',
+              border: '1px solid #282828',
+              borderRadius: '20px',
+              padding: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px'
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '12px', color: '#8E8E93', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Estimated Delivery
+              </div>
+              <div style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: '#1DB954', marginTop: '2px' }}>
+                {currentStatus === 'delivered' ? 'Order Delivered!' : '15–25 Minutes'}
+              </div>
+              <div style={{ fontSize: '13px', color: '#D1D5DB', marginTop: '4px' }}>
+                Status: <strong style={{ color: '#fff', textTransform: 'capitalize' }}>{currentStatus.replace(/_/g, ' ')}</strong>
+              </div>
+            </div>
+
+            <div
+              style={{
+                width: '56px',
+                height: '56px',
+                borderRadius: '16px',
+                backgroundColor: 'rgba(29, 185, 84, 0.15)',
+                color: '#1DB954',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Truck size={28} />
+            </div>
+          </div>
+
+          {/* Stepper Timeline */}
+          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '20px' }}>
+              Delivery Progress
+            </h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'relative', paddingLeft: '8px' }}>
+              {STATUS_STEPS.map((step, idx) => {
+                const isPassed = currentStepIdx >= idx;
+                const isCurrent = currentStepIdx === idx;
+
+                return (
+                  <div key={step.key} style={{ display: 'flex', alignItems: 'center', gap: '16px', position: 'relative' }}>
+                    <div
+                      style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        backgroundColor: isPassed ? '#1DB954' : '#222',
+                        color: isPassed ? '#000' : '#555',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        zIndex: 2
+                      }}
+                    >
+                      {isPassed ? <CheckCircle2 size={16} /> : idx + 1}
+                    </div>
+
+                    <div>
+                      <div style={{ fontSize: '14px', fontWeight: isCurrent ? 800 : isPassed ? 600 : 400, color: isPassed ? '#fff' : '#666' }}>
+                        {step.label}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Store & Delivery Partner Info */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Store Info Card */}
+          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#202020', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1DB954' }}>
+                <StoreIcon size={20} />
+              </div>
+              <div>
+                <div style={{ fontSize: '12px', color: '#8E8E93' }}>Fulfilling Store</div>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{order.retailer?.shopName || 'Neighborhood Shop'}</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '13px', color: '#A7A7A7' }}>
+              {order.retailer?.addressLine1 || order.retailer?.city || 'Local Neighborhood'}
+            </div>
+          </div>
+
+          {/* Delivery Partner Card */}
+          {order.deliveryPartner && (
+            <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+                  <Bike size={20} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#8E8E93' }}>Assigned Rider</div>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{order.deliveryPartner.fullName}</div>
+                  <div style={{ fontSize: '12px', color: '#1DB954' }}>{order.deliveryPartner.vehicleType || 'Electric Two-Wheeler'} ({order.deliveryPartner.vehicleNumber || 'EV-Fleet'})</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Delivery Address */}
+          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1DB954', fontSize: '13px', fontWeight: 700, marginBottom: '8px' }}>
+              <Home size={15} /> Delivery Destination
+            </div>
+            <p style={{ fontSize: '13px', color: '#D1D5DB', lineHeight: 1.4 }}>
+              {order.address?.addressLine1}
+              {order.address?.addressLine2 && `, ${order.address.addressLine2}`}
+            </p>
+            <p style={{ fontSize: '12px', color: '#8E8E93', marginTop: '4px' }}>
+              {order.address?.city} - {order.address?.pincode}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
