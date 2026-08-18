@@ -2,7 +2,19 @@
   command = "npm run build"
   publish = "dist"
 
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=UTF-8"
+    X-Content-Type-Options = "nosniff"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=UTF-8"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
