@@ -1359,39 +1359,699 @@ img {
   color: var(--text-secondary);
 }
 
-/* Light theme styles for dropdowns and navigation */
-[data-theme="light"] .categories-dropdown-menu,
-.theme-light .categories-dropdown-menu,
-[data-theme="light"] .search-dropdown-menu,
-.theme-light .search-dropdown-menu,
-[data-theme="light"] .user-dropdown-menu,
-.theme-light .user-dropdown-menu {
-  background-color: #FFFFFF;
-  border-color: #E5E7EB;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+/* ========================================================================== */
+/* THEME-SPECIFIC COMPONENT STYLING (DARK DEFAULT & RICH LIGHT MODE)          */
+/* ========================================================================== */
+
+/* Hero Banner Default (Dark) */
+.hero-banner {
+  position: relative;
+  border-radius: 24px;
+  padding: 48px 36px;
+  margin: 20px 0 40px;
+  background: radial-gradient(ellipse at 80% 20%, rgba(29, 185, 84, 0.2) 0%, rgba(18, 18, 18, 0.95) 70%), #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
-[data-theme="light"] .category-dropdown-item,
-.theme-light .category-dropdown-item,
-[data-theme="light"] .search-result-item,
-.theme-light .search-result-item,
-[data-theme="light"] .user-dropdown-item,
-.theme-light .user-dropdown-item {
-  background-color: #F8F9FA;
-  color: #111827;
+.hero-location-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(29, 185, 84, 0.12);
+  border: 1px solid rgba(29, 185, 84, 0.35);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #39D353;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-[data-theme="light"] .category-dropdown-item:hover,
-.theme-light .category-dropdown-item:hover,
-[data-theme="light"] .search-result-item:hover,
-.theme-light .search-result-item:hover,
-[data-theme="light"] .user-dropdown-item:hover,
-.theme-light .user-dropdown-item:hover {
-  background-color: #EDF2F7;
+.hero-location-city {
+  color: #FFFFFF;
+}
+
+.hero-headline {
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800;
+  line-height: 1.15;
+  font-family: var(--font-display);
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+.hero-headline-gradient {
+  background: linear-gradient(90deg, #1DB954 0%, #39D353 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #A7A7A7;
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 620px;
+}
+
+.hero-trending-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: #A7A7A7;
+}
+
+.hero-trending-label {
+  font-weight: 600;
+  color: #FFFFFF;
+}
+
+.hero-trending-tag {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #D1D5DB;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hero-trending-tag:hover {
+  background-color: rgba(29, 185, 84, 0.2);
+  border-color: #1DB954;
+  color: #FFFFFF;
+}
+
+.hero-floating-card {
+  background-color: rgba(24, 24, 24, 0.85);
+  border: 1px solid #292929;
+  padding: 16px 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 240px;
+}
+
+.hero-floating-icon {
+  padding: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-floating-title {
+  font-weight: 800;
+  font-size: 16px;
+  font-family: var(--font-display);
+  color: #FFFFFF;
+}
+
+.hero-floating-desc {
+  color: #A7A7A7;
+  font-size: 12px;
+}
+
+/* Trust Strip Items */
+.trust-strip-item {
+  background-color: #141414;
+  border: 1px solid #242424;
+  padding: 14px 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.trust-icon-box {
+  background-color: rgba(29, 185, 84, 0.1);
+  padding: 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trust-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #FFFFFF;
+}
+
+.trust-desc {
+  font-size: 11px;
+  color: #8E8E93;
+}
+
+/* Home Category Card */
+.home-category-card {
+  background-color: #181818;
+  border: 1px solid #262626;
+  border-radius: 14px;
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-category-card:hover {
+  border-color: var(--color-green);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.home-category-img-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  margin: 0 auto 8px;
+  overflow: hidden;
+  background-color: #202020;
+}
+
+.home-category-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.home-category-cta {
+  font-size: 11px;
+  color: var(--color-green);
+  font-weight: 500;
+}
+
+/* Flash Deal Banner */
+.flash-deal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-family: var(--font-display);
+}
+
+.flash-deal-desc {
+  font-size: 13px;
+  color: #A7A7A7;
+}
+
+.flash-countdown-digits {
+  display: flex;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: monospace;
+  color: #FFFFFF;
+}
+
+.countdown-digit-box {
+  background-color: #202020;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Section Headings */
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: #FFFFFF;
+}
+
+.section-subtitle {
+  color: #A7A7A7;
+  font-size: 12.5px;
+  margin-top: 2px;
+}
+
+/* How GETORA Works */
+.how-getora-works-card {
+  background-color: #121212;
+  border: 1px solid #262626;
+  border-radius: 24px;
+  padding: 44px 36px;
+  margin-bottom: 60px;
+}
+
+.how-works-heading {
+  font-size: 30px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: #FFFFFF;
+  margin-top: 6px;
+}
+
+.how-works-subtext {
+  color: #A7A7A7;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.how-step-card {
+  background-color: #181818;
+  border: 1px solid #282828;
+  border-radius: 18px;
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.how-step-num {
+  font-size: 32px;
+  font-weight: 900;
+  color: rgba(29, 185, 84, 0.4);
+  font-family: var(--font-display);
+  margin-bottom: 12px;
+}
+
+.how-step-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 8px;
+}
+
+.how-step-desc {
+  font-size: 14px;
+  color: #A7A7A7;
+  line-height: 1.6;
+}
+
+/* CTA Cards */
+.cta-retailer-card {
+  background-color: #151816;
+  border: 1px solid rgba(29, 185, 84, 0.25);
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cta-rider-card {
+  background-color: #161616;
+  border: 1px solid #282828;
+  border-radius: 20px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cta-card-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-family: var(--font-display);
+  margin-bottom: 10px;
+}
+
+.cta-card-desc {
+  color: #A7A7A7;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.empty-state-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+/* ========================================================================== */
+/* 🌟 RICH & POLISHED LIGHT THEME OVERRIDES (WHITE & VIBRANT GREEN)           */
+/* ========================================================================== */
+
+[data-theme="light"], .theme-light {
+  /* Header Light Mode */
+  .header-wrapper {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    border-bottom: 1px solid rgba(29, 185, 84, 0.2) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .location-btn {
+    background-color: rgba(29, 185, 84, 0.08) !important;
+    border: 1px solid rgba(29, 185, 84, 0.25) !important;
+    color: #111827 !important;
+  }
+
+  .location-btn:hover {
+    background-color: rgba(29, 185, 84, 0.16) !important;
+    border-color: #1DB954 !important;
+  }
+
+  .location-label {
+    color: #15803D !important;
+  }
+
+  .location-val {
+    color: #111827 !important;
+  }
+
+  .action-icon-btn {
+    background-color: #FFFFFF !important;
+    border-color: #E2E8F0 !important;
+    color: #111827 !important;
+  }
+
+  .action-icon-btn:hover {
+    border-color: #1DB954 !important;
+    color: #15803D !important;
+  }
+
+  .theme-toggle-btn {
+    background-color: rgba(29, 185, 84, 0.08) !important;
+    border: 1px solid rgba(29, 185, 84, 0.25) !important;
+    color: #15803D !important;
+  }
+
+  .theme-toggle-btn:hover {
+    background-color: rgba(29, 185, 84, 0.18) !important;
+    border-color: #1DB954 !important;
+  }
+
+  .user-profile-btn {
+    background-color: rgba(29, 185, 84, 0.08) !important;
+    border: 1px solid rgba(29, 185, 84, 0.25) !important;
+    color: #111827 !important;
+  }
+
+  /* Cart button remains high-contrast vibrant green */
+  .cart-btn-pill {
+    background-color: var(--color-green) !important;
+    border-color: var(--color-green) !important;
+    color: #000000 !important;
+    box-shadow: 0 4px 14px rgba(29, 185, 84, 0.3) !important;
+  }
+
+  /* Hero Section in Light Mode */
+  .hero-banner {
+    background: radial-gradient(ellipse at 85% 15%, rgba(29, 185, 84, 0.22) 0%, #F0FDF4 50%, #FFFFFF 100%) !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.28) !important;
+    box-shadow: 0 20px 50px rgba(29, 185, 84, 0.08), 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .hero-location-badge {
+    background-color: rgba(29, 185, 84, 0.14) !important;
+    border-color: rgba(29, 185, 84, 0.4) !important;
+    color: #15803D !important;
+  }
+
+  .hero-location-city {
+    color: #111827 !important;
+  }
+
+  .hero-headline {
+    color: #111827 !important;
+  }
+
+  .hero-headline-gradient {
+    background: linear-gradient(90deg, #15803D 0%, #1DB954 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  .hero-subtitle {
+    color: #4B5563 !important;
+  }
+
+  .hero-search-box {
+    background-color: #FFFFFF !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.35) !important;
+    box-shadow: 0 10px 30px rgba(29, 185, 84, 0.12) !important;
+  }
+
+  .hero-search-box:focus-within {
+    border-color: #1DB954 !important;
+    box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2) !important;
+  }
+
+  .hero-search-input {
+    color: #111827 !important;
+  }
+
+  .hero-search-input::placeholder {
+    color: #9CA3AF !important;
+  }
+
+  .hero-trending-label {
+    color: #111827 !important;
+  }
+
+  .hero-trending-tag {
+    background-color: #F0FDF4 !important;
+    border: 1px solid rgba(29, 185, 84, 0.3) !important;
+    color: #15803D !important;
+    font-weight: 600 !important;
+  }
+
+  .hero-trending-tag:hover {
+    background-color: #DCFCE7 !important;
+    border-color: #1DB954 !important;
+    color: #14532D !important;
+  }
+
+  .hero-floating-card {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(29, 185, 84, 0.1) !important;
+  }
+
+  .hero-floating-title {
+    color: #111827 !important;
+  }
+
+  .hero-floating-desc {
+    color: #6B7280 !important;
+  }
+
+  /* Trust Strip Items in Light Mode */
+  .trust-strip-item {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .trust-icon-box {
+    background-color: rgba(29, 185, 84, 0.12) !important;
+  }
+
+  .trust-title {
+    color: #111827 !important;
+  }
+
+  .trust-desc {
+    color: #6B7280 !important;
+  }
+
+  /* Category Cards in Light Mode */
+  .home-category-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .home-category-card:hover {
+    border-color: #1DB954 !important;
+    box-shadow: 0 8px 24px rgba(29, 185, 84, 0.18) !important;
+  }
+
+  .home-category-img-box {
+    background-color: #F1F5F9 !important;
+  }
+
+  .home-category-name {
+    color: #111827 !important;
+  }
+
+  /* Flash Deal Banner in Light Mode */
+  .flash-deal-banner {
+    background: linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 60%, #FFF1F2 100%) !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(29, 185, 84, 0.1) !important;
+  }
+
+  .flash-deal-title {
+    color: #111827 !important;
+  }
+
+  .flash-deal-desc {
+    color: #4B5563 !important;
+  }
+
+  .flash-countdown-digits {
+    color: #111827 !important;
+  }
+
+  .countdown-digit-box {
+    background-color: #F1F5F9 !important;
+    color: #111827 !important;
+    border: 1px solid #E2E8F0 !important;
+  }
+
+  /* Section Headings in Light Mode */
+  .section-title {
+    color: #111827 !important;
+  }
+
+  .section-subtitle {
+    color: #6B7280 !important;
+  }
+
+  /* Product Cards & Store Cards in Light Mode */
+  .product-card, .store-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .product-card:hover, .store-card:hover {
+    border-color: rgba(29, 185, 84, 0.6) !important;
+    box-shadow: 0 10px 28px rgba(29, 185, 84, 0.16) !important;
+    transform: translateY(-3px) !important;
+  }
+
+  /* How GETORA Works in Light Mode */
+  .how-getora-works-card {
+    background-color: #F8FAF9 !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.22) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .how-works-heading {
+    color: #111827 !important;
+  }
+
+  .how-works-subtext {
+    color: #4B5563 !important;
+  }
+
+  .how-step-card {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .how-step-num {
+    color: #1DB954 !important;
+  }
+
+  .how-step-title {
+    color: #111827 !important;
+  }
+
+  .how-step-desc {
+    color: #6B7280 !important;
+  }
+
+  /* Onboarding Cards in Light Mode */
+  .cta-retailer-card {
+    background-color: #F0FDF4 !important;
+    border: 1.5px solid rgba(29, 185, 84, 0.35) !important;
+    box-shadow: 0 8px 24px rgba(29, 185, 84, 0.08) !important;
+  }
+
+  .cta-rider-card {
+    background-color: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .cta-card-title {
+    color: #111827 !important;
+  }
+
+  .cta-card-desc {
+    color: #4B5563 !important;
+  }
+
+  /* Dropdown Menus in Light Mode */
+  .categories-dropdown-menu,
+  .search-dropdown-menu,
+  .user-dropdown-menu,
+  .theme-dropdown-menu {
+    background-color: #FFFFFF !important;
+    border-color: #E5E7EB !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12) !important;
+  }
+
+  .category-dropdown-item,
+  .search-result-item,
+  .user-dropdown-item,
+  .theme-option-btn {
+    background-color: #F8F9FA !important;
+    color: #111827 !important;
+  }
+
+  .category-dropdown-item:hover,
+  .search-result-item:hover,
+  .user-dropdown-item:hover,
+  .theme-option-btn:hover {
+    background-color: #EDF8F2 !important;
+    color: #15803D !important;
+  }
+
+  .theme-option-btn.active {
+    background-color: rgba(29, 185, 84, 0.12) !important;
+    color: #15803D !important;
+    border-color: #1DB954 !important;
+  }
+
+  /* Mobile Quick Category Rail in Light Mode */
+  .mobile-category-icon-circle {
+    background-color: #FFFFFF !important;
+    border-color: #E2E8F0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .mobile-category-chip-label {
+    color: #111827 !important;
+  }
+
+  /* Footer in Light Mode */
+  .footer-wrapper {
+    background-color: #FFFFFF !important;
+    border-top-color: #E2E8F0 !important;
+  }
+
+  .footer-col h4 {
+    color: #111827 !important;
+  }
+
+  .footer-links a {
+    color: #4B5563 !important;
+  }
+
+  .footer-links a:hover {
+    color: #15803D !important;
+  }
+
+  .footer-bottom {
+    color: #6B7280 !important;
+    border-top-color: #E5E7EB !important;
+  }
 }
 
 /* Global Theme Transition */
-body, .header-wrapper, .footer-wrapper, .product-card, .store-card, .btn-secondary {
+body, .header-wrapper, .footer-wrapper, .product-card, .store-card, .hero-banner, .trust-strip-item, .how-getora-works-card, .btn-secondary {
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 

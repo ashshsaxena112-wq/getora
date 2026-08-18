@@ -24,8 +24,8 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
       className="store-card"
       onClick={handleCardClick}
       style={{
-        backgroundColor: '#181818',
-        border: '1px solid #262626',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '20px',
         overflow: 'hidden',
         cursor: 'pointer',
@@ -33,17 +33,9 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
         display: 'flex',
         flexDirection: 'column'
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#1DB954';
-        e.currentTarget.style.transform = 'translateY(-4px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#262626';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
     >
       {/* Banner */}
-      <div style={{ position: 'relative', height: '140px', width: '100%', backgroundColor: '#202020' }}>
+      <div style={{ position: 'relative', height: '140px', width: '100%', backgroundColor: 'var(--bg-secondary)' }}>
         <img
           src={bannerImage}
           alt={store.shopName}
@@ -99,7 +91,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
               style={{
                 fontSize: '16px',
                 fontWeight: 700,
-                color: '#fff',
+                color: 'var(--text-primary)',
                 fontFamily: 'Outfit',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -127,19 +119,19 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
             )}
           </div>
 
-          <div style={{ fontSize: '13px', color: '#A7A7A7', marginBottom: '8px' }}>
+          <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
             {store.businessCategory || 'General Hardware & Goods'} • {store.ownerName}
           </div>
 
-          <div style={{ fontSize: '12px', color: '#8E8E93', display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
             <MapPin size={13} color="#1DB954" /> {store.city || 'Bengaluru'} {store.pincode ? `(${store.pincode})` : ''}
           </div>
         </div>
 
         {/* Free delivery badge */}
-        <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #222', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#1DB954', fontWeight: 600 }}>
-          <span>Free delivery above ₹499</span>
-          <span style={{ color: '#8E8E93' }}>{store.totalOrders} orders delivered</span>
+        <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#1DB954', fontWeight: 600 }}>
+          <span>✓ Instant Dispatch</span>
+          <span>Hyperlocal Fleet</span>
         </div>
       </div>
     </div>

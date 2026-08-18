@@ -91,71 +91,27 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 1. HERO BANNER & SEARCH BAR                                              */}
       {/* ========================================================================= */}
-      <section 
-        className="hero-banner"
-        style={{
-          position: 'relative',
-          borderRadius: '24px',
-          padding: '48px 36px',
-          margin: '20px 0 40px',
-          background: 'radial-gradient(ellipse at 80% 20%, rgba(29, 185, 84, 0.2) 0%, rgba(18, 18, 18, 0.95) 70%), #121212',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
-          overflow: 'hidden'
-        }}
-      >
+      <section className="hero-banner">
         <div style={{ maxWidth: '720px', position: 'relative', zIndex: 2 }}>
           {/* Location Badge */}
           <div 
             onClick={openLocationModal}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: 'rgba(29, 185, 84, 0.12)',
-              border: '1px solid rgba(29, 185, 84, 0.35)',
-              padding: '6px 14px',
-              borderRadius: '9999px',
-              fontSize: '13px',
-              fontWeight: 600,
-              color: '#39D353',
-              marginBottom: '20px',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
+            className="hero-location-badge"
           >
             <MapPin size={15} />
-            <span>Delivering to: <strong style={{ color: '#FFFFFF' }}>{selectedAddress?.city || 'Bengaluru'}</strong> {selectedAddress?.addressLine2 ? `(${selectedAddress.addressLine2})` : ''}</span>
+            <span>Delivering to: <strong className="hero-location-city">{selectedAddress?.city || 'Bengaluru'}</strong> {selectedAddress?.addressLine2 ? `(${selectedAddress.addressLine2})` : ''}</span>
             <ChevronRight size={14} />
           </div>
 
           {/* Main SEO Headline (H1) */}
-          <h1 style={{
-            fontSize: 'clamp(32px, 5vw, 54px)',
-            fontWeight: 800,
-            lineHeight: 1.15,
-            fontFamily: 'Outfit, Inter, sans-serif',
-            color: '#FFFFFF',
-            letterSpacing: '-0.02em',
-            marginBottom: '18px'
-          }}>
+          <h1 className="hero-headline">
             Get Anything Fast from <br />
-            <span style={{ 
-              background: 'linear-gradient(90deg, #1DB954 0%, #39D353 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
+            <span className="hero-headline-gradient">
               Local Shops with GETORA
             </span>
           </h1>
 
-          <p style={{
-            fontSize: 'clamp(14px, 2vw, 16px)',
-            color: '#A7A7A7',
-            lineHeight: 1.6,
-            marginBottom: '28px',
-            maxWidth: '620px'
-          }}>
+          <p className="hero-subtitle">
             GETORA connects customers with nearby local shops and fast delivery. Discover nearby shops online, find products from local stores, and enjoy fast local delivery in 15–25 minutes.
           </p>
 
@@ -188,22 +144,13 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Quick Search Chips */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', fontSize: '13px', color: '#A7A7A7' }}>
-            <span style={{ fontWeight: 600, color: '#fff' }}>Trending:</span>
+          <div className="hero-trending-row">
+            <span className="hero-trending-label">Trending:</span>
             {['LED Bulbs', 'Drill Kits', 'Fast Charger', 'FR Wire', 'Switch Plate', 'Pet Care'].map((tag) => (
               <button
                 key={tag}
                 onClick={() => handleQuickSearch(tag)}
-                style={{
-                  backgroundColor: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#D1D5DB',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s'
-                }}
+                className="hero-trending-tag"
               >
                 {tag}
               </button>
@@ -212,58 +159,24 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Hero Floating Feature Pill Cards (Right Side Desktop) */}
-        <div 
-          style={{
-            position: 'absolute',
-            right: '40px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            zIndex: 2
-          }}
-          className="hero-badge-desktop"
-        >
-          <div style={{
-            backgroundColor: 'rgba(24, 24, 24, 0.85)',
-            border: '1px solid #292929',
-            padding: '16px 20px',
-            borderRadius: '16px',
-            backdropFilter: 'blur(12px)',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            width: '240px'
-          }}>
-            <div style={{ backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', padding: '10px', borderRadius: '12px' }}>
+        <div className="hero-badge-desktop">
+          <div className="hero-floating-card">
+            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954' }}>
               <Zap size={22} />
             </div>
             <div>
-              <div style={{ color: '#1DB954', fontWeight: 800, fontSize: '18px', fontFamily: 'Outfit' }}>15–25 MINS</div>
-              <div style={{ color: '#A7A7A7', fontSize: '12px' }}>Hyperlocal Delivery</div>
+              <div className="hero-floating-title" style={{ color: '#1DB954' }}>15–25 MINS</div>
+              <div className="hero-floating-desc">Hyperlocal Delivery</div>
             </div>
           </div>
 
-          <div style={{
-            backgroundColor: 'rgba(24, 24, 24, 0.85)',
-            border: '1px solid #292929',
-            padding: '16px 20px',
-            borderRadius: '16px',
-            backdropFilter: 'blur(12px)',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '14px',
-            width: '240px'
-          }}>
-            <div style={{ backgroundColor: 'rgba(57, 211, 83, 0.15)', color: '#39D353', padding: '10px', borderRadius: '12px' }}>
+          <div className="hero-floating-card">
+            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(57, 211, 83, 0.15)', color: '#39D353' }}>
               <ShieldCheck size={22} />
             </div>
             <div>
-              <div style={{ color: '#FFFFFF', fontWeight: 800, fontSize: '16px', fontFamily: 'Outfit' }}>100% Genuine</div>
-              <div style={{ color: '#A7A7A7', fontSize: '12px' }}>Verified Local Retailers</div>
+              <div className="hero-floating-title">100% Genuine</div>
+              <div className="hero-floating-desc">Verified Local Retailers</div>
             </div>
           </div>
         </div>
@@ -317,22 +230,14 @@ export const HomePage: React.FC = () => {
         ].map((item, idx) => (
           <div 
             key={idx}
-            style={{
-              backgroundColor: '#141414',
-              border: '1px solid #242424',
-              padding: '14px 16px',
-              borderRadius: '14px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px'
-            }}
+            className="trust-strip-item"
           >
-            <div style={{ backgroundColor: 'rgba(29,185,84,0.1)', padding: '9px', borderRadius: '10px', flexShrink: 0 }}>
+            <div className="trust-icon-box">
               {item.icon}
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '13px', color: '#fff' }}>{item.title}</div>
-              <div style={{ fontSize: '11px', color: '#8E8E93' }}>{item.desc}</div>
+              <div className="trust-title">{item.title}</div>
+              <div className="trust-desc">{item.desc}</div>
             </div>
           </div>
         ))}
@@ -344,10 +249,10 @@ export const HomePage: React.FC = () => {
       <section style={{ marginBottom: '44px' }}>
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h2 className="section-title" style={{ fontSize: '22px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            <h2 className="section-title">
               Explore Categories
             </h2>
-            <p style={{ color: '#A7A7A7', fontSize: '12.5px', marginTop: '2px' }}>
+            <p className="section-subtitle">
               Select a category to explore neighborhood inventory
             </p>
           </div>
@@ -371,26 +276,9 @@ export const HomePage: React.FC = () => {
               <div
                 key={cat.id}
                 onClick={() => navigate('categories', { categoryId: cat.id })}
-                style={{
-                  backgroundColor: '#181818',
-                  border: '1px solid #262626',
-                  borderRadius: '14px',
-                  padding: '12px 8px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  transition: 'all 0.2s ease',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
+                className="home-category-card"
               >
-                <div style={{
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '12px',
-                  margin: '0 auto 8px',
-                  overflow: 'hidden',
-                  backgroundColor: '#202020'
-                }}>
+                <div className="home-category-img-box">
                   <img 
                     src={cat.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'} 
                     alt={cat.name} 
@@ -398,8 +286,8 @@ export const HomePage: React.FC = () => {
                     loading="lazy" 
                   />
                 </div>
-                <h3 style={{ fontSize: '12.5px', fontWeight: 700, color: '#fff', marginBottom: '2px', lineHeight: 1.2 }}>{cat.name}</h3>
-                <p style={{ fontSize: '11px', color: '#1DB954', fontWeight: 500 }}>Shop Now</p>
+                <h3 className="home-category-name">{cat.name}</h3>
+                <p className="home-category-cta">Shop Now</p>
               </div>
             ))}
           </div>
@@ -429,7 +317,7 @@ export const HomePage: React.FC = () => {
 
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '16px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit' }}>
+                <span className="flash-deal-title">
                   Flash Offer: Flat ₹100 Off
                 </span>
                 <span style={{
@@ -443,18 +331,18 @@ export const HomePage: React.FC = () => {
                   ENDS SOON
                 </span>
               </div>
-              <div style={{ fontSize: '13px', color: '#A7A7A7' }}>
+              <div className="flash-deal-desc">
                 Use code <strong style={{ color: '#1DB954' }}>GETORA100</strong> on your order above ₹299.
               </div>
             </div>
 
             {/* Countdown Display */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '10px' }}>
-              <Clock size={16} color="#A7A7A7" />
-              <div style={{ display: 'flex', gap: '4px', fontSize: '13px', fontWeight: 700, fontFamily: 'monospace', color: '#fff' }}>
-                <span style={{ backgroundColor: '#202020', padding: '4px 8px', borderRadius: '6px' }}>{String(timeLeft.hours).padStart(2, '0')}h</span> :
-                <span style={{ backgroundColor: '#202020', padding: '4px 8px', borderRadius: '6px' }}>{String(timeLeft.minutes).padStart(2, '0')}m</span> :
-                <span style={{ backgroundColor: '#202020', padding: '4px 8px', borderRadius: '6px' }}>{String(timeLeft.seconds).padStart(2, '0')}s</span>
+              <Clock size={16} color="var(--text-muted)" />
+              <div className="flash-countdown-digits">
+                <span className="countdown-digit-box">{String(timeLeft.hours).padStart(2, '0')}h</span> :
+                <span className="countdown-digit-box">{String(timeLeft.minutes).padStart(2, '0')}m</span> :
+                <span className="countdown-digit-box">{String(timeLeft.seconds).padStart(2, '0')}s</span>
               </div>
             </div>
           </div>
@@ -491,10 +379,10 @@ export const HomePage: React.FC = () => {
       <section style={{ marginBottom: '56px' }}>
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <h2 className="section-title" style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            <h2 className="section-title">
               Nearby Stores in {selectedAddress?.city || 'Bengaluru'}
             </h2>
-            <p style={{ color: '#A7A7A7', fontSize: '13px', marginTop: '2px' }}>
+            <p className="section-subtitle">
               Real-time inventory from neighborhood shops
             </p>
           </div>
@@ -513,10 +401,10 @@ export const HomePage: React.FC = () => {
             <Loader2 size={24} className="spin" /> Loading stores...
           </div>
         ) : stores.length === 0 ? (
-          <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '16px', padding: '40px', textAlign: 'center' }}>
-            <StoreIcon size={40} color="#333" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ fontSize: '16px', color: '#fff', fontWeight: 700, marginBottom: '6px' }}>No Stores Registered Yet</h3>
-            <p style={{ fontSize: '13px', color: '#8E8E93', marginBottom: '16px' }}>Be the first local merchant to list your store on GETORA!</p>
+          <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
+            <StoreIcon size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+            <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Stores Registered Yet</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>Be the first local merchant to list your store on GETORA!</p>
             <button className="btn-primary" onClick={openAuthModal} style={{ padding: '10px 20px', borderRadius: '10px', fontSize: '13px' }}>
               Register as Retailer
             </button>
@@ -541,7 +429,7 @@ export const HomePage: React.FC = () => {
                 LOCAL CATALOG
               </span>
             </div>
-            <h2 className="section-title" style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            <h2 className="section-title">
               Popular Products Near You
             </h2>
           </div>
@@ -560,10 +448,10 @@ export const HomePage: React.FC = () => {
             <Loader2 size={24} className="spin" /> Loading products...
           </div>
         ) : products.length === 0 ? (
-          <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '16px', padding: '40px', textAlign: 'center' }}>
-            <Package size={40} color="#333" style={{ margin: '0 auto 12px' }} />
-            <h3 style={{ fontSize: '16px', color: '#fff', fontWeight: 700, marginBottom: '6px' }}>No Products Listed Yet</h3>
-            <p style={{ fontSize: '13px', color: '#8E8E93', marginBottom: '16px' }}>Retailers can add new items from their shop dashboard.</p>
+          <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
+            <Package size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+            <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Products Listed Yet</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>Retailers can add new items from their shop dashboard.</p>
             {role === 'retailer' && (
               <button className="btn-primary" onClick={() => navigate('retailer-dashboard')} style={{ padding: '10px 20px', borderRadius: '10px', fontSize: '13px' }}>
                 Go to Shop Dashboard
@@ -582,21 +470,15 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 7. HOW GETORA WORKS (WEBSITE EXPLAINER)                                   */}
       {/* ========================================================================= */}
-      <section style={{
-        backgroundColor: '#121212',
-        border: '1px solid #262626',
-        borderRadius: '24px',
-        padding: '44px 36px',
-        marginBottom: '60px'
-      }}>
+      <section className="how-getora-works-card">
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px' }}>
           <span style={{ color: '#1DB954', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             HYPERLOCAL COMMERCE
           </span>
-          <h2 style={{ fontSize: '30px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginTop: '6px' }}>
+          <h2 className="how-works-heading">
             How GETORA Delivers in Minutes
           </h2>
-          <p style={{ color: '#A7A7A7', fontSize: '14px', marginTop: '8px' }}>
+          <p className="how-works-subtext">
             We connect you with authentic neighbourhood retailers with instant EV-rider fulfillment.
           </p>
         </div>
@@ -621,25 +503,13 @@ export const HomePage: React.FC = () => {
           ].map((s, idx) => (
             <div 
               key={idx}
-              style={{
-                backgroundColor: '#181818',
-                border: '1px solid #282828',
-                borderRadius: '18px',
-                padding: '28px 24px',
-                position: 'relative'
-              }}
+              className="how-step-card"
             >
-              <div style={{
-                fontSize: '32px',
-                fontWeight: 900,
-                color: 'rgba(29, 185, 84, 0.4)',
-                fontFamily: 'Outfit',
-                marginBottom: '12px'
-              }}>
+              <div className="how-step-num">
                 {s.step}
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>{s.title}</h3>
-              <p style={{ fontSize: '14px', color: '#A7A7A7', lineHeight: 1.6 }}>{s.desc}</p>
+              <h3 className="how-step-title">{s.title}</h3>
+              <p className="how-step-desc">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -654,23 +524,15 @@ export const HomePage: React.FC = () => {
         gap: '20px'
       }}>
         {/* Retailer Card */}
-        <div style={{
-          backgroundColor: '#151816',
-          border: '1px solid rgba(29, 185, 84, 0.25)',
-          borderRadius: '20px',
-          padding: '32px 28px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="cta-retailer-card">
           <div>
             <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
               🏪 For Shop Owners
             </div>
-            <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit', marginBottom: '10px' }}>
+            <h3 className="cta-card-title">
               Grow Your Local Retail Store
             </h3>
-            <p style={{ color: '#A7A7A7', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+            <p className="cta-card-desc">
               List your inventory on GETORA. Reach thousands of neighborhood customers with automated delivery.
             </p>
           </div>
@@ -684,23 +546,15 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Delivery Partner Card */}
-        <div style={{
-          backgroundColor: '#161616',
-          border: '1px solid #282828',
-          borderRadius: '20px',
-          padding: '32px 28px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
+        <div className="cta-rider-card">
           <div>
-            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(255, 255, 255, 0.08)', color: '#fff', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
+            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
               ⚡ For Delivery Riders
             </div>
-            <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit', marginBottom: '10px' }}>
+            <h3 className="cta-card-title">
               Deliver & Earn with GETORA Fleet
             </h3>
-            <p style={{ color: '#A7A7A7', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+            <p className="cta-card-desc">
               Flexible hours, instant weekly payouts, and EV incentives. Join our high-speed local delivery team.
             </p>
           </div>

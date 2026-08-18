@@ -49,8 +49,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="product-card"
       onClick={handleCardClick}
       style={{
-        backgroundColor: '#181818',
-        border: '1px solid #262626',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '16px',
         overflow: 'hidden',
         display: 'flex',
@@ -60,21 +60,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         transition: 'all 0.2s ease',
         position: 'relative'
       }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#1DB954';
-        e.currentTarget.style.transform = 'translateY(-3px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#262626';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
     >
       {/* Product Image */}
       <div
         style={{
           width: '100%',
           height: '160px',
-          backgroundColor: '#202020',
+          backgroundColor: 'var(--bg-secondary)',
           position: 'relative',
           overflow: 'hidden'
         }}
@@ -131,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             style={{
               fontSize: '14px',
               fontWeight: 600,
-              color: '#FFFFFF',
+              color: 'var(--text-primary)',
               lineHeight: 1.35,
               marginBottom: '4px',
               overflow: 'hidden',
@@ -144,25 +136,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
             {product.name}
           </h4>
-          <div style={{ fontSize: '12px', color: '#8E8E93', marginBottom: '12px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
             Unit: {product.unit || '1 pc'} • {product.retailer?.shopName || 'Neighborhood Store'}
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: 800, color: '#FFFFFF', fontFamily: 'Outfit' }}>
+            <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
               ₹{product.sellingPrice}
             </div>
             {product.price > product.sellingPrice && (
-              <div style={{ fontSize: '12px', color: '#6B6B6B', textDecoration: 'line-through' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
                 ₹{product.price}
               </div>
             )}
           </div>
 
           {!inStock ? (
-            <span style={{ fontSize: '11px', color: '#8E8E93', backgroundColor: '#222', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
               Out of Stock
             </span>
           ) : quantityInCart > 0 ? (
