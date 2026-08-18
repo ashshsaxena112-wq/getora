@@ -1477,10 +1477,139 @@ body, .header-wrapper, .footer-wrapper, .product-card, .store-card, .btn-seconda
   }
 }
 
-/* Touch Device Optimization */
-@media (hover: none) and (pointer: coarse) {
-  button, .mobile-nav-item, .category-dropdown-item, .search-result-item {
-    min-height: 40px;
+/* Hero Desktop Floating Badges */
+.hero-badge-desktop {
+  display: none !important;
+}
+
+@media (min-width: 992px) {
+  .hero-badge-desktop {
+    display: flex !important;
+  }
+}
+
+/* Trust Strip Grid */
+.trust-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+  .trust-strip-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+}
+
+/* Home Categories Grid (App-like on mobile, comprehensive on desktop) */
+.home-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+@media (min-width: 640px) {
+  .home-categories-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 992px) {
+  .home-categories-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .home-categories-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Mobile Quick Category Rail */
+.mobile-category-rail {
+  display: flex;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 4px 2px 14px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mobile-category-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-category-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  width: 72px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.mobile-category-icon-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.mobile-category-chip:active .mobile-category-icon-circle {
+  transform: scale(0.94);
+  border-color: var(--color-green);
+}
+
+.mobile-category-chip-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.15;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 26px;
+}
+
+/* Flash Deal Banner Responsive */
+.flash-deal-banner {
+  background-color: #121212;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: linear-gradient(135deg, #131E15 0%, #121212 60%, #191414 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+@media (min-width: 768px) {
+  .flash-deal-banner {
+    border-radius: 20px;
+    padding: 24px 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
   }
 }
 

@@ -286,14 +286,45 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
+      {/* 1.5 MOBILE QUICK CATEGORIES RAIL (Blinkit/Zepto Native App Style)         */}
+      {/* ========================================================================= */}
+      <section style={{ marginBottom: '28px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            Quick Categories
+          </h3>
+          <button
+            onClick={() => navigate('categories')}
+            style={{ fontSize: '12.5px', color: '#1DB954', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}
+          >
+            See All <ChevronRight size={14} />
+          </button>
+        </div>
+        <div className="mobile-category-rail">
+          {categories.map((cat) => (
+            <div
+              key={cat.id}
+              className="mobile-category-chip"
+              onClick={() => navigate('categories', { categoryId: cat.id })}
+            >
+              <div className="mobile-category-icon-circle">
+                <img
+                  src={cat.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'}
+                  alt={cat.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  loading="lazy"
+                />
+              </div>
+              <span className="mobile-category-chip-label">{cat.name}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
       {/* 2. TRUST & SPEED VALUE PROPOSITION STRIP                                */}
       {/* ========================================================================= */}
-      <section style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-        gap: '16px',
-        marginBottom: '48px'
-      }}>
+      <section className="trust-strip-grid">
         {[
           { icon: <Zap color="#1DB954" size={20} />, title: '15-25 Min Fast Delivery', desc: 'Dispatched instantly from neighbor shops' },
           { icon: <StoreIcon color="#1DB954" size={20} />, title: 'Local Neighborhood Stores', desc: 'Support trusted local merchants near you' },
@@ -305,19 +336,19 @@ export const HomePage: React.FC = () => {
             style={{
               backgroundColor: '#141414',
               border: '1px solid #242424',
-              padding: '16px 20px',
+              padding: '14px 16px',
               borderRadius: '14px',
               display: 'flex',
               alignItems: 'center',
-              gap: '14px'
+              gap: '12px'
             }}
           >
-            <div style={{ backgroundColor: 'rgba(29,185,84,0.1)', padding: '10px', borderRadius: '10px' }}>
+            <div style={{ backgroundColor: 'rgba(29,185,84,0.1)', padding: '9px', borderRadius: '10px', flexShrink: 0 }}>
               {item.icon}
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '14px', color: '#fff' }}>{item.title}</div>
-              <div style={{ fontSize: '12px', color: '#8E8E93' }}>{item.desc}</div>
+              <div style={{ fontWeight: 700, fontSize: '13px', color: '#fff' }}>{item.title}</div>
+              <div style={{ fontSize: '11px', color: '#8E8E93' }}>{item.desc}</div>
             </div>
           </div>
         ))}
@@ -326,22 +357,22 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 3. BROWSE CATEGORIES SECTION (Real Supabase Categories)                   */}
       {/* ========================================================================= */}
-      <section style={{ marginBottom: '52px' }}>
-        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <section style={{ marginBottom: '44px' }}>
+        <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div>
-            <h2 className="section-title" style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            <h2 className="section-title" style={{ fontSize: '22px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
               Explore Categories
             </h2>
-            <p style={{ color: '#A7A7A7', fontSize: '13px', marginTop: '2px' }}>
+            <p style={{ color: '#A7A7A7', fontSize: '12.5px', marginTop: '2px' }}>
               Select a category to explore neighborhood inventory
             </p>
           </div>
           <button 
             className="section-link" 
             onClick={() => navigate('categories')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1DB954', fontWeight: 600, fontSize: '14px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1DB954', fontWeight: 600, fontSize: '13.5px' }}
           >
-            View All <ArrowRight size={16} />
+            View All <ArrowRight size={15} />
           </button>
         </div>
 
@@ -351,11 +382,7 @@ export const HomePage: React.FC = () => {
             <Loader2 size={24} className="spin" /> Loading categories...
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-            gap: '14px'
-          }}>
+          <div className="home-categories-grid">
             {categories.map((cat) => (
               <div
                 key={cat.id}
@@ -363,28 +390,20 @@ export const HomePage: React.FC = () => {
                 style={{
                   backgroundColor: '#181818',
                   border: '1px solid #262626',
-                  borderRadius: '16px',
-                  padding: '16px 14px',
+                  borderRadius: '14px',
+                  padding: '12px 8px',
                   cursor: 'pointer',
                   textAlign: 'center',
-                  transition: 'all 0.25s ease',
+                  transition: 'all 0.2s ease',
                   position: 'relative',
                   overflow: 'hidden'
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#1DB954';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#262626';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
               >
                 <div style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '14px',
-                  margin: '0 auto 12px',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  margin: '0 auto 8px',
                   overflow: 'hidden',
                   backgroundColor: '#202020'
                 }}>
@@ -395,8 +414,8 @@ export const HomePage: React.FC = () => {
                     loading="lazy" 
                   />
                 </div>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{cat.name}</h3>
-                <p style={{ fontSize: '12px', color: '#1DB954', fontWeight: 500 }}>Explore Products</p>
+                <h3 style={{ fontSize: '12.5px', fontWeight: 700, color: '#fff', marginBottom: '2px', lineHeight: 1.2 }}>{cat.name}</h3>
+                <p style={{ fontSize: '11px', color: '#1DB954', fontWeight: 500 }}>Shop Now</p>
               </div>
             ))}
           </div>
@@ -406,38 +425,27 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 4. FLASH DEALS & PROMOTIONS STRIP                                         */}
       {/* ========================================================================= */}
-      <section style={{ marginBottom: '52px' }}>
-        <div style={{
-          backgroundColor: '#121212',
-          border: '1px solid #292929',
-          borderRadius: '20px',
-          padding: '24px 30px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '24px',
-          flexWrap: 'wrap',
-          background: 'linear-gradient(135deg, #131E15 0%, #121212 60%, #191414 100%)',
-          boxShadow: '0 12px 36px rgba(0,0,0,0.4)'
-        }}>
+      <section style={{ marginBottom: '44px' }}>
+        <div className="flash-deal-banner">
           {/* Left info & countdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
             <div style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '16px',
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
               backgroundColor: 'rgba(29, 185, 84, 0.18)',
               color: '#1DB954',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              flexShrink: 0
             }}>
-              <Flame size={28} />
+              <Flame size={24} />
             </div>
 
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '18px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '16px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit' }}>
                   Flash Offer: Flat ₹100 Off
                 </span>
                 <span style={{
