@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <p style={{ color: '#A7A7A7', fontSize: '13.5px', marginBottom: '14px', maxWidth: '280px' }}>
-            High-speed local commerce delivered to your door in minutes from your favorite neighborhood stores.
+            GETORA connects customers with nearby local shops and fast delivery across India.
           </p>
           <div style={{ color: '#6B6B6B', fontSize: '12px' }}>
             © {new Date().getFullYear()} GETORA. All rights reserved.

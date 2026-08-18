@@ -129,7 +129,7 @@ export const HomePage: React.FC = () => {
             <ChevronRight size={14} />
           </div>
 
-          {/* Main Headline */}
+          {/* Main SEO Headline (H1) */}
           <h1 style={{
             fontSize: 'clamp(32px, 5vw, 54px)',
             fontWeight: 800,
@@ -139,24 +139,24 @@ export const HomePage: React.FC = () => {
             letterSpacing: '-0.02em',
             marginBottom: '18px'
           }}>
-            Everything You Need, <br />
+            Get Anything Fast from <br />
             <span style={{ 
               background: 'linear-gradient(90deg, #1DB954 0%, #39D353 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
-              Delivered in 15–25 Mins.
+              Local Shops with GETORA
             </span>
           </h1>
 
           <p style={{
-            fontSize: 'clamp(15px, 2vw, 17px)',
+            fontSize: 'clamp(14px, 2vw, 16px)',
             color: '#A7A7A7',
             lineHeight: 1.6,
-            marginBottom: '32px',
-            maxWidth: '600px'
+            marginBottom: '28px',
+            maxWidth: '620px'
           }}>
-            Order authentic hardware, electrical supplies, tech accessories, stationery, and daily home essentials directly from verified local shops in your neighborhood.
+            GETORA connects customers with nearby local shops and fast delivery. Discover nearby shops online, find products from local stores, and enjoy fast local delivery in 15–25 minutes.
           </p>
 
           {/* Quick Search on Hero */}
@@ -621,18 +621,18 @@ export const HomePage: React.FC = () => {
           {[
             {
               step: '01',
-              title: 'Select Store & Products',
-              desc: 'Browse live inventory from authorized hardware, electrical, electronics & grocery shops around you.'
+              title: 'Discover Nearby Local Shops & Products',
+              desc: 'Customers can discover nearby local shops, browse verified store inventories, and buy from local shops online effortlessly.'
             },
             {
               step: '02',
-              title: 'Fast Merchant Packing',
-              desc: 'The retailer receives your order instantly and packs genuine brand items within 5 minutes.'
+              title: 'Local Shops Reach Customers',
+              desc: 'Neighborhood retailers receive customer orders in real time and prepare genuine, high-quality products for immediate dispatch.'
             },
             {
               step: '03',
-              title: 'Live GPS Doorstep Delivery',
-              desc: 'Our electric rider fleet picks up your parcel and delivers to your doorstep with live route tracking.'
+              title: 'Fast Local Delivery by Partners',
+              desc: 'Trained delivery partners pick up orders from local stores and ensure safe, fast local delivery to your doorstep in minutes.'
             }
           ].map((s, idx) => (
             <div 
