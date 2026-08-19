@@ -91,7 +91,21 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 1. HERO BANNER & SEARCH BAR                                              */}
       {/* ========================================================================= */}
-      <section className="hero-banner">
+      <section className="hero-banner" style={{ position: 'relative' }}>
+        {/* Hero dots pattern overlay (SVG, behind text, z-index handled) */}
+        <svg
+          className="hero-dots-pattern"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 1 }}
+          aria-hidden="true"
+        >
+          <defs>
+            <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.4" className="hero-dot-circle" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dots)" />
+        </svg>
+
         <div style={{ maxWidth: '720px', position: 'relative', zIndex: 2 }}>
           {/* Location Badge */}
           <div 
@@ -159,7 +173,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Hero Floating Feature Pill Cards (Right Side Desktop) */}
-        <div className="hero-badge-desktop">
+        <div className="hero-badge-desktop" style={{ position: 'relative', zIndex: 2 }}>
           <div className="hero-floating-card">
             <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E' }}>
               <IconBolt size={22} stroke={1.8} />
@@ -192,7 +206,7 @@ export const HomePage: React.FC = () => {
           </h3>
           <button
             onClick={() => navigate('categories')}
-            style={{ fontSize: '12.5px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}
+            style={{ fontSize: '12.5px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             See All <IconChevronRight size={14} stroke={1.8} />
           </button>
@@ -205,11 +219,11 @@ export const HomePage: React.FC = () => {
               onClick={() => navigate('categories', { categoryId: cat.id })}
             >
               <div className="mobile-category-icon-circle">
-                <img
-                  src={cat.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'}
-                  alt={cat.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  loading="lazy"
+                <img 
+                  src={cat.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'} 
+                  alt={cat.name} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  loading="lazy" 
                 />
               </div>
               <span className="mobile-category-chip-label">{cat.name}</span>
@@ -259,7 +273,7 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('categories')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '13.5px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '13.5px', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             View All <IconArrowRight size={15} stroke={1.8} />
           </button>
@@ -321,8 +335,8 @@ export const HomePage: React.FC = () => {
                   Flash Offer: Flat ₹100 Off
                 </span>
                 <span style={{
-                  backgroundColor: 'rgba(255, 82, 82, 0.2)',
-                  color: '#FF5252',
+                  backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                  color: '#EF4444',
                   fontSize: '11px',
                   fontWeight: 700,
                   padding: '2px 8px',
@@ -353,7 +367,6 @@ export const HomePage: React.FC = () => {
               className="btn-primary"
               onClick={() => handleCopyCoupon('GETORA100')}
               style={{
-                backgroundColor: copiedCoupon === 'GETORA100' ? '#22C55E' : '#22C55E',
                 padding: '12px 24px',
                 borderRadius: '12px',
                 fontWeight: 700,
@@ -389,7 +402,7 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('stores')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             Explore All {stores.length} Stores <IconArrowRight size={16} stroke={1.8} />
           </button>
@@ -436,7 +449,7 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('search', { q: '' })}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             View All Products <IconArrowRight size={16} stroke={1.8} />
           </button>
@@ -472,7 +485,7 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="how-getora-works-card">
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px' }}>
-          <span style={{ color: '#1DB954', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <span style={{ color: '#22C55E', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             HYPERLOCAL COMMERCE
           </span>
           <h2 className="how-works-heading">
@@ -526,7 +539,7 @@ export const HomePage: React.FC = () => {
         {/* Retailer Card */}
         <div className="cta-retailer-card">
           <div>
-            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
+            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
               🏪 For Shop Owners
             </div>
             <h3 className="cta-card-title">
@@ -548,7 +561,7 @@ export const HomePage: React.FC = () => {
         {/* Delivery Partner Card */}
         <div className="cta-rider-card">
           <div>
-            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
+            <div style={{ display: 'inline-flex', padding: '8px 12px', backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E', borderRadius: '10px', fontSize: '13px', fontWeight: 700, marginBottom: '16px' }}>
               ⚡ For Delivery Riders
             </div>
             <h3 className="cta-card-title">

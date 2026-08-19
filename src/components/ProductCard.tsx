@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconHeart, IconPlus, IconMinus, IconTag, IconShieldCheck } from '@tabler/icons-react';
+import { IconPlus, IconMinus } from '@tabler/icons-react';
 import { Product } from '../types';
 import { useGetora } from '../context/GetoraContext';
 
@@ -51,14 +51,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       style={{
         backgroundColor: 'var(--bg-card)',
         border: '1px solid var(--border-color)',
-        borderRadius: '16px',
+        borderRadius: '12px',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        position: 'relative'
+        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        position: 'relative',
+        boxShadow: 'var(--shadow-card)'
       }}
     >
       {/* Product Image */}
@@ -68,7 +69,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           height: '160px',
           backgroundColor: 'var(--bg-secondary)',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderTopLeftRadius: '12px',
+          borderTopRightRadius: '12px'
         }}
       >
         <img
@@ -84,11 +87,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               position: 'absolute',
               top: '8px',
               left: '8px',
-              backgroundColor: '#1DB954',
+              backgroundColor: 'var(--primary-green)',
               color: '#000000',
               fontWeight: 800,
               fontSize: '11px',
-              padding: '2px 6px',
+              padding: '2px 7px',
               borderRadius: '6px'
             }}
           >
@@ -102,9 +105,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               position: 'absolute',
               bottom: '8px',
               left: '8px',
-              backgroundColor: 'rgba(0,0,0,0.7)',
-              color: '#fff',
-              fontSize: '10px',
+              backgroundColor: 'rgba(0,0,0,0.65)',
+              color: '#FFFFFF',
+              fontSize: '10.5px',
               fontWeight: 600,
               padding: '2px 6px',
               borderRadius: '4px',
@@ -122,7 +125,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <h4
             style={{
               fontSize: '14px',
-              fontWeight: 600,
+              fontWeight: 500,
               color: 'var(--text-primary)',
               lineHeight: 1.35,
               marginBottom: '4px',
@@ -136,25 +139,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           >
             {product.name}
           </h4>
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '12px' }}>
-            Unit: {product.unit || '1 pc'} • {product.retailer?.shopName || 'Neighborhood Store'}
+          <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginBottom: '12px' }}>
+            {product.unit || '1 pc'} • {product.retailer?.shopName || 'Local Shop'}
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', gap: '8px' }}>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
+            <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--primary-green)', fontFamily: 'Outfit' }}>
               ₹{product.sellingPrice}
             </div>
             {product.price > product.sellingPrice && (
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
+              <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
                 ₹{product.price}
               </div>
             )}
           </div>
 
           {!inStock ? (
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-elevated)', padding: '4px 8px', borderRadius: '9999px', fontWeight: 600 }}>
               Out of Stock
             </span>
           ) : quantityInCart > 0 ? (
@@ -162,25 +165,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#1DB954',
-                color: '#000',
-                borderRadius: '8px',
-                padding: '2px 6px',
+                backgroundColor: 'var(--primary-green)',
+                color: '#FFFFFF',
+                borderRadius: '9999px',
+                padding: '4px 10px',
                 gap: '8px',
-                fontWeight: 800
+                fontWeight: 800,
+                boxShadow: '0 2px 8px rgba(34, 197, 94, 0.3)'
               }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={handleDecrement}
-                style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex', padding: '2px' }}
+                style={{ border: 'none', background: 'transparent', color: '#FFFFFF', cursor: 'pointer', display: 'flex', padding: '2px' }}
+                aria-label="Decrease quantity"
               >
                 <IconMinus size={14} stroke={2.5} />
               </button>
-              <span style={{ fontSize: '13px' }}>{quantityInCart}</span>
+              <span style={{ fontSize: '13px', minWidth: '14px', textAlign: 'center' }}>{quantityInCart}</span>
               <button
                 onClick={handleIncrement}
-                style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex', padding: '2px' }}
+                style={{ border: 'none', background: 'transparent', color: '#FFFFFF', cursor: 'pointer', display: 'flex', padding: '2px' }}
+                aria-label="Increase quantity"
               >
                 <IconPlus size={14} stroke={2.5} />
               </button>
@@ -189,26 +195,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <button
               onClick={handleAddClick}
               style={{
-                backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                border: '1px solid rgba(29, 185, 84, 0.4)',
-                color: '#1DB954',
+                backgroundColor: 'var(--primary-green)',
+                color: '#FFFFFF',
                 fontWeight: 700,
-                fontSize: '12px',
-                padding: '6px 14px',
-                borderRadius: '8px',
+                fontSize: '12.5px',
+                padding: '6px 18px',
+                borderRadius: '9999px',
+                border: 'none',
                 cursor: 'pointer',
-                transition: 'all 0.15s'
+                transition: 'all 0.15s ease',
+                boxShadow: '0 2px 10px rgba(34, 197, 94, 0.25)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#1DB954';
-                e.currentTarget.style.color = '#000';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 14px rgba(34, 197, 94, 0.4)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(29, 185, 84, 0.15)';
-                e.currentTarget.style.color = '#1DB954';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 10px rgba(34, 197, 94, 0.25)';
               }}
             >
-              + ADD
+              Add
             </button>
           )}
         </div>
