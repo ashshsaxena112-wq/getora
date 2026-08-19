@@ -263,35 +263,32 @@ img {
   cursor: pointer;
 }
 
-.getora-logo-emblem {
-  background-color: #141414;
-  border: 1px solid rgba(29, 185, 84, 0.35);
-  box-shadow: 0 0 14px rgba(29, 185, 84, 0.18);
+.getora-logo-image-box {
+  background-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.getora-word-first {
-  color: #FFFFFF;
+.getora-logo-image-box:hover {
+  transform: scale(1.02);
 }
 
-.getora-word-accent {
-  color: var(--color-green);
+/* Instant CSS theme switching */
+.getora-theme-logo-dark {
+  display: block;
 }
 
-[data-theme="light"] .getora-logo-emblem,
-.theme-light .getora-logo-emblem {
-  background-color: #F0FDF4 !important;
-  border: 1.5px solid rgba(29, 185, 84, 0.35) !important;
-  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.15) !important;
+.getora-theme-logo-light {
+  display: none;
 }
 
-[data-theme="light"] .getora-word-first,
-.theme-light .getora-word-first {
-  color: #111827 !important;
+[data-theme="light"] .getora-theme-logo-dark,
+.theme-light .getora-theme-logo-dark {
+  display: none !important;
 }
 
-[data-theme="light"] .getora-word-accent,
-.theme-light .getora-word-accent {
-  color: #15803D !important;
+[data-theme="light"] .getora-theme-logo-light,
+.theme-light .getora-theme-logo-light {
+  display: block !important;
 }
 
 .brand-badge-desktop {
