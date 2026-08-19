@@ -131,9 +131,45 @@ export interface ProductImage {
   sortOrder: number;
 }
 
+export interface MasterProduct {
+  id: string;
+  name: string;
+  slug?: string;
+  brand: string;
+  categoryId: string;
+  categoryName?: string;
+  description: string;
+  suggestedPrice: number; // MRP
+  suggestedSellingPrice: number; // Suggested local selling price
+  unit: string;
+  packInfo?: string;
+  imageUrl: string;
+  images?: string[];
+  features?: (string | { label: string; value: string })[];
+  isPopular?: boolean;
+  isActive?: boolean;
+  sku?: string;
+}
+
+export interface ProductRequest {
+  id: string;
+  retailerId: string;
+  retailerName?: string;
+  name: string;
+  brand?: string;
+  categoryId: string;
+  categoryName?: string;
+  expectedPrice?: number;
+  unit?: string;
+  notes?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+}
+
 export interface Product {
   id: string;
   retailerId: string;
+  masterProductId?: string; // Links to GETORA Master Catalog
   categoryId?: string;
   name: string;
   slug?: string;

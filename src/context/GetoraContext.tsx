@@ -7,6 +7,8 @@ import {
   Category,
   Retailer,
   Product,
+  MasterProduct,
+  ProductRequest,
   ProductImage,
   Cart,
   CartItem,
@@ -20,6 +22,7 @@ import {
   ToastMessage
 } from '../types';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { MASTER_PRODUCT_CATALOG } from '../data/masterCatalog';
 
 interface GetoraContextType {
   // Navigation & View Routing
@@ -121,7 +124,7 @@ interface GetoraContextType {
   cancelOrder: (orderId: string) => Promise<boolean>;
   getOrderById: (orderId: string) => Order | undefined;
 
-  // Retailer Specific Operations
+  // Retailer Specific Operations & Master Catalog
   retailerProfile: Retailer | null;
   retailerProducts: Product[];
   retailerOrders: Order[];
@@ -130,6 +133,31 @@ interface GetoraContextType {
   updateProduct: (productId: string, updates: Partial<Product>) => Promise<boolean>;
   deleteProduct: (productId: string) => Promise<boolean>;
   updateOrderStatus: (orderId: string, status: OrderStatus) => Promise<boolean>;
+
+  // Master Catalog & Product Management System
+  masterCatalog: MasterProduct[];
+  productRequests: ProductRequest[];
+  addMasterProductToShop: (
+    masterProduct: MasterProduct,
+    details: { price: number; sellingPrice: number; stockQuantity: number; unit?: string }
+  ) => Promise<boolean>;
+  updateRetailerProductPriceStock: (
+    productId: string,
+    updates: { sellingPrice: number; price?: number; stockQuantity: number; isAvailable?: boolean }
+  ) => Promise<boolean>;
+  requestNewProduct: (request: {
+    name: string;
+    brand?: string;
+    categoryId: string;
+    categoryName?: string;
+    expectedPrice?: number;
+    unit?: string;
+    notes?: string;
+  }) => Promise<boolean>;
+  isMasterProductInShop: (
+    masterProductId: string,
+    retailerId?: string
+  ) => { inShop: boolean; product?: Product };
 
   // Wishlist
   wishlist: string[];
@@ -252,10 +280,19 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(false);
 
-  // Retailer Specific
+  // Retailer Specific & Master Catalog
   const [retailerProfile, setRetailerProfile] = useState<Retailer | null>(null);
   const [retailerProducts, setRetailerProducts] = useState<Product[]>([]);
   const [retailerOrders, setRetailerOrders] = useState<Order[]>([]);
+  const [masterCatalog] = useState<MasterProduct[]>(MASTER_PRODUCT_CATALOG);
+  const [productRequests, setProductRequests] = useState<ProductRequest[]>(() => {
+    try {
+      const saved = localStorage.getItem('getora_product_requests');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // Notifications & Reviews
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -1410,6 +1447,200 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   // ============================================================================
+  // 6.5 MASTER PRODUCT CATALOG & 1-CLICK ADDING SYSTEM
+  // ============================================================================
+
+  const isMasterProductInShop = (masterProductId: string, targetRetailerId?: string) => {
+    const retId = targetRetailerId || retailerProfile?.id || (role === 'retailer' ? profile?.id : null);
+    if (!retId) return { inShop: false };
+
+    const master = masterCatalog.find((m) => m.id === masterProductId);
+    const prod = products.find(
+      (p) =>
+        p.retailerId === retId &&
+        (p.masterProductId === masterProductId || (master && p.name.toLowerCase() === master.name.toLowerCase()))
+    );
+
+    return { inShop: !!prod, product: prod };
+  };
+
+  const addMasterProductToShop = async (
+    masterProduct: MasterProduct,
+    details: { price: number; sellingPrice: number; stockQuantity: number; unit?: string }
+  ) => {
+    const targetRetailerId = retailerProfile?.id || (role === 'retailer' ? profile?.id : null) || 'store-voltix';
+    if (!targetRetailerId) {
+      showToast('Login Required', 'Please sign in with a retailer account to manage your store', 'warning');
+      return false;
+    }
+
+    try {
+      // 1. Check for duplicate prevention
+      const existingProduct = products.find(
+        (p) =>
+          p.retailerId === targetRetailerId &&
+          (p.masterProductId === masterProduct.id || p.name.toLowerCase() === masterProduct.name.toLowerCase())
+      );
+
+      if (existingProduct) {
+        // Update existing item's price and stock instead of creating duplicate
+        await updateRetailerProductPriceStock(existingProduct.id, {
+          sellingPrice: details.sellingPrice,
+          price: details.price,
+          stockQuantity: details.stockQuantity,
+          isAvailable: true
+        });
+        showToast('Shop Updated', `Updated price (₹${details.sellingPrice}) and stock (${details.stockQuantity}) for ${masterProduct.name}`, 'success');
+        return true;
+      }
+
+      // 2. Create new shop product linked to Master Catalog
+      const newProductData: Partial<Product> = {
+        retailerId: targetRetailerId,
+        masterProductId: masterProduct.id,
+        categoryId: masterProduct.categoryId,
+        categoryName: masterProduct.categoryName,
+        name: masterProduct.name,
+        brand: masterProduct.brand,
+        description: masterProduct.description,
+        unit: details.unit || masterProduct.unit,
+        price: Number(details.price || details.sellingPrice),
+        sellingPrice: Number(details.sellingPrice),
+        stockQuantity: Number(details.stockQuantity || 0),
+        imageUrl: masterProduct.imageUrl,
+        isAvailable: true,
+        isActive: true,
+        sku: masterProduct.sku || `SKU-${masterProduct.id}`
+      };
+
+      if (isSupabaseConfigured()) {
+        try {
+          const { data: inserted, error } = await supabase
+            .from('products')
+            .insert({
+              retailer_id: targetRetailerId,
+              category_id: masterProduct.categoryId,
+              name: masterProduct.name,
+              brand: masterProduct.brand,
+              description: masterProduct.description,
+              unit: details.unit || masterProduct.unit,
+              price: Number(details.price || details.sellingPrice),
+              selling_price: Number(details.sellingPrice),
+              stock_quantity: Number(details.stockQuantity || 0),
+              image_url: masterProduct.imageUrl,
+              sku: masterProduct.sku || `SKU-${masterProduct.id}`,
+              is_available: true,
+              is_active: true
+            })
+            .select()
+            .single();
+
+          if (inserted && !error) {
+            newProductData.id = inserted.id;
+          }
+        } catch (dbErr) {
+          console.warn('Supabase product insert skipped or offline, storing locally', dbErr);
+        }
+      }
+
+      if (!newProductData.id) {
+        newProductData.id = `prod-shop-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+      }
+
+      // Update state live
+      setProducts((prev) => [newProductData as Product, ...prev]);
+
+      showToast('Added to My Shop', `${masterProduct.name} is now listed in your shop at ₹${details.sellingPrice}!`, 'success');
+      return true;
+    } catch (err: any) {
+      showToast('Error', err.message || 'Failed to add product to shop', 'error');
+      return false;
+    }
+  };
+
+  const updateRetailerProductPriceStock = async (
+    productId: string,
+    updates: { sellingPrice: number; price?: number; stockQuantity: number; isAvailable?: boolean }
+  ) => {
+    try {
+      if (isSupabaseConfigured()) {
+        try {
+          const dbUpdates: any = {
+            selling_price: updates.sellingPrice,
+            stock_quantity: updates.stockQuantity
+          };
+          if (updates.price !== undefined) dbUpdates.price = updates.price;
+          if (updates.isAvailable !== undefined) dbUpdates.is_available = updates.isAvailable;
+
+          await supabase.from('products').update(dbUpdates).eq('id', productId);
+        } catch (dbErr) {
+          console.warn('Supabase product update error:', dbErr);
+        }
+      }
+
+      setProducts((prev) =>
+        prev.map((p) => {
+          if (p.id === productId) {
+            return {
+              ...p,
+              sellingPrice: updates.sellingPrice,
+              price: updates.price !== undefined ? updates.price : p.price,
+              stockQuantity: updates.stockQuantity,
+              isAvailable: updates.isAvailable !== undefined ? updates.isAvailable : p.isAvailable
+            };
+          }
+          return p;
+        })
+      );
+
+      showToast('Updated', 'Product price and stock updated', 'success');
+      return true;
+    } catch (err: any) {
+      showToast('Error', err.message || 'Failed to update product', 'error');
+      return false;
+    }
+  };
+
+  const requestNewProduct = async (request: {
+    name: string;
+    brand?: string;
+    categoryId: string;
+    categoryName?: string;
+    expectedPrice?: number;
+    unit?: string;
+    notes?: string;
+  }) => {
+    const targetRetailerId = retailerProfile?.id || (role === 'retailer' && profile?.id ? profile.id : 'retailer-guest');
+    const retailerName = retailerProfile?.shopName || profile?.fullName || 'Retailer';
+
+    const newRequest: ProductRequest = {
+      id: `req-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      retailerId: targetRetailerId,
+      retailerName,
+      name: request.name.trim(),
+      brand: request.brand?.trim(),
+      categoryId: request.categoryId,
+      categoryName: request.categoryName || categories.find((c) => c.id === request.categoryId)?.name || 'General',
+      expectedPrice: request.expectedPrice,
+      unit: request.unit || '1 pc',
+      notes: request.notes,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+
+    setProductRequests((prev) => {
+      const updated = [newRequest, ...prev];
+      try {
+        localStorage.setItem('getora_product_requests', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    showToast('Request Submitted', `GETORA team will review and add "${request.name}" to the master catalog shortly.`, 'success');
+    return true;
+  };
+
+  // ============================================================================
   // 7. REVIEWS & NOTIFICATIONS
   // ============================================================================
 
@@ -1568,6 +1799,13 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         updateProduct,
         deleteProduct,
         updateOrderStatus,
+
+        masterCatalog,
+        productRequests,
+        addMasterProductToShop,
+        updateRetailerProductPriceStock,
+        requestNewProduct,
+        isMasterProductInShop,
 
         notifications,
         reviews,
