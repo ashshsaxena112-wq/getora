@@ -1,20 +1,20 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  Clock,
-  MapPin,
-  Truck,
-  Phone,
-  CheckCircle2,
-  Store as StoreIcon,
-  Home,
-  ShieldCheck,
-  Star,
-  ChevronRight,
-  ArrowLeft,
-  Navigation,
-  Bike
-} from 'lucide-react';
+  IconClock,
+  IconMapPin,
+  IconTruckDelivery,
+  IconPhone,
+  IconCircleCheck,
+  IconBuildingStore,
+  IconHome,
+  IconShieldCheck,
+  IconStar,
+  IconChevronRight,
+  IconArrowLeft,
+  IconNavigation,
+  IconMotorbike
+} from '@tabler/icons-react';
 import { OrderStatus } from '../types';
 
 export const LiveTrackingPage: React.FC = () => {
@@ -26,7 +26,7 @@ export const LiveTrackingPage: React.FC = () => {
     return (
       <div style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center', padding: '40px' }}>
         <h2>No Active Order Found for Tracking</h2>
-        <p style={{ color: '#8E8E93', marginTop: '8px' }}>Place an order to track live delivery updates.</p>
+        <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Place an order to track live delivery updates.</p>
         <button className="btn-primary" onClick={() => navigate('orders')} style={{ marginTop: '20px' }}>
           View Orders
         </button>
@@ -61,12 +61,12 @@ export const LiveTrackingPage: React.FC = () => {
           className="btn-secondary"
           style={{ padding: '8px 14px', borderRadius: '8px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
         >
-          <ArrowLeft size={16} /> Back to Orders
+          <IconArrowLeft size={16} stroke={1.8} /> Back to Orders
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Order:</span>
-          <span style={{ color: '#1DB954', fontWeight: 800, fontSize: '14px', fontFamily: 'monospace' }}>
+          <span style={{ color: '#22C55E', fontWeight: 800, fontSize: '14px', fontFamily: 'monospace' }}>
             {order.orderNumber}
           </span>
         </div>
@@ -92,7 +92,7 @@ export const LiveTrackingPage: React.FC = () => {
               <div style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Estimated Delivery
               </div>
-              <div style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: '#1DB954', marginTop: '2px' }}>
+              <div style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: '#22C55E', marginTop: '2px' }}>
                 {currentStatus === 'delivered' ? 'Order Delivered!' : '15–25 Minutes'}
               </div>
               <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
@@ -105,14 +105,14 @@ export const LiveTrackingPage: React.FC = () => {
                 width: '56px',
                 height: '56px',
                 borderRadius: '16px',
-                backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                color: '#1DB954',
+                backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                color: '#22C55E',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
-              <Truck size={28} />
+              <IconTruckDelivery size={28} stroke={1.8} />
             </div>
           </div>
 
@@ -134,7 +134,7 @@ export const LiveTrackingPage: React.FC = () => {
                         width: '24px',
                         height: '24px',
                         borderRadius: '50%',
-                        backgroundColor: isPassed ? '#1DB954' : 'var(--bg-elevated)',
+                        backgroundColor: isPassed ? '#22C55E' : 'var(--bg-elevated)',
                         color: isPassed ? '#000' : 'var(--text-muted)',
                         display: 'flex',
                         alignItems: 'center',
@@ -144,7 +144,7 @@ export const LiveTrackingPage: React.FC = () => {
                         zIndex: 2
                       }}
                     >
-                      {isPassed ? <CheckCircle2 size={16} /> : idx + 1}
+                      {isPassed ? <IconCircleCheck size={16} stroke={2.5} /> : idx + 1}
                     </div>
 
                     <div>
@@ -164,8 +164,8 @@ export const LiveTrackingPage: React.FC = () => {
           {/* Store Info Card */}
           <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1DB954' }}>
-                <StoreIcon size={20} />
+              <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E' }}>
+                <IconBuildingStore size={20} stroke={1.8} />
               </div>
               <div>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Fulfilling Store</div>
@@ -181,13 +181,13 @@ export const LiveTrackingPage: React.FC = () => {
           {order.deliveryPartner && (
             <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
-                  <Bike size={20} />
+                <div style={{ width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#22C55E', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
+                  <IconMotorbike size={20} stroke={1.8} />
                 </div>
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Assigned Rider</div>
                   <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>{order.deliveryPartner.fullName}</div>
-                  <div style={{ fontSize: '12px', color: '#1DB954' }}>{order.deliveryPartner.vehicleType || 'Electric Two-Wheeler'} ({order.deliveryPartner.vehicleNumber || 'EV-Fleet'})</div>
+                  <div style={{ fontSize: '12px', color: '#22C55E' }}>{order.deliveryPartner.vehicleType || 'Electric Two-Wheeler'} ({order.deliveryPartner.vehicleNumber || 'EV-Fleet'})</div>
                 </div>
               </div>
             </div>
@@ -195,8 +195,8 @@ export const LiveTrackingPage: React.FC = () => {
 
           {/* Delivery Address */}
           <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1DB954', fontSize: '13px', fontWeight: 700, marginBottom: '8px' }}>
-              <Home size={15} /> Delivery Destination
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#22C55E', fontSize: '13px', fontWeight: 700, marginBottom: '8px' }}>
+              <IconHome size={15} stroke={1.8} /> Delivery Destination
             </div>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               {order.address?.addressLine1}

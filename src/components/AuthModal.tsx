@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import {
-  X,
-  Mail,
-  Phone,
-  Lock,
-  ArrowRight,
-  Sparkles,
-  ShieldCheck,
-  Store,
-  Bike,
-  User,
-  AlertCircle,
-  Loader2,
-  KeyRound,
-  Calendar,
-  Heart,
-  Check
-} from 'lucide-react';
+  IconX,
+  IconMail,
+  IconPhone,
+  IconLock,
+  IconArrowRight,
+  IconSparkles,
+  IconShieldCheck,
+  IconBuildingStore,
+  IconMotorbike,
+  IconUser,
+  IconAlertCircle,
+  IconLoader2,
+  IconKey,
+  IconCalendar,
+  IconHeart,
+  IconCheck
+} from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { UserRole } from '../types';
 import { GetoraLogo } from './GetoraLogo';
@@ -287,10 +287,11 @@ export const AuthModal: React.FC = () => {
               backgroundColor: 'var(--bg-elevated)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
-              display: 'flex'
+              display: 'flex',
+              border: 'none'
             }}
           >
-            <X size={18} />
+            <IconX size={18} stroke={1.8} />
           </button>
         </div>
 
@@ -300,19 +301,19 @@ export const AuthModal: React.FC = () => {
           {errorMessage && (
             <div
               style={{
-                backgroundColor: 'rgba(255, 69, 58, 0.12)',
-                border: '1px solid rgba(255, 69, 58, 0.3)',
+                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
                 borderRadius: '12px',
                 padding: '12px 14px',
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '10px',
                 marginBottom: '18px',
-                color: '#FF453A',
+                color: '#EF4444',
                 fontSize: '13px'
               }}
             >
-              <AlertCircle size={16} style={{ marginTop: '2px', flexShrink: 0 }} />
+              <IconAlertCircle size={16} stroke={1.8} style={{ marginTop: '2px', flexShrink: 0 }} />
               <div>{errorMessage}</div>
             </div>
           )}
@@ -342,7 +343,7 @@ export const AuthModal: React.FC = () => {
                     gap: '10px'
                   }}
                 >
-                  <User size={16} color="var(--color-green)" />
+                  <IconUser size={16} stroke={1.8} color="#22C55E" />
                   <input
                     type="text"
                     placeholder="Your Full Name"
@@ -369,7 +370,7 @@ export const AuthModal: React.FC = () => {
                     gap: '10px'
                   }}
                 >
-                  <Phone size={16} color="var(--color-green)" />
+                  <IconPhone size={16} stroke={1.8} color="#22C55E" />
                   <input
                     type="tel"
                     placeholder="10-digit mobile number"
@@ -396,7 +397,7 @@ export const AuthModal: React.FC = () => {
                     gap: '10px'
                   }}
                 >
-                  <Calendar size={16} color="var(--color-green)" />
+                  <IconCalendar size={16} stroke={1.8} color="#22C55E" />
                   <input
                     type="date"
                     value={dateOfBirth}
@@ -427,9 +428,9 @@ export const AuthModal: React.FC = () => {
                         borderRadius: '10px',
                         fontSize: '13px',
                         fontWeight: 600,
-                        backgroundColor: gender === g.id ? 'var(--color-green-dim)' : 'var(--bg-input)',
-                        border: gender === g.id ? '1px solid var(--color-green)' : '1px solid var(--border-color)',
-                        color: gender === g.id ? 'var(--color-green)' : 'var(--text-secondary)',
+                        backgroundColor: gender === g.id ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                        border: gender === g.id ? '1px solid #22C55E' : '1px solid var(--border-color)',
+                        color: gender === g.id ? '#22C55E' : 'var(--text-secondary)',
                         textAlign: 'center',
                         cursor: 'pointer'
                       }}
@@ -474,7 +475,7 @@ export const AuthModal: React.FC = () => {
                     gap: '8px'
                   }}
                 >
-                  {loading ? <Loader2 size={16} className="spin" /> : 'Save & Start Shopping →'}
+                  {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : 'Save & Start Shopping →'}
                 </button>
               </div>
             </form>
@@ -489,15 +490,15 @@ export const AuthModal: React.FC = () => {
                     width: '56px',
                     height: '56px',
                     borderRadius: '50%',
-                    backgroundColor: 'var(--color-green-dim)',
-                    color: 'var(--color-green)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                    color: '#22C55E',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 12px'
                   }}
                 >
-                  <KeyRound size={26} />
+                  <IconKey size={26} stroke={1.8} />
                 </div>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
                   Enter the 6-digit verification code sent to:
@@ -525,7 +526,7 @@ export const AuthModal: React.FC = () => {
                     letterSpacing: '8px',
                     textAlign: 'center',
                     fontWeight: 800,
-                    color: 'var(--color-green)'
+                    color: '#22C55E'
                   }}
                 />
               </div>
@@ -546,21 +547,21 @@ export const AuthModal: React.FC = () => {
                   gap: '8px'
                 }}
               >
-                {loading ? <Loader2 size={18} className="spin" /> : 'Verify Code & Continue →'}
+                {loading ? <IconLoader2 size={18} stroke={1.8} className="spin" /> : 'Verify Code & Continue →'}
               </button>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-muted)' }}>
                 <button
                   type="button"
                   onClick={() => setStep('input')}
-                  style={{ background: 'none', border: 'none', color: 'var(--color-green)', cursor: 'pointer' }}
+                  style={{ background: 'none', border: 'none', color: '#22C55E', cursor: 'pointer' }}
                 >
                   ← Change {authMethod === 'otp_email' ? 'Email' : 'Phone'}
                 </button>
                 <button
                   type="button"
                   onClick={handleSendOtp}
-                  style={{ background: 'none', border: 'none', color: 'var(--color-green)', cursor: 'pointer' }}
+                  style={{ background: 'none', border: 'none', color: '#22C55E', cursor: 'pointer' }}
                 >
                   Resend Code
                 </button>
@@ -592,6 +593,8 @@ export const AuthModal: React.FC = () => {
                     fontWeight: 700,
                     backgroundColor: authMode === 'login' ? 'var(--bg-card)' : 'transparent',
                     color: authMode === 'login' ? 'var(--text-primary)' : 'var(--text-muted)',
+                    border: 'none',
+                    cursor: 'pointer',
                     boxShadow: authMode === 'login' ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
                   }}
                 >
@@ -608,6 +611,8 @@ export const AuthModal: React.FC = () => {
                     fontWeight: 700,
                     backgroundColor: authMode === 'signup' ? 'var(--bg-card)' : 'transparent',
                     color: authMode === 'signup' ? 'var(--text-primary)' : 'var(--text-muted)',
+                    border: 'none',
+                    cursor: 'pointer',
                     boxShadow: authMode === 'signup' ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
                   }}
                 >
@@ -627,15 +632,15 @@ export const AuthModal: React.FC = () => {
                       style={{
                         padding: '12px',
                         borderRadius: '12px',
-                        backgroundColor: role === 'customer' ? 'var(--color-green-dim)' : 'var(--bg-input)',
-                        border: role === 'customer' ? '1px solid var(--color-green)' : '1px solid var(--border-color)',
+                        backgroundColor: role === 'customer' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                        border: role === 'customer' ? '1px solid #22C55E' : '1px solid var(--border-color)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px'
                       }}
                     >
-                      <User size={18} color={role === 'customer' ? 'var(--color-green)' : 'var(--text-secondary)'} />
+                      <IconUser size={18} stroke={1.8} color={role === 'customer' ? '#22C55E' : 'var(--text-secondary)'} />
                       <div>
                         <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Customer</div>
                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Order essentials</div>
@@ -647,15 +652,15 @@ export const AuthModal: React.FC = () => {
                       style={{
                         padding: '12px',
                         borderRadius: '12px',
-                        backgroundColor: role === 'retailer' ? 'var(--color-green-dim)' : 'var(--bg-input)',
-                        border: role === 'retailer' ? '1px solid var(--color-green)' : '1px solid var(--border-color)',
+                        backgroundColor: role === 'retailer' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                        border: role === 'retailer' ? '1px solid #22C55E' : '1px solid var(--border-color)',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '10px'
                       }}
                     >
-                      <Store size={18} color={role === 'retailer' ? 'var(--color-green)' : 'var(--text-secondary)'} />
+                      <IconBuildingStore size={18} stroke={1.8} color={role === 'retailer' ? '#22C55E' : 'var(--text-secondary)'} />
                       <div>
                         <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Retailer</div>
                         <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Sell products</div>
@@ -676,16 +681,17 @@ export const AuthModal: React.FC = () => {
                     borderRadius: '10px',
                     fontSize: '12px',
                     fontWeight: 600,
-                    backgroundColor: authMethod === 'otp_email' ? 'var(--color-green-dim)' : 'var(--bg-input)',
-                    border: authMethod === 'otp_email' ? '1px solid var(--color-green)' : '1px solid var(--border-color)',
-                    color: authMethod === 'otp_email' ? 'var(--color-green)' : 'var(--text-secondary)',
+                    backgroundColor: authMethod === 'otp_email' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                    border: authMethod === 'otp_email' ? '1px solid #22C55E' : '1px solid var(--border-color)',
+                    color: authMethod === 'otp_email' ? '#22C55E' : 'var(--text-secondary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '6px'
+                    gap: '6px',
+                    cursor: 'pointer'
                   }}
                 >
-                  <Mail size={14} /> Email OTP
+                  <IconMail size={15} stroke={1.8} /> Email OTP
                 </button>
 
                 <button
@@ -697,16 +703,17 @@ export const AuthModal: React.FC = () => {
                     borderRadius: '10px',
                     fontSize: '12px',
                     fontWeight: 600,
-                    backgroundColor: authMethod === 'password' ? 'var(--color-green-dim)' : 'var(--bg-input)',
-                    border: authMethod === 'password' ? '1px solid var(--color-green)' : '1px solid var(--border-color)',
-                    color: authMethod === 'password' ? 'var(--color-green)' : 'var(--text-secondary)',
+                    backgroundColor: authMethod === 'password' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                    border: authMethod === 'password' ? '1px solid #22C55E' : '1px solid var(--border-color)',
+                    color: authMethod === 'password' ? '#22C55E' : 'var(--text-secondary)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '6px'
+                    gap: '6px',
+                    cursor: 'pointer'
                   }}
                 >
-                  <Lock size={14} /> Password
+                  <IconLock size={15} stroke={1.8} /> Password
                 </button>
               </div>
 
@@ -771,7 +778,7 @@ export const AuthModal: React.FC = () => {
                     className="btn-primary"
                     style={{ width: '100%', padding: '12px', borderRadius: '12px', fontSize: '14px', fontWeight: 700, marginTop: '8px' }}
                   >
-                    {loading ? <Loader2 size={16} className="spin" /> : authMode === 'login' ? 'Sign In →' : 'Create Account →'}
+                    {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : authMode === 'login' ? 'Sign In →' : 'Create Account →'}
                   </button>
                 </form>
               ) : (
@@ -822,7 +829,7 @@ export const AuthModal: React.FC = () => {
                     className="btn-primary"
                     style={{ width: '100%', padding: '12px', borderRadius: '12px', fontSize: '14px', fontWeight: 700, marginTop: '8px' }}
                   >
-                    {loading ? <Loader2 size={16} className="spin" /> : 'Send 6-Digit Verification Code →'}
+                    {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : 'Send 6-Digit Verification Code →'}
                   </button>
                 </form>
               )}

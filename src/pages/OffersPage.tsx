@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
-import { Tag, Check, Copy, Sparkles } from 'lucide-react';
+import { IconTag, IconCheck, IconCopy, IconSparkles } from '@tabler/icons-react';
 
 export const OffersPage: React.FC = () => {
   const { applyCoupon, appliedCoupon, navigate, showToast } = useGetora();
@@ -53,7 +53,7 @@ export const OffersPage: React.FC = () => {
               style={{
                 backgroundColor: 'var(--bg-card)',
                 border: '1px solid',
-                borderColor: isApplied ? '#1DB954' : 'var(--border-color)',
+                borderColor: isApplied ? '#22C55E' : 'var(--border-color)',
                 borderRadius: '20px',
                 padding: '24px',
                 display: 'flex',
@@ -69,13 +69,13 @@ export const OffersPage: React.FC = () => {
                     position: 'absolute',
                     top: '12px',
                     right: '12px',
-                    backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                    color: '#1DB954',
+                    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                    color: '#22C55E',
                     fontSize: '11px',
                     fontWeight: 700,
                     padding: '3px 8px',
                     borderRadius: '4px',
-                    border: '1px solid #1DB954'
+                    border: '1px solid #22C55E'
                   }}
                 >
                   APPLIED IN CART
@@ -89,14 +89,14 @@ export const OffersPage: React.FC = () => {
                       width: '36px',
                       height: '36px',
                       borderRadius: '8px',
-                      backgroundColor: 'rgba(29, 185, 84, 0.12)',
-                      color: '#1DB954',
+                      backgroundColor: 'rgba(34, 197, 94, 0.12)',
+                      color: '#22C55E',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
                   >
-                    <Tag size={18} />
+                    <IconTag size={18} stroke={1.8} />
                   </div>
 
                   <span
@@ -104,7 +104,7 @@ export const OffersPage: React.FC = () => {
                       fontFamily: 'Outfit',
                       fontSize: '18px',
                       fontWeight: 800,
-                      color: '#1DB954',
+                      color: '#22C55E',
                       letterSpacing: '0.5px'
                     }}
                   >
@@ -134,7 +134,7 @@ export const OffersPage: React.FC = () => {
                   onClick={() => handleCopy(c.code)}
                   style={{ padding: '10px 14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
                 >
-                  <Copy size={14} /> Copy
+                  <IconCopy size={15} stroke={1.8} /> Copy
                 </button>
               </div>
             </div>

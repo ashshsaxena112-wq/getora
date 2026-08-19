@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import { StoreCard } from '../components/StoreCard';
-import { MapPin, Zap, Tag, Star, Store, Loader2 } from 'lucide-react';
+import { IconMapPin, IconBolt, IconTag, IconStar, IconBuildingStore, IconLoader2 } from '@tabler/icons-react';
 
 export const NearbyStoresPage: React.FC = () => {
   const { stores, isLoadingCatalog, selectedAddress, openLocationModal, openAuthModal } = useGetora();
@@ -32,7 +32,7 @@ export const NearbyStoresPage: React.FC = () => {
             className="btn-secondary"
             style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
           >
-            <MapPin size={15} color="#1DB954" /> Change Location
+            <IconMapPin size={15} stroke={1.8} color="#22C55E" /> Change Location
           </button>
         </div>
       </div>
@@ -61,12 +61,12 @@ export const NearbyStoresPage: React.FC = () => {
 
       {/* Stores Grid */}
       {isLoadingCatalog ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#1DB954', gap: '10px' }}>
-          <Loader2 size={24} className="spin" /> Loading nearby stores...
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#22C55E', gap: '10px' }}>
+          <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading nearby stores...
         </div>
       ) : filteredStores.length === 0 ? (
         <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '48px 24px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
-          <Store size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+          <IconBuildingStore size={44} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
           <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Stores Found</h3>
           <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '20px' }}>
             No registered stores match your current filter.

@@ -1,15 +1,15 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  CheckCircle2,
-  Package,
-  MapPin,
-  Clock,
-  ArrowRight,
-  Truck,
-  Store,
-  ChevronRight
-} from 'lucide-react';
+  IconCircleCheck,
+  IconPackage,
+  IconMapPin,
+  IconClock,
+  IconArrowRight,
+  IconTruckDelivery,
+  IconBuildingStore,
+  IconChevronRight
+} from '@tabler/icons-react';
 
 export const OrderConfirmationPage: React.FC = () => {
   const { viewParams, getOrderById, navigate } = useGetora();
@@ -34,16 +34,16 @@ export const OrderConfirmationPage: React.FC = () => {
             width: '76px',
             height: '76px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(29, 185, 84, 0.15)',
-            color: '#1DB954',
+            backgroundColor: 'rgba(34, 197, 94, 0.15)',
+            color: '#22C55E',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 20px',
-            border: '2px solid rgba(29, 185, 84, 0.3)'
+            border: '2px solid rgba(34, 197, 94, 0.3)'
           }}
         >
-          <CheckCircle2 size={42} />
+          <IconCircleCheck size={42} stroke={1.8} />
         </div>
 
         <h1 style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '8px' }}>
@@ -68,7 +68,7 @@ export const OrderConfirmationPage: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '12px' }}>
               <div>
                 <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Order Number</div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
+                <div style={{ fontSize: '15px', fontWeight: 800, color: '#22C55E', fontFamily: 'monospace' }}>
                   {order.orderNumber}
                 </div>
               </div>
@@ -79,7 +79,7 @@ export const OrderConfirmationPage: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-              <Clock size={16} color="#1DB954" />
+              <IconClock size={16} stroke={1.8} color="#22C55E" />
               <span>Estimated Delivery: <strong>15–25 Minutes</strong></span>
             </div>
           </div>
@@ -92,7 +92,7 @@ export const OrderConfirmationPage: React.FC = () => {
               onClick={() => navigate('track-order', { orderId: order.id })}
               style={{ padding: '12px 24px', borderRadius: '12px', fontSize: '14px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              <Truck size={16} /> Live Order Tracking
+              <IconTruckDelivery size={16} stroke={1.8} /> Live Order Tracking
             </button>
           )}
           <button

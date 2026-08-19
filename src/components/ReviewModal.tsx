@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
-import { X, Star, Sparkles } from 'lucide-react';
+import { IconX, IconStar, IconSparkles } from '@tabler/icons-react';
 
 export const ReviewModal: React.FC = () => {
   const { activeReviewModal, closeReviewModal, submitReview } = useGetora();
@@ -37,13 +37,13 @@ export const ReviewModal: React.FC = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sparkles size={18} color="#1DB954" />
+            <IconSparkles size={18} stroke={1.8} color="#22C55E" />
             <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
               Rate & Review Order
             </h3>
           </div>
           <button onClick={closeReviewModal} style={{ color: 'var(--text-secondary)', background: 'none', border: 'none', cursor: 'pointer' }}>
-            <X size={18} />
+            <IconX size={18} stroke={1.8} />
           </button>
         </div>
 
@@ -64,14 +64,17 @@ export const ReviewModal: React.FC = () => {
                 onClick={() => setRating(star)}
                 style={{
                   padding: '6px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
                   transition: 'transform 0.15s ease',
                   transform: (hoverRating || rating) >= star ? 'scale(1.15)' : 'scale(1)'
                 }}
               >
-                <Star
+                <IconStar
                   size={32}
-                  fill={isFilled ? '#FFC107' : 'none'}
-                  color={isFilled ? '#FFC107' : '#444'}
+                  stroke={1.8}
+                  color={isFilled ? '#22C55E' : 'var(--text-muted)'}
                 />
               </button>
             );

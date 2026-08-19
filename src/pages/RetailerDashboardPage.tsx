@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  Store,
-  Package,
-  Plus,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  Truck,
-  Image as ImageIcon,
-  DollarSign,
-  Layers,
-  Edit2,
-  Trash2,
-  Power,
-  Loader2
-} from 'lucide-react';
+  IconBuildingStore,
+  IconPackage,
+  IconPlus,
+  IconClock,
+  IconCircleCheck,
+  IconAlertCircle,
+  IconTruckDelivery,
+  IconPhoto,
+  IconCurrencyDollar,
+  IconLayersLinked,
+  IconEdit,
+  IconTrash,
+  IconPower,
+  IconLoader2
+} from '@tabler/icons-react';
 import { OrderStatus, Product } from '../types';
 
 export const RetailerDashboardPage: React.FC = () => {
@@ -51,7 +51,7 @@ export const RetailerDashboardPage: React.FC = () => {
     return (
       <div style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center', padding: '40px' }}>
         <h2>Retailer Account Required</h2>
-        <p style={{ color: '#8E8E93', marginTop: '8px' }}>
+        <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
           Please sign in with a registered retailer account to manage your store.
         </p>
         <button className="btn-primary" onClick={() => navigate('account')} style={{ marginTop: '20px' }}>
@@ -125,14 +125,14 @@ export const RetailerDashboardPage: React.FC = () => {
                 width: '68px',
                 height: '68px',
                 borderRadius: '16px',
-                backgroundColor: '#1DB954',
+                backgroundColor: '#22C55E',
                 color: '#000',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
-              <Store size={34} />
+              <IconBuildingStore size={34} stroke={1.8} />
             </div>
 
             <div>
@@ -142,8 +142,8 @@ export const RetailerDashboardPage: React.FC = () => {
                 </h1>
                 <span
                   style={{
-                    backgroundColor: retailerProfile.isOpen ? 'rgba(29, 185, 84, 0.2)' : 'rgba(255, 69, 58, 0.2)',
-                    color: retailerProfile.isOpen ? '#39D353' : '#FF453A',
+                    backgroundColor: retailerProfile.isOpen ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                    color: retailerProfile.isOpen ? '#22C55E' : '#EF4444',
                     fontSize: '11px',
                     fontWeight: 700,
                     padding: '2px 8px',
@@ -165,9 +165,9 @@ export const RetailerDashboardPage: React.FC = () => {
             style={{
               padding: '12px 20px',
               borderRadius: '12px',
-              border: retailerProfile.isOpen ? '1px solid #FF453A' : '1px solid #1DB954',
-              backgroundColor: retailerProfile.isOpen ? 'rgba(255, 69, 58, 0.12)' : 'rgba(29, 185, 84, 0.12)',
-              color: retailerProfile.isOpen ? '#FF453A' : '#1DB954',
+              border: retailerProfile.isOpen ? '1px solid #EF4444' : '1px solid #22C55E',
+              backgroundColor: retailerProfile.isOpen ? 'rgba(239, 68, 68, 0.12)' : 'rgba(34, 197, 94, 0.12)',
+              color: retailerProfile.isOpen ? '#EF4444' : '#22C55E',
               fontSize: '13px',
               fontWeight: 700,
               display: 'flex',
@@ -176,7 +176,7 @@ export const RetailerDashboardPage: React.FC = () => {
               cursor: 'pointer'
             }}
           >
-            <Power size={16} />
+            <IconPower size={16} stroke={1.8} />
             {retailerProfile.isOpen ? 'Close Store for Today' : 'Open Store for Orders'}
           </button>
         </div>
@@ -188,21 +188,21 @@ export const RetailerDashboardPage: React.FC = () => {
           className={`filter-chip ${activeTab === 'orders' ? 'active' : ''}`}
           onClick={() => setActiveTab('orders')}
         >
-          <Clock size={15} /> Incoming Orders ({retailerOrders.length})
+          <IconClock size={15} stroke={1.8} /> Incoming Orders ({retailerOrders.length})
         </button>
 
         <button
           className={`filter-chip ${activeTab === 'inventory' ? 'active' : ''}`}
           onClick={() => setActiveTab('inventory')}
         >
-          <Package size={15} /> Shop Products ({shopProducts.length})
+          <IconPackage size={15} stroke={1.8} /> Shop Products ({shopProducts.length})
         </button>
 
         <button
           className={`filter-chip ${activeTab === 'add-product' ? 'active' : ''}`}
           onClick={() => setActiveTab('add-product')}
         >
-          <Plus size={15} /> Add New Product
+          <IconPlus size={15} stroke={1.8} /> Add New Product
         </button>
       </div>
 
@@ -211,7 +211,7 @@ export const RetailerDashboardPage: React.FC = () => {
         <div>
           {retailerOrders.length === 0 ? (
             <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '60px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
-              <Clock size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+              <IconClock size={44} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
               <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700 }}>No Orders Received Yet</h3>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
                 When customers order products from your shop, they will appear here in real-time.
@@ -232,7 +232,7 @@ export const RetailerDashboardPage: React.FC = () => {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '14px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                     <div>
-                      <div style={{ fontSize: '16px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
+                      <div style={{ fontSize: '16px', fontWeight: 800, color: '#22C55E', fontFamily: 'monospace' }}>
                         Order #{ord.orderNumber}
                       </div>
                       <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -243,8 +243,8 @@ export const RetailerDashboardPage: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span
                         style={{
-                          backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                          color: '#1DB954',
+                          backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                          color: '#22C55E',
                           fontSize: '12px',
                           fontWeight: 700,
                           padding: '4px 10px',
@@ -333,7 +333,7 @@ export const RetailerDashboardPage: React.FC = () => {
         <div>
           {shopProducts.length === 0 ? (
             <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '60px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
-              <Package size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+              <IconPackage size={44} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
               <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700 }}>No Products in Catalog</h3>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px', marginBottom: '16px' }}>
                 Add your hardware, electrical, or tech inventory to start receiving orders.
@@ -367,7 +367,7 @@ export const RetailerDashboardPage: React.FC = () => {
                       />
                     </div>
                     <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{p.name}</h4>
-                    <div style={{ fontSize: '13px', color: '#1DB954', fontWeight: 700, marginBottom: '6px' }}>
+                    <div style={{ fontSize: '13px', color: '#22C55E', fontWeight: 700, marginBottom: '6px' }}>
                       ₹{p.sellingPrice} <span style={{ fontSize: '11px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>₹{p.price}</span>
                     </div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -378,10 +378,10 @@ export const RetailerDashboardPage: React.FC = () => {
                   <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
                     <button
                       onClick={() => deleteProduct(p.id)}
-                      style={{ background: 'none', border: 'none', color: '#FF453A', cursor: 'pointer', padding: '4px' }}
+                      style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '4px' }}
                       title="Delete Product"
                     >
-                      <Trash2 size={16} />
+                      <IconTrash size={16} stroke={1.8} />
                     </button>
                   </div>
                 </div>
@@ -468,7 +468,7 @@ export const RetailerDashboardPage: React.FC = () => {
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
                   required
-                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: '#1DB954', fontWeight: 700, fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: '#22C55E', fontWeight: 700, fontSize: '14px' }}
                 />
               </div>
 
@@ -536,7 +536,7 @@ export const RetailerDashboardPage: React.FC = () => {
                 gap: '8px'
               }}
             >
-              {submittingProduct ? <Loader2 size={18} className="spin" /> : 'Publish Product to Live Store'}
+              {submittingProduct ? <IconLoader2 size={18} stroke={1.8} className="spin" /> : 'Publish Product to Live Store'}
             </button>
           </form>
         </div>

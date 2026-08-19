@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  Star,
-  Truck,
-  ShieldCheck,
-  RotateCcw,
-  Store,
-  Plus,
-  Minus,
-  ArrowLeft,
-  Tag,
-  Clock,
-  Sparkles,
-  MapPin,
-  CheckCircle2
-} from 'lucide-react';
+  IconStar,
+  IconTruckDelivery,
+  IconShieldCheck,
+  IconRotateClockwise,
+  IconBuildingStore,
+  IconPlus,
+  IconMinus,
+  IconArrowLeft,
+  IconTag,
+  IconClock,
+  IconSparkles,
+  IconMapPin,
+  IconCircleCheck
+} from '@tabler/icons-react';
 
 export const ProductDetailPage: React.FC = () => {
   const { viewParams, getProductById, getStoreById, addToCart, updateCartQuantity, getItemQuantityInCart, navigate } = useGetora();
@@ -27,7 +27,7 @@ export const ProductDetailPage: React.FC = () => {
     return (
       <div style={{ maxWidth: '800px', margin: '60px auto', textAlign: 'center', padding: '40px' }}>
         <h2>Product Not Found</h2>
-        <p style={{ color: '#8E8E93', marginTop: '8px' }}>This product is no longer available in the catalog.</p>
+        <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>This product is no longer available in the catalog.</p>
         <button className="btn-primary" onClick={() => navigate('home')} style={{ marginTop: '20px' }}>
           Back to Home
         </button>
@@ -65,7 +65,7 @@ export const ProductDetailPage: React.FC = () => {
           fontSize: '13px'
         }}
       >
-        <ArrowLeft size={16} /> Back
+        <IconArrowLeft size={16} stroke={1.8} /> Back
       </button>
 
       {/* Main Product Layout */}
@@ -99,7 +99,7 @@ export const ProductDetailPage: React.FC = () => {
                   position: 'absolute',
                   top: '16px',
                   left: '16px',
-                  backgroundColor: '#1DB954',
+                  backgroundColor: '#22C55E',
                   color: '#000',
                   fontWeight: 800,
                   fontSize: '12px',
@@ -123,7 +123,7 @@ export const ProductDetailPage: React.FC = () => {
                     width: '72px',
                     height: '72px',
                     borderRadius: '12px',
-                    border: selectedImgIndex === idx ? '2px solid #1DB954' : '1px solid var(--border-color)',
+                    border: selectedImgIndex === idx ? '2px solid #22C55E' : '1px solid var(--border-color)',
                     overflow: 'hidden',
                     cursor: 'pointer',
                     backgroundColor: 'var(--bg-secondary)',
@@ -152,12 +152,12 @@ export const ProductDetailPage: React.FC = () => {
                 borderRadius: '8px',
                 padding: '6px 12px',
                 fontSize: '13px',
-                color: '#1DB954',
+                color: '#22C55E',
                 marginBottom: '16px',
                 cursor: 'pointer'
               }}
             >
-              <Store size={14} /> Sold & Packed by <strong style={{ color: 'var(--text-primary)' }}>{store.shopName}</strong>
+              <IconBuildingStore size={15} stroke={1.8} /> Sold & Packed by <strong style={{ color: 'var(--text-primary)' }}>{store.shopName}</strong>
             </div>
           )}
 
@@ -191,7 +191,7 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               )}
               {discountPercent > 0 && (
-                <span style={{ color: '#1DB954', fontWeight: 700, fontSize: '15px' }}>
+                <span style={{ color: '#22C55E', fontWeight: 700, fontSize: '15px' }}>
                   Save ₹{product.price - product.sellingPrice}
                 </span>
               )}
@@ -225,7 +225,7 @@ export const ProductDetailPage: React.FC = () => {
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      backgroundColor: '#1DB954',
+                      backgroundColor: '#22C55E',
                       color: '#000',
                       borderRadius: '12px',
                       padding: '8px 16px',
@@ -237,14 +237,14 @@ export const ProductDetailPage: React.FC = () => {
                       onClick={() => updateCartQuantity(product.id, quantityInCart - 1)}
                       style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex' }}
                     >
-                      <Minus size={16} strokeWidth={3} />
+                      <IconMinus size={16} stroke={2.5} />
                     </button>
                     <span style={{ fontSize: '16px' }}>{quantityInCart}</span>
                     <button
                       onClick={() => updateCartQuantity(product.id, quantityInCart + 1)}
                       style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex' }}
                     >
-                      <Plus size={16} strokeWidth={3} />
+                      <IconPlus size={16} stroke={2.5} />
                     </button>
                   </div>
                   <button
@@ -270,11 +270,11 @@ export const ProductDetailPage: React.FC = () => {
           {/* Value Props Strip */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
             <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Truck size={18} color="#1DB954" />
+              <IconTruckDelivery size={18} stroke={1.8} color="#22C55E" />
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>15–25 Min Delivery</span>
             </div>
             <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShieldCheck size={18} color="#1DB954" />
+              <IconShieldCheck size={18} stroke={1.8} color="#22C55E" />
               <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>100% Genuine Item</span>
             </div>
           </div>

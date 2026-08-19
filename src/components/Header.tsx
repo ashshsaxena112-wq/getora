@@ -1,44 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  Search,
-  MapPin,
-  ShoppingBag,
-  Clock,
-  User,
-  X,
-  ChevronDown,
-  Store,
-  LogOut,
-  Tag,
-  Sun,
-  Moon,
-  Monitor,
-  Grid,
-  Wrench,
-  Zap,
-  Smartphone,
-  BookOpen,
-  Home,
-  Car,
-  Heart,
-  Apple,
-  Headphones,
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
+  IconSearch,
+  IconMapPin,
+  IconShoppingBag,
+  IconClock,
+  IconUser,
+  IconX,
+  IconChevronDown,
+  IconBuildingStore,
+  IconLogout,
+  IconTag,
+  IconSun,
+  IconMoon,
+  IconDeviceDesktop,
+  IconLayoutGrid,
+  IconTool,
+  IconBolt,
+  IconDeviceMobile,
+  IconBook,
+  IconHome,
+  IconCar,
+  IconHeart,
+  IconApple,
+  IconHeadphones,
+  IconSparkles,
+  IconArrowRight
+} from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { GetoraLogo } from './GetoraLogo';
 
 const HEADER_CATEGORIES = [
-  { id: 'cat-hardware', name: 'Hardware', icon: Wrench, color: '#FF9500' },
-  { id: 'cat-electrical', name: 'Electrical', icon: Zap, color: '#FFCC00' },
-  { id: 'cat-mobile', name: 'Mobile Accessories', icon: Smartphone, color: '#0A84FF' },
-  { id: 'cat-stationery', name: 'Stationery', icon: BookOpen, color: '#30D158' },
-  { id: 'cat-home', name: 'Home Essentials', icon: Home, color: '#FF375F' },
-  { id: 'cat-auto', name: 'Auto Accessories', icon: Car, color: '#BF5AF2' },
-  { id: 'cat-pet', name: 'Pet Products', icon: Heart, color: '#FF2D55' },
-  { id: 'cat-grocery', name: 'Grocery & Essentials', icon: Apple, color: '#34C759' },
-  { id: 'cat-electronics', name: 'Electronics', icon: Headphones, color: '#5E5CE6' }
+  { id: 'cat-hardware', name: 'Hardware', icon: IconTool, color: '#FF9500' },
+  { id: 'cat-electrical', name: 'Electrical', icon: IconBolt, color: '#FFCC00' },
+  { id: 'cat-mobile', name: 'Mobile Accessories', icon: IconDeviceMobile, color: '#0A84FF' },
+  { id: 'cat-stationery', name: 'Stationery', icon: IconBook, color: '#30D158' },
+  { id: 'cat-home', name: 'Home Essentials', icon: IconHome, color: '#FF375F' },
+  { id: 'cat-auto', name: 'Auto Accessories', icon: IconCar, color: '#BF5AF2' },
+  { id: 'cat-pet', name: 'Pet Products', icon: IconHeart, color: '#FF2D55' },
+  { id: 'cat-grocery', name: 'Grocery & Essentials', icon: IconApple, color: '#34C759' },
+  { id: 'cat-electronics', name: 'Electronics', icon: IconHeadphones, color: '#5E5CE6' }
 ];
 
 export const Header: React.FC = () => {
@@ -156,10 +156,11 @@ export const Header: React.FC = () => {
               onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
               title="Browse Categories"
             >
-              <Grid size={17} color="#1DB954" />
+              <IconLayoutGrid size={18} stroke={1.8} color="#22C55E" />
               <span className="categories-btn-text">Categories</span>
-              <ChevronDown
-                size={14}
+              <IconChevronDown
+                size={15}
+                stroke={1.8}
                 style={{
                   transform: isCategoriesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s ease'
@@ -177,9 +178,9 @@ export const Header: React.FC = () => {
                       setIsCategoriesOpen(false);
                       navigate('categories', { categoryId: 'all' });
                     }}
-                    style={{ fontSize: '12px', color: '#1DB954', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                    style={{ fontSize: '12px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                   >
-                    View All <ArrowRight size={13} />
+                    View All <IconArrowRight size={14} stroke={1.8} />
                   </button>
                 </div>
 
@@ -199,7 +200,7 @@ export const Header: React.FC = () => {
                           className="category-dropdown-icon"
                           style={{ color: cat.color, backgroundColor: `${cat.color}15` }}
                         >
-                          <IconComponent size={18} />
+                          <IconComponent size={18} stroke={1.8} />
                         </div>
                         <span className="category-dropdown-label">{cat.name}</span>
                       </div>
@@ -214,7 +215,7 @@ export const Header: React.FC = () => {
           <div className="header-search desktop-search-bar" ref={searchContainerRef}>
             <form onSubmit={handleSearchSubmit}>
               <div className="search-bar-input-box">
-                <Search size={17} color="#1DB954" />
+                <IconSearch size={18} stroke={1.8} color="#22C55E" />
                 <input
                   type="text"
                   placeholder="Search products, shops..."
@@ -228,7 +229,7 @@ export const Header: React.FC = () => {
                     onClick={() => setSearchQuery('')}
                     style={{ display: 'flex', color: '#A7A7A7' }}
                   >
-                    <X size={15} />
+                    <IconX size={16} stroke={1.8} />
                   </button>
                 )}
               </div>
@@ -250,7 +251,7 @@ export const Header: React.FC = () => {
                         }}
                       >
                         <div className="search-result-icon">
-                          <Store size={16} color="#1DB954" />
+                          <IconBuildingStore size={16} stroke={1.8} color="#22C55E" />
                         </div>
                         <div>
                           <div className="search-result-name">{st.shopName || st.name}</div>
@@ -274,7 +275,7 @@ export const Header: React.FC = () => {
                         }}
                       >
                         <div className="search-result-icon">
-                          <Tag size={16} color="#1DB954" />
+                          <IconTag size={16} stroke={1.8} color="#22C55E" />
                         </div>
                         <div>
                           <div className="search-result-name">{pr.name}</div>
@@ -299,14 +300,14 @@ export const Header: React.FC = () => {
             
             {/* Location Picker */}
             <button className="location-btn" onClick={openLocationModal} title="Select Delivery Address">
-              <MapPin size={16} color="#1DB954" />
+              <IconMapPin size={17} stroke={1.8} color="#22C55E" />
               <div className="location-btn-text">
                 <span className="location-label">Deliver To</span>
                 <span className="location-val">
                   {selectedAddress ? `${selectedAddress.city}` : 'Select City'}
                 </span>
               </div>
-              <ChevronDown size={14} color="#A7A7A7" />
+              <IconChevronDown size={14} stroke={1.8} color="var(--text-muted)" />
             </button>
 
             {/* Retailer Portal Link (If retailer) */}
@@ -315,9 +316,9 @@ export const Header: React.FC = () => {
                 className="action-icon-btn retailer-portal-btn"
                 onClick={() => navigate('retailer-dashboard')}
                 title="Retailer Dashboard"
-                style={{ color: '#1DB954', backgroundColor: 'rgba(29,185,84,0.1)' }}
+                style={{ color: '#22C55E', backgroundColor: 'rgba(34,197,94,0.1)' }}
               >
-                <Store size={18} />
+                <IconBuildingStore size={18} stroke={1.8} />
                 <span className="btn-label-desktop">Shop Portal</span>
               </button>
             )}
@@ -329,7 +330,7 @@ export const Header: React.FC = () => {
                 onClick={() => navigate('orders')}
                 title="My Orders"
               >
-                <Clock size={18} />
+                <IconClock size={18} stroke={1.8} />
                 <span className="btn-label-desktop">Orders</span>
               </button>
             )}
@@ -341,7 +342,7 @@ export const Header: React.FC = () => {
               title="Shopping Cart"
             >
               <div className="cart-badge-wrapper">
-                <ShoppingBag size={18} />
+                <IconShoppingBag size={18} stroke={1.8} />
                 {cartTotalItems > 0 && (
                   <span className="cart-count-badge">
                     {cartTotalItems}
@@ -361,11 +362,11 @@ export const Header: React.FC = () => {
                 title={`Theme: ${themeMode === 'auto' ? 'Auto (System)' : themeMode === 'dark' ? 'Dark' : 'Light'}`}
               >
                 {themeMode === 'auto' ? (
-                  <Monitor size={17} />
+                  <IconDeviceDesktop size={18} stroke={1.8} />
                 ) : themeMode === 'dark' ? (
-                  <Moon size={17} />
+                  <IconMoon size={18} stroke={1.8} />
                 ) : (
-                  <Sun size={17} />
+                  <IconSun size={18} stroke={1.8} />
                 )}
               </button>
 
@@ -384,7 +385,7 @@ export const Header: React.FC = () => {
                     className={`theme-option-btn ${themeMode === 'auto' ? 'active' : ''}`}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Monitor size={15} /> Auto (System)
+                      <IconDeviceDesktop size={16} stroke={1.8} /> Auto (System)
                     </div>
                     {themeMode === 'auto' && <span style={{ fontSize: '12px' }}>✓</span>}
                   </button>
@@ -397,7 +398,7 @@ export const Header: React.FC = () => {
                     className={`theme-option-btn ${themeMode === 'dark' ? 'active' : ''}`}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Moon size={15} /> Dark Mode
+                      <IconMoon size={16} stroke={1.8} /> Dark Mode
                     </div>
                     {themeMode === 'dark' && <span style={{ fontSize: '12px' }}>✓</span>}
                   </button>
@@ -410,7 +411,7 @@ export const Header: React.FC = () => {
                     className={`theme-option-btn ${themeMode === 'light' ? 'active' : ''}`}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Sun size={15} /> Light Mode
+                      <IconSun size={16} stroke={1.8} /> Light Mode
                     </div>
                     {themeMode === 'light' && <span style={{ fontSize: '12px' }}>✓</span>}
                   </button>
@@ -431,7 +432,7 @@ export const Header: React.FC = () => {
                   <span className="user-name-desktop">
                     {profile?.fullName || 'Account'}
                   </span>
-                  <ChevronDown size={13} color="#A7A7A7" />
+                  <IconChevronDown size={14} stroke={1.8} color="var(--text-muted)" />
                 </button>
 
                 {/* User Dropdown */}
@@ -453,7 +454,7 @@ export const Header: React.FC = () => {
                         navigate('account');
                       }}
                     >
-                      <User size={15} /> Profile & Settings
+                      <IconUser size={16} stroke={1.8} /> Profile & Settings
                     </div>
 
                     <div
@@ -463,19 +464,19 @@ export const Header: React.FC = () => {
                         navigate('orders');
                       }}
                     >
-                      <Clock size={15} /> My Orders
+                      <IconClock size={16} stroke={1.8} /> My Orders
                     </div>
 
                     {role === 'retailer' && (
                       <div
                         className="user-dropdown-item"
-                        style={{ color: 'var(--color-green)' }}
+                        style={{ color: '#22C55E' }}
                         onClick={() => {
                           setIsUserMenuOpen(false);
                           navigate('retailer-dashboard');
                         }}
                       >
-                        <Store size={15} /> Shop Dashboard
+                        <IconBuildingStore size={16} stroke={1.8} /> Shop Dashboard
                       </div>
                     )}
 
@@ -486,7 +487,7 @@ export const Header: React.FC = () => {
                         signOut();
                       }}
                     >
-                      <LogOut size={15} /> Sign Out
+                      <IconLogout size={16} stroke={1.8} /> Sign Out
                     </div>
                   </div>
                 )}
@@ -496,7 +497,7 @@ export const Header: React.FC = () => {
                 className="btn-primary signin-header-btn"
                 onClick={openAuthModal}
               >
-                <User size={15} /> <span>Sign In</span>
+                <IconUser size={16} stroke={1.8} /> <span>Sign In</span>
               </button>
             )}
           </div>
@@ -511,14 +512,14 @@ export const Header: React.FC = () => {
               className="mobile-category-pill-btn"
               title="Categories"
             >
-              <Grid size={16} color="#1DB954" />
+              <IconLayoutGrid size={16} stroke={1.8} color="#22C55E" />
               <span>Categories</span>
             </button>
 
             {/* Mobile Search Box */}
             <form onSubmit={handleSearchSubmit} style={{ flex: 1 }}>
               <div className="search-bar-input-box">
-                <Search size={16} color="#1DB954" />
+                <IconSearch size={16} stroke={1.8} color="#22C55E" />
                 <input
                   type="text"
                   placeholder="Search products, shops..."
@@ -532,7 +533,7 @@ export const Header: React.FC = () => {
                     onClick={() => setSearchQuery('')}
                     style={{ display: 'flex', color: '#A7A7A7' }}
                   >
-                    <X size={15} />
+                    <IconX size={15} stroke={1.8} />
                   </button>
                 )}
               </div>
@@ -549,9 +550,9 @@ export const Header: React.FC = () => {
                     setIsCategoriesOpen(false);
                     navigate('categories', { categoryId: 'all' });
                   }}
-                  style={{ fontSize: '12px', color: '#1DB954', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                  style={{ fontSize: '12px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
-                  View All <ArrowRight size={13} />
+                  View All <IconArrowRight size={13} stroke={1.8} />
                 </button>
               </div>
 
@@ -571,7 +572,7 @@ export const Header: React.FC = () => {
                         className="category-dropdown-icon"
                         style={{ color: cat.color, backgroundColor: `${cat.color}15` }}
                       >
-                        <IconComponent size={17} />
+                        <IconComponent size={17} stroke={1.8} />
                       </div>
                       <span className="category-dropdown-label">{cat.name}</span>
                     </div>
@@ -597,7 +598,7 @@ export const Header: React.FC = () => {
                       }}
                     >
                       <div className="search-result-icon">
-                        <Store size={15} color="#1DB954" />
+                        <IconBuildingStore size={16} stroke={1.8} color="#22C55E" />
                       </div>
                       <div>
                         <div className="search-result-name">{st.shopName || st.name}</div>
@@ -621,7 +622,7 @@ export const Header: React.FC = () => {
                       }}
                     >
                       <div className="search-result-icon">
-                        <Tag size={15} color="#1DB954" />
+                        <IconTag size={16} stroke={1.8} color="#22C55E" />
                       </div>
                       <div>
                         <div className="search-result-name">{pr.name}</div>

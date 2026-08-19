@@ -2,29 +2,30 @@ import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import { ProductCard } from '../components/ProductCard';
 import {
-  Star,
-  Clock,
-  MapPin,
-  Search,
-  ArrowLeft,
-  Truck,
-  ShieldCheck,
-  Phone,
-  Package
-} from 'lucide-react';
+  IconStar,
+  IconClock,
+  IconMapPin,
+  IconSearch,
+  IconArrowLeft,
+  IconTruckDelivery,
+  IconShieldCheck,
+  IconPhone,
+  IconPackage
+} from '@tabler/icons-react';
 
 export const StoreDetailPage: React.FC = () => {
   const { viewParams, getStoreById, getProductsByStore, navigate } = useGetora();
   const storeId = viewParams.storeId || viewParams.id;
   const store = getStoreById(storeId);
 
-  const [inStoreSearch, setInStoreSearch] = useState('');
+  const [inStoreSearch] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
 
   if (!store) {
     return (
       <div style={{ maxWidth: '800px', margin: '60px auto', textAlign: 'center', padding: '40px' }}>
         <h2>Store Not Found</h2>
-        <p style={{ color: '#8E8E93', marginTop: '8px' }}>The requested store is not available or inactive.</p>
+        <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>The requested store is not available or inactive.</p>
         <button className="btn-primary" onClick={() => navigate('stores')} style={{ marginTop: '20px' }}>
           Back to Stores
         </button>
@@ -36,10 +37,10 @@ export const StoreDetailPage: React.FC = () => {
 
   const displayedProducts = storeProducts.filter((p) => {
     return (
-      inStoreSearch.trim() === '' ||
-      p.name.toLowerCase().includes(inStoreSearch.toLowerCase()) ||
-      p.brand?.toLowerCase().includes(inStoreSearch.toLowerCase()) ||
-      p.description?.toLowerCase().includes(inStoreSearch.toLowerCase())
+      localSearch.trim() === '' ||
+      p.name.toLowerCase().includes(localSearch.toLowerCase()) ||
+      p.brand?.toLowerCase().includes(localSearch.toLowerCase()) ||
+      p.description?.toLowerCase().includes(localSearch.toLowerCase())
     );
   });
 
@@ -64,7 +65,7 @@ export const StoreDetailPage: React.FC = () => {
           fontSize: '13px'
         }}
       >
-        <ArrowLeft size={16} /> Back to Nearby Stores
+        <IconArrowLeft size={16} stroke={1.8} /> Back to Nearby Stores
       </button>
 
       {/* Store Cover Banner */}
@@ -74,7 +75,7 @@ export const StoreDetailPage: React.FC = () => {
           borderRadius: '24px',
           overflow: 'hidden',
           backgroundColor: '#141414',
-          border: '1px solid #292929',
+          border: '1px solid var(--border-color)',
           marginBottom: '32px',
           minHeight: '220px',
           display: 'flex',
@@ -94,7 +95,7 @@ export const StoreDetailPage: React.FC = () => {
               height: '80px',
               borderRadius: '16px',
               backgroundColor: '#181818',
-              border: '2px solid #1DB954',
+              border: '2px solid #22C55E',
               overflow: 'hidden',
               flexShrink: 0
             }}
@@ -114,8 +115,8 @@ export const StoreDetailPage: React.FC = () => {
               </h1>
               <span
                 style={{
-                  backgroundColor: store.isOpen ? 'rgba(29, 185, 84, 0.2)' : 'rgba(255, 69, 58, 0.2)',
-                  color: store.isOpen ? '#39D353' : '#FF453A',
+                  backgroundColor: store.isOpen ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                  color: store.isOpen ? '#22C55E' : '#EF4444',
                   fontSize: '12px',
                   fontWeight: 700,
                   padding: '2px 8px',
@@ -132,15 +133,15 @@ export const StoreDetailPage: React.FC = () => {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', fontSize: '13px', color: '#A7A7A7' }}>
               {store.rating > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#1DB954', fontWeight: 700 }}>
-                  <Star size={14} fill="#1DB954" /> {store.rating.toFixed(1)}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#22C55E', fontWeight: 700 }}>
+                  <IconStar size={14} stroke={1.8} color="#22C55E" /> {store.rating.toFixed(1)}
                 </div>
               )}
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Clock size={14} /> 15-25 mins avg delivery
+                <IconClock size={14} stroke={1.8} /> 15-25 mins avg delivery
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <MapPin size={14} color="#1DB954" /> {store.addressLine1 || store.city || 'Local Area'}
+                <IconMapPin size={14} stroke={1.8} color="#22C55E" /> {store.addressLine1 || store.city || 'Local Area'}
               </div>
             </div>
           </div>
@@ -157,12 +158,12 @@ export const StoreDetailPage: React.FC = () => {
         </div>
 
         <div style={{ width: '100%', maxWidth: '320px', position: 'relative' }}>
-          <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+          <IconSearch size={16} stroke={1.8} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
             placeholder="Search items in this shop..."
-            value={inStoreSearch}
-            onChange={(e) => setInStoreSearch(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             style={{
               width: '100%',
               backgroundColor: 'var(--bg-input)',
@@ -179,7 +180,7 @@ export const StoreDetailPage: React.FC = () => {
       {/* Product Grid */}
       {displayedProducts.length === 0 ? (
         <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '48px 24px', textAlign: 'center' }}>
-          <Package size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+          <IconPackage size={40} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
           <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700 }}>No products found</h3>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>This shop has not listed matching products yet.</p>
         </div>

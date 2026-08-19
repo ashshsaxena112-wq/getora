@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
 import { ProductCard } from '../components/ProductCard';
-import { Heart, ArrowRight } from 'lucide-react';
+import { IconHeart, IconArrowRight } from '@tabler/icons-react';
 
 export const WishlistPage: React.FC = () => {
   const { wishlist, products, navigate } = useGetora();
@@ -36,15 +36,15 @@ export const WishlistPage: React.FC = () => {
               width: '64px',
               height: '64px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(255, 77, 79, 0.1)',
-              color: '#ff4d4f',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              color: '#EF4444',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 16px'
             }}
           >
-            <Heart size={30} />
+            <IconHeart size={30} stroke={1.8} />
           </div>
           <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
             Your Wishlist is Empty
@@ -53,7 +53,7 @@ export const WishlistPage: React.FC = () => {
             Save items you love by clicking the heart icon on any product card.
           </p>
           <button className="btn-primary" onClick={() => navigate('stores')}>
-            Explore Stores <ArrowRight size={16} />
+            Explore Stores <IconArrowRight size={16} stroke={1.8} />
           </button>
         </div>
       ) : (

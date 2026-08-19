@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  ShoppingBag,
-  Trash2,
-  Plus,
-  Minus,
-  Tag,
-  MapPin,
-  ArrowRight,
-  Store as StoreIcon,
-  ShieldCheck,
-  Zap,
-  Info
-} from 'lucide-react';
+  IconShoppingBag,
+  IconTrash,
+  IconPlus,
+  IconMinus,
+  IconTag,
+  IconMapPin,
+  IconArrowRight,
+  IconBuildingStore,
+  IconShieldCheck,
+  IconBolt,
+  IconInfoCircle
+} from '@tabler/icons-react';
 
 export const CartPage: React.FC = () => {
   const {
@@ -53,37 +53,30 @@ export const CartPage: React.FC = () => {
       openAuthModal();
       return;
     }
-    const targetId = retailerId || retailerGroups[0]?.retailer?.id;
-    navigate('checkout', { retailerId: targetId });
+    if (!selectedAddress) {
+      openLocationModal();
+      return;
+    }
+    navigate('checkout', { retailerId: retailerId || retailerGroups[0]?.retailer?.id });
   };
 
   if (cart.length === 0) {
     return (
-      <div
-        style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: '20px',
-          padding: '60px 20px',
-          textAlign: 'center',
-          maxWidth: '560px',
-          margin: '40px auto'
-        }}
-      >
+      <div className="cart-page-empty" style={{ maxWidth: '600px', margin: '60px auto', textAlign: 'center', padding: '0 20px' }}>
         <div
           style={{
             width: '72px',
             height: '72px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(29, 185, 84, 0.12)',
-            color: '#1DB954',
+            backgroundColor: 'rgba(34, 197, 94, 0.12)',
+            color: '#22C55E',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 16px'
           }}
         >
-          <ShoppingBag size={34} />
+          <IconShoppingBag size={34} stroke={1.8} />
         </div>
         <h2 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '8px' }}>
           Your cart is empty
@@ -110,9 +103,9 @@ export const CartPage: React.FC = () => {
         </h1>
         <button
           onClick={clearCart}
-          style={{ background: 'none', border: 'none', color: '#FF453A', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
+          style={{ background: 'none', border: 'none', color: '#EF4444', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
         >
-          <Trash2 size={15} /> Clear Basket
+          <IconTrash size={15} stroke={1.8} /> Clear Basket
         </button>
       </div>
 
@@ -133,7 +126,7 @@ export const CartPage: React.FC = () => {
               {/* Retailer Header */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <StoreIcon size={18} color="#1DB954" />
+                  <IconBuildingStore size={18} stroke={1.8} color="#22C55E" />
                   <div>
                     <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {group.retailer?.shopName || 'Local Retailer'}
@@ -177,7 +170,7 @@ export const CartPage: React.FC = () => {
                         <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px' }}>
                           {item.product.name}
                         </h4>
-                        <div style={{ fontSize: '13px', color: '#1DB954', fontWeight: 700 }}>
+                        <div style={{ fontSize: '13px', color: '#22C55E', fontWeight: 700 }}>
                           ₹{item.unitPrice} <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 400 }}>each</span>
                         </div>
                       </div>
@@ -200,14 +193,14 @@ export const CartPage: React.FC = () => {
                           onClick={() => updateCartQuantity(item.productId, item.quantity - 1)}
                           style={{ border: 'none', background: 'transparent', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex' }}
                         >
-                          <Minus size={13} />
+                          <IconMinus size={13} stroke={2} />
                         </button>
                         <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.quantity}</span>
                         <button
                           onClick={() => updateCartQuantity(item.productId, item.quantity + 1)}
                           style={{ border: 'none', background: 'transparent', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex' }}
                         >
-                          <Plus size={13} />
+                          <IconPlus size={13} stroke={2} />
                         </button>
                       </div>
 
@@ -219,7 +212,7 @@ export const CartPage: React.FC = () => {
                         onClick={() => removeFromCart(item.productId)}
                         style={{ border: 'none', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
                       >
-                        <Trash2 size={15} />
+                        <IconTrash size={15} stroke={1.8} />
                       </button>
                     </div>
                   </div>
@@ -252,7 +245,7 @@ export const CartPage: React.FC = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Delivery Fee</span>
-                <span style={{ color: deliveryFee === 0 ? '#1DB954' : 'var(--text-primary)', fontWeight: 600 }}>
+                <span style={{ color: deliveryFee === 0 ? '#22C55E' : 'var(--text-primary)', fontWeight: 600 }}>
                   {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
                 </span>
               </div>
@@ -261,7 +254,7 @@ export const CartPage: React.FC = () => {
                 <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>₹{platformFee}</span>
               </div>
               {discount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1DB954' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#22C55E' }}>
                   <span>Coupon Discount</span>
                   <span style={{ fontWeight: 700 }}>-₹{discount}</span>
                 </div>
@@ -270,7 +263,7 @@ export const CartPage: React.FC = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '16px', marginBottom: '24px' }}>
               <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>To Pay</span>
-              <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#1DB954' }}>
+              <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#22C55E' }}>
                 ₹{grandTotal}
               </span>
             </div>
@@ -291,7 +284,7 @@ export const CartPage: React.FC = () => {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <MapPin size={16} color="#1DB954" />
+                <IconMapPin size={16} stroke={1.8} color="#22C55E" />
                 <div style={{ fontSize: '13px' }}>
                   <div style={{ color: 'var(--text-primary)', fontWeight: 600 }}>
                     {selectedAddress ? `${selectedAddress.addressType}: ${selectedAddress.city}` : 'Choose Address'}
@@ -301,7 +294,7 @@ export const CartPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <span style={{ color: '#1DB954', fontSize: '12px', fontWeight: 600 }}>Change</span>
+              <span style={{ color: '#22C55E', fontSize: '12px', fontWeight: 600 }}>Change</span>
             </div>
 
             <button
@@ -323,14 +316,14 @@ export const CartPage: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <Tag size={16} color="#1DB954" />
+              <IconTag size={16} stroke={1.8} color="#22C55E" />
               <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Apply Promo Code</span>
             </div>
 
             {appliedCoupon ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(29, 185, 84, 0.12)', border: '1px solid rgba(29, 185, 84, 0.3)', padding: '10px 14px', borderRadius: '10px' }}>
-                <span style={{ color: '#39D353', fontWeight: 700, fontSize: '13px' }}>✓ Code {appliedCoupon} Applied</span>
-                <button onClick={removeCoupon} style={{ color: '#FF453A', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '10px 14px', borderRadius: '10px' }}>
+                <span style={{ color: '#22C55E', fontWeight: 700, fontSize: '13px' }}>✓ Code {appliedCoupon} Applied</span>
+                <button onClick={removeCoupon} style={{ color: '#EF4444', fontSize: '12px', border: 'none', background: 'none', cursor: 'pointer' }}>
                   Remove
                 </button>
               </div>
@@ -357,7 +350,7 @@ export const CartPage: React.FC = () => {
               </form>
             )}
 
-            {couponError && <p style={{ color: '#FF453A', fontSize: '12px', marginTop: '6px' }}>{couponError}</p>}
+            {couponError && <p style={{ color: '#EF4444', fontSize: '12px', marginTop: '6px' }}>{couponError}</p>}
           </div>
         </div>
       </div>

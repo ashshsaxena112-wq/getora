@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Grid, ShoppingBag, Clock, User } from 'lucide-react';
+import { IconHome, IconLayoutGrid, IconShoppingBag, IconClock, IconUser } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 
 export const MobileBottomNav: React.FC = () => {
@@ -13,7 +13,7 @@ export const MobileBottomNav: React.FC = () => {
         className={`mobile-nav-item ${currentView === 'home' ? 'active' : ''}`}
         onClick={() => navigate('home')}
       >
-        <Home size={20} />
+        <IconHome size={20} stroke={1.8} />
         <span>Home</span>
       </button>
 
@@ -21,7 +21,7 @@ export const MobileBottomNav: React.FC = () => {
         className={`mobile-nav-item ${currentView === 'categories' ? 'active' : ''}`}
         onClick={() => navigate('categories')}
       >
-        <Grid size={20} />
+        <IconLayoutGrid size={20} stroke={1.8} />
         <span>Categories</span>
       </button>
 
@@ -29,7 +29,7 @@ export const MobileBottomNav: React.FC = () => {
         className={`mobile-nav-item ${currentView === 'cart' ? 'active' : ''}`}
         onClick={() => navigate('cart')}
       >
-        <ShoppingBag size={20} />
+        <IconShoppingBag size={20} stroke={1.8} />
         <span>Cart</span>
         {totalCartItems > 0 && <span className="mobile-badge">{totalCartItems}</span>}
       </button>
@@ -38,7 +38,7 @@ export const MobileBottomNav: React.FC = () => {
         className={`mobile-nav-item ${currentView === 'orders' ? 'active' : ''}`}
         onClick={() => navigate('orders')}
       >
-        <Clock size={20} />
+        <IconClock size={20} stroke={1.8} />
         <span>Orders</span>
       </button>
 
@@ -46,7 +46,7 @@ export const MobileBottomNav: React.FC = () => {
         className={`mobile-nav-item ${currentView === 'account' ? 'active' : ''}`}
         onClick={() => navigate('account')}
       >
-        <User size={20} />
+        <IconUser size={20} stroke={1.8} />
         <span>Account</span>
       </button>
     </nav>

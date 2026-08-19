@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Plus, Minus, Tag, ShieldCheck } from 'lucide-react';
+import { IconHeart, IconPlus, IconMinus, IconTag, IconShieldCheck } from '@tabler/icons-react';
 import { Product } from '../types';
 import { useGetora } from '../context/GetoraContext';
 
@@ -175,14 +175,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onClick={handleDecrement}
                 style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex', padding: '2px' }}
               >
-                <Minus size={13} strokeWidth={3} />
+                <IconMinus size={14} stroke={2.5} />
               </button>
               <span style={{ fontSize: '13px' }}>{quantityInCart}</span>
               <button
                 onClick={handleIncrement}
                 style={{ border: 'none', background: 'transparent', color: '#000', cursor: 'pointer', display: 'flex', padding: '2px' }}
               >
-                <Plus size={13} strokeWidth={3} />
+                <IconPlus size={14} stroke={2.5} />
               </button>
             </div>
           ) : (

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  Clock,
-  Truck,
-  RotateCcw,
-  Star,
-  MapPin,
-  CheckCircle2,
-  AlertCircle,
-  Store as StoreIcon,
-  ShoppingBag,
-  Loader2
-} from 'lucide-react';
+  IconClock,
+  IconTruckDelivery,
+  IconRotateClockwise,
+  IconStar,
+  IconMapPin,
+  IconCircleCheck,
+  IconAlertCircle,
+  IconBuildingStore,
+  IconShoppingBag,
+  IconLoader2
+} from '@tabler/icons-react';
 import { Order, OrderStatus } from '../types';
 
 export const OrdersPage: React.FC = () => {
@@ -49,28 +49,28 @@ export const OrdersPage: React.FC = () => {
           className={`filter-chip ${activeTab === 'active' ? 'active' : ''}`}
           onClick={() => setActiveTab('active')}
         >
-          <Truck size={14} /> Active Orders ({orders.filter((o) => ['placed', 'accepted', 'preparing', 'ready_for_pickup', 'picked_up', 'out_for_delivery'].includes(getOrderStatus(o))).length})
+          <IconTruckDelivery size={15} stroke={1.8} /> Active Orders ({orders.filter((o) => ['placed', 'accepted', 'preparing', 'ready_for_pickup', 'picked_up', 'out_for_delivery'].includes(getOrderStatus(o))).length})
         </button>
 
         <button
           className={`filter-chip ${activeTab === 'completed' ? 'active' : ''}`}
           onClick={() => setActiveTab('completed')}
         >
-          <CheckCircle2 size={14} /> Completed ({orders.filter((o) => getOrderStatus(o) === 'delivered').length})
+          <IconCircleCheck size={15} stroke={1.8} /> Completed ({orders.filter((o) => getOrderStatus(o) === 'delivered').length})
         </button>
 
         <button
           className={`filter-chip ${activeTab === 'cancelled' ? 'active' : ''}`}
           onClick={() => setActiveTab('cancelled')}
         >
-          <AlertCircle size={14} /> Cancelled ({orders.filter((o) => getOrderStatus(o) === 'cancelled').length})
+          <IconAlertCircle size={15} stroke={1.8} /> Cancelled ({orders.filter((o) => getOrderStatus(o) === 'cancelled').length})
         </button>
       </div>
 
       {/* Loading state */}
       {isLoadingOrders ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#1DB954', gap: '10px' }}>
-          <Loader2 size={24} className="spin" /> Loading orders...
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#22C55E', gap: '10px' }}>
+          <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading orders...
         </div>
       ) : filteredOrders.length === 0 ? (
         <div
@@ -84,7 +84,7 @@ export const OrdersPage: React.FC = () => {
             margin: '20px auto'
           }}
         >
-          <ShoppingBag size={40} color="#1DB954" style={{ margin: '0 auto 12px' }} />
+          <IconShoppingBag size={40} stroke={1.8} color="#22C55E" style={{ margin: '0 auto 12px' }} />
           <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>
             No {activeTab} orders found
           </h3>
@@ -106,7 +106,7 @@ export const OrdersPage: React.FC = () => {
                 key={ord.id}
                 style={{
                   backgroundColor: 'var(--bg-card)',
-                  border: isLive ? '1.5px solid #1DB954' : '1px solid var(--border-color)',
+                  border: isLive ? '1.5px solid #22C55E' : '1px solid var(--border-color)',
                   borderRadius: '20px',
                   padding: '24px',
                   position: 'relative'
@@ -116,7 +116,7 @@ export const OrdersPage: React.FC = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '15px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800, color: '#22C55E', fontFamily: 'monospace' }}>
                         {ord.orderNumber}
                       </span>
                       <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
@@ -124,7 +124,7 @@ export const OrdersPage: React.FC = () => {
                       </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>
-                      <StoreIcon size={15} color="#1DB954" /> {ord.retailer?.shopName || 'Neighborhood Store'}
+                      <IconBuildingStore size={16} stroke={1.8} color="#22C55E" /> {ord.retailer?.shopName || 'Neighborhood Store'}
                     </div>
                   </div>
 
@@ -133,16 +133,16 @@ export const OrdersPage: React.FC = () => {
                       style={{
                         backgroundColor:
                           st === 'delivered'
-                            ? 'rgba(29, 185, 84, 0.15)'
+                            ? 'rgba(34, 197, 94, 0.15)'
                             : st === 'cancelled'
-                            ? 'rgba(255, 69, 58, 0.15)'
-                            : 'rgba(255, 214, 10, 0.15)',
+                            ? 'rgba(239, 68, 68, 0.15)'
+                            : 'rgba(245, 158, 11, 0.15)',
                         color:
                           st === 'delivered'
-                            ? '#39D353'
+                            ? '#22C55E'
                             : st === 'cancelled'
-                            ? '#FF453A'
-                            : '#FFD60A',
+                            ? '#EF4444'
+                            : '#F59E0B',
                         fontSize: '12px',
                         fontWeight: 700,
                         padding: '4px 10px',
@@ -164,7 +164,7 @@ export const OrdersPage: React.FC = () => {
                     {ord.items?.map((it) => `${it.productName} (×${it.quantity})`).join(', ') || 'Items details in tracking'}
                   </div>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
-                    <MapPin size={13} color="#1DB954" /> Delivery to: {ord.address?.addressLine1 || 'Saved Address'}, {ord.address?.city || 'Bengaluru'}
+                    <IconMapPin size={14} stroke={1.8} color="#22C55E" /> Delivery to: {ord.address?.addressLine1 || 'Saved Address'}, {ord.address?.city || 'Bengaluru'}
                   </div>
                 </div>
 
@@ -176,14 +176,14 @@ export const OrdersPage: React.FC = () => {
                       onClick={() => navigate('track-order', { orderId: ord.id })}
                       style={{ padding: '8px 18px', borderRadius: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
                     >
-                      <Truck size={15} /> Live Track Order
+                      <IconTruckDelivery size={16} stroke={1.8} /> Live Track Order
                     </button>
                   )}
 
                   {ord.orderStatus === 'placed' && (
                     <button
                       onClick={() => cancelOrder(ord.id)}
-                      style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '13px', border: '1px solid var(--border-color)', color: '#FF453A', background: 'none', cursor: 'pointer' }}
+                      style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '13px', border: '1px solid var(--border-color)', color: '#EF4444', background: 'none', cursor: 'pointer' }}
                     >
                       Cancel Order
                     </button>

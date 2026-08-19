@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import { ProductCard } from '../components/ProductCard';
 import { StoreCard } from '../components/StoreCard';
-import { Grid, ArrowLeft, SlidersHorizontal, Sparkles, Loader2, Package } from 'lucide-react';
+import { IconLayoutGrid, IconArrowLeft, IconAdjustmentsHorizontal, IconSparkles, IconLoader2, IconPackage } from '@tabler/icons-react';
 
 export const CategoriesPage: React.FC = () => {
   const { categories, products, stores, viewParams, navigate, isLoadingCatalog } = useGetora();
@@ -36,7 +36,7 @@ export const CategoriesPage: React.FC = () => {
               className="btn-secondary"
               style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              <ArrowLeft size={16} /> All Categories
+              <IconArrowLeft size={16} stroke={1.8} /> All Categories
             </button>
           )}
           <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
@@ -55,7 +55,7 @@ export const CategoriesPage: React.FC = () => {
           className={`filter-chip ${selectedCatId === 'all' ? 'active' : ''}`}
           onClick={() => navigate('categories', { categoryId: 'all' })}
         >
-          <Grid size={14} /> All Categories ({categories.length})
+          <IconLayoutGrid size={15} stroke={1.8} /> All Categories ({categories.length})
         </button>
         {categories.map((cat) => (
           <button
@@ -69,8 +69,8 @@ export const CategoriesPage: React.FC = () => {
       </div>
 
       {isLoadingCatalog ? (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#1DB954', gap: '10px' }}>
-          <Loader2 size={24} className="spin" /> Loading category items...
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '60px', color: '#22C55E', gap: '10px' }}>
+          <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading category items...
         </div>
       ) : (
         <>
@@ -130,7 +130,7 @@ export const CategoriesPage: React.FC = () => {
 
             {displayedProducts.length === 0 ? (
               <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
-                <Package size={36} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+                <IconPackage size={36} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
                 <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700 }}>No products listed in this category</h3>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Check back soon as local stores update their inventories.</p>
               </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
-import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
+import { IconCircleCheck, IconAlertCircle, IconInfoCircle, IconX } from '@tabler/icons-react';
 
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useGetora();
@@ -10,29 +10,29 @@ export const ToastContainer: React.FC = () => {
   return (
     <div className="toast-container">
       {toasts.map((t) => {
-        let borderColor = '#1DB954';
-        let IconComponent = CheckCircle2;
-        let iconColor = '#1DB954';
+        let borderColor = '#22C55E';
+        let IconComponent = IconCircleCheck;
+        let iconColor = '#22C55E';
 
         if (t.type === 'error') {
-          borderColor = '#ff4d4f';
-          IconComponent = AlertCircle;
-          iconColor = '#ff4d4f';
+          borderColor = '#EF4444';
+          IconComponent = IconAlertCircle;
+          iconColor = '#EF4444';
         } else if (t.type === 'warning') {
-          borderColor = '#faad14';
-          IconComponent = AlertCircle;
-          iconColor = '#faad14';
+          borderColor = '#F59E0B';
+          IconComponent = IconAlertCircle;
+          iconColor = '#F59E0B';
         } else if (t.type === 'info') {
-          borderColor = '#169C46';
-          IconComponent = Info;
-          iconColor = '#169C46';
+          borderColor = '#22C55E';
+          IconComponent = IconInfoCircle;
+          iconColor = '#22C55E';
         }
 
         return (
           <div key={t.id} className="toast-item" style={{ borderLeftColor: borderColor }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                <IconComponent size={18} color={iconColor} style={{ marginTop: '2px', flexShrink: 0 }} />
+                <IconComponent size={18} stroke={1.8} color={iconColor} style={{ marginTop: '2px', flexShrink: 0 }} />
                 <div>
                   <div className="toast-title">{t.title}</div>
                   <div className="toast-desc">{t.message}</div>
@@ -40,9 +40,9 @@ export const ToastContainer: React.FC = () => {
               </div>
               <button
                 onClick={() => removeToast(t.id)}
-                style={{ color: '#6B6B6B', padding: '2px' }}
+                style={{ color: 'var(--text-muted)', padding: '2px', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                <X size={14} />
+                <IconX size={15} stroke={1.8} />
               </button>
             </div>
           </div>

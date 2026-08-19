@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Truck,
-  Sparkles,
-  ArrowRight,
-  Zap,
-  Tag,
-  ShieldCheck,
-  MapPin,
-  Flame,
-  Star,
-  CheckCircle2,
-  Clock,
-  ChevronRight,
-  TrendingUp,
-  Store as StoreIcon,
-  Package,
-  Bike,
-  ShieldAlert,
-  Percent,
-  Search,
-  Loader2
-} from 'lucide-react';
+  IconTruckDelivery,
+  IconSparkles,
+  IconArrowRight,
+  IconBolt,
+  IconTag,
+  IconShieldCheck,
+  IconMapPin,
+  IconFlame,
+  IconStar,
+  IconCircleCheck,
+  IconClock,
+  IconChevronRight,
+  IconTrendingUp,
+  IconBuildingStore,
+  IconPackage,
+  IconMotorbike,
+  IconShield,
+  IconPercentage,
+  IconSearch,
+  IconLoader2
+} from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { StoreCard } from '../components/StoreCard';
 import { ProductCard } from '../components/ProductCard';
@@ -98,9 +98,9 @@ export const HomePage: React.FC = () => {
             onClick={openLocationModal}
             className="hero-location-badge"
           >
-            <MapPin size={15} />
+            <IconMapPin size={16} stroke={1.8} />
             <span>Delivering to: <strong className="hero-location-city">{selectedAddress?.city || 'Bengaluru'}</strong> {selectedAddress?.addressLine2 ? `(${selectedAddress.addressLine2})` : ''}</span>
-            <ChevronRight size={14} />
+            <IconChevronRight size={15} stroke={1.8} />
           </div>
 
           {/* Main SEO Headline (H1) */}
@@ -118,7 +118,7 @@ export const HomePage: React.FC = () => {
           {/* Quick Search on Hero */}
           <div className="hero-search-box">
             <div className="hero-search-input-row">
-              <Search size={20} color="#1DB954" style={{ marginRight: '10px', flexShrink: 0 }} />
+              <IconSearch size={20} stroke={1.8} color="#22C55E" style={{ marginRight: '10px', flexShrink: 0 }} />
               <input 
                 type="text"
                 className="hero-search-input"
@@ -161,18 +161,18 @@ export const HomePage: React.FC = () => {
         {/* Hero Floating Feature Pill Cards (Right Side Desktop) */}
         <div className="hero-badge-desktop">
           <div className="hero-floating-card">
-            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954' }}>
-              <Zap size={22} />
+            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E' }}>
+              <IconBolt size={22} stroke={1.8} />
             </div>
             <div>
-              <div className="hero-floating-title" style={{ color: '#1DB954' }}>15–25 MINS</div>
+              <div className="hero-floating-title" style={{ color: '#22C55E' }}>15–25 MINS</div>
               <div className="hero-floating-desc">Hyperlocal Delivery</div>
             </div>
           </div>
 
           <div className="hero-floating-card">
-            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(57, 211, 83, 0.15)', color: '#39D353' }}>
-              <ShieldCheck size={22} />
+            <div className="hero-floating-icon" style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E' }}>
+              <IconShieldCheck size={22} stroke={1.8} />
             </div>
             <div>
               <div className="hero-floating-title">100% Genuine</div>
@@ -187,14 +187,14 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       <section style={{ marginBottom: '28px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
             Quick Categories
           </h3>
           <button
             onClick={() => navigate('categories')}
-            style={{ fontSize: '12.5px', color: '#1DB954', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}
+            style={{ fontSize: '12.5px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '3px' }}
           >
-            See All <ChevronRight size={14} />
+            See All <IconChevronRight size={14} stroke={1.8} />
           </button>
         </div>
         <div className="mobile-category-rail">
@@ -223,10 +223,10 @@ export const HomePage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="trust-strip-grid">
         {[
-          { icon: <Zap color="#1DB954" size={20} />, title: '15-25 Min Fast Delivery', desc: 'Dispatched instantly from neighbor shops' },
-          { icon: <StoreIcon color="#1DB954" size={20} />, title: 'Local Neighborhood Stores', desc: 'Support trusted local merchants near you' },
-          { icon: <Bike color="#1DB954" size={20} />, title: 'Live GPS Fleet Tracking', desc: 'Real-time rider updates to your doorstep' },
-          { icon: <ShieldCheck color="#1DB954" size={20} />, title: 'Cash on Delivery & UPI', desc: 'Secure payments & easy 24/7 support' }
+          { icon: <IconBolt color="#22C55E" size={20} stroke={1.8} />, title: '15-25 Min Fast Delivery', desc: 'Dispatched instantly from neighbor shops' },
+          { icon: <IconBuildingStore color="#22C55E" size={20} stroke={1.8} />, title: 'Local Neighborhood Stores', desc: 'Support trusted local merchants near you' },
+          { icon: <IconTruckDelivery color="#22C55E" size={20} stroke={1.8} />, title: 'Local Hyperlocal Fleet', desc: 'Real-time rider updates to your doorstep' },
+          { icon: <IconShieldCheck color="#22C55E" size={20} stroke={1.8} />, title: 'Cash on Delivery & UPI', desc: 'Secure payments & easy 24/7 support' }
         ].map((item, idx) => (
           <div 
             key={idx}
@@ -259,16 +259,16 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('categories')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1DB954', fontWeight: 600, fontSize: '13.5px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '13.5px' }}
           >
-            View All <ArrowRight size={15} />
+            View All <IconArrowRight size={15} stroke={1.8} />
           </button>
         </div>
 
         {/* Loading / Categories Grid */}
         {isLoadingCatalog ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#1DB954', gap: '10px' }}>
-            <Loader2 size={24} className="spin" /> Loading categories...
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#22C55E', gap: '10px' }}>
+            <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading categories...
           </div>
         ) : (
           <div className="home-categories-grid">
@@ -305,14 +305,14 @@ export const HomePage: React.FC = () => {
               width: '48px',
               height: '48px',
               borderRadius: '14px',
-              backgroundColor: 'rgba(29, 185, 84, 0.18)',
-              color: '#1DB954',
+              backgroundColor: 'rgba(34, 197, 94, 0.18)',
+              color: '#22C55E',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0
             }}>
-              <Flame size={24} />
+              <IconFlame size={24} stroke={1.8} />
             </div>
 
             <div>
@@ -332,13 +332,13 @@ export const HomePage: React.FC = () => {
                 </span>
               </div>
               <div className="flash-deal-desc">
-                Use code <strong style={{ color: '#1DB954' }}>GETORA100</strong> on your order above ₹299.
+                Use code <strong style={{ color: '#22C55E' }}>GETORA100</strong> on your order above ₹299.
               </div>
             </div>
 
             {/* Countdown Display */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '10px' }}>
-              <Clock size={16} color="var(--text-muted)" />
+              <IconClock size={16} stroke={1.8} color="var(--text-muted)" />
               <div className="flash-countdown-digits">
                 <span className="countdown-digit-box">{String(timeLeft.hours).padStart(2, '0')}h</span> :
                 <span className="countdown-digit-box">{String(timeLeft.minutes).padStart(2, '0')}m</span> :
@@ -353,7 +353,7 @@ export const HomePage: React.FC = () => {
               className="btn-primary"
               onClick={() => handleCopyCoupon('GETORA100')}
               style={{
-                backgroundColor: copiedCoupon === 'GETORA100' ? '#39D353' : '#1DB954',
+                backgroundColor: copiedCoupon === 'GETORA100' ? '#22C55E' : '#22C55E',
                 padding: '12px 24px',
                 borderRadius: '12px',
                 fontWeight: 700,
@@ -389,20 +389,20 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('stores')}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1DB954', fontWeight: 600, fontSize: '14px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px' }}
           >
-            Explore All {stores.length} Stores <ArrowRight size={16} />
+            Explore All {stores.length} Stores <IconArrowRight size={16} stroke={1.8} />
           </button>
         </div>
 
         {/* Stores Grid */}
         {isLoadingCatalog ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#1DB954', gap: '10px' }}>
-            <Loader2 size={24} className="spin" /> Loading stores...
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#22C55E', gap: '10px' }}>
+            <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading stores...
           </div>
         ) : stores.length === 0 ? (
           <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
-            <StoreIcon size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+            <IconBuildingStore size={40} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
             <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Stores Registered Yet</h3>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>Be the first local merchant to list your store on GETORA!</p>
             <button className="btn-primary" onClick={openAuthModal} style={{ padding: '10px 20px', borderRadius: '10px', fontSize: '13px' }}>
@@ -425,7 +425,7 @@ export const HomePage: React.FC = () => {
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ color: '#1DB954', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span style={{ color: '#22C55E', fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 LOCAL CATALOG
               </span>
             </div>
@@ -436,20 +436,20 @@ export const HomePage: React.FC = () => {
           <button 
             className="section-link" 
             onClick={() => navigate('search', { q: '' })}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1DB954', fontWeight: 600, fontSize: '14px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22C55E', fontWeight: 600, fontSize: '14px' }}
           >
-            View All Products <ArrowRight size={16} />
+            View All Products <IconArrowRight size={16} stroke={1.8} />
           </button>
         </div>
 
         {/* Products Grid */}
         {isLoadingCatalog ? (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#1DB954', gap: '10px' }}>
-            <Loader2 size={24} className="spin" /> Loading products...
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: '#22C55E', gap: '10px' }}>
+            <IconLoader2 size={24} stroke={1.8} className="spin" /> Loading products...
           </div>
         ) : products.length === 0 ? (
           <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
-            <Package size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+            <IconPackage size={40} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
             <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Products Listed Yet</h3>
             <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>Retailers can add new items from their shop dashboard.</p>
             {role === 'retailer' && (

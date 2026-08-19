@@ -1,27 +1,25 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  MapPin,
-  Plus,
-  ArrowLeft,
-  ShieldCheck,
-  CheckCircle2,
-  Clock,
-  CreditCard,
-  Banknote,
-  Smartphone,
-  Loader2,
-  Store
-} from 'lucide-react';
+  IconMapPin,
+  IconPlus,
+  IconArrowLeft,
+  IconShieldCheck,
+  IconCircleCheck,
+  IconClock,
+  IconCreditCard,
+  IconCash,
+  IconDeviceMobile,
+  IconLoader2,
+  IconBuildingStore
+} from '@tabler/icons-react';
 
 export const CheckoutPage: React.FC = () => {
   const {
     viewParams,
     getStoreById,
     cart,
-    savedAddresses,
     selectedAddress,
-    selectLocation,
     openLocationModal,
     getCartSummary,
     placeOrder,
@@ -60,44 +58,46 @@ export const CheckoutPage: React.FC = () => {
     }
 
     setSubmitting(true);
-    const targetRetId = targetRetailer?.id || itemsToCheckout[0]?.product.retailerId || itemsToCheckout[0]?.product.storeId || '';
+    try {
+      const res = await placeOrder({
+        retailerId: targetRetailer?.id || itemsToCheckout[0]?.product?.retailerId || 'default-store',
+        addressId: selectedAddress.id,
+        paymentMethod,
+        items: itemsToCheckout
+      });
 
-    const res = await placeOrder({
-      retailerId: targetRetId,
-      addressId: selectedAddress.id,
-      paymentMethod,
-      items: itemsToCheckout
-    });
-
-    setSubmitting(false);
-
-    if (res.success && res.orderId) {
-      navigate('order-confirmation', { orderId: res.orderId });
+      if (res.success && res.orderId) {
+        navigate('order-confirmation', { orderId: res.orderId });
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="checkout-page-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 16px 60px' }}>
-      <button
-        onClick={() => navigate('cart')}
-        className="btn-secondary"
-        style={{ padding: '8px 14px', borderRadius: '8px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}
-      >
-        <ArrowLeft size={16} /> Back to Cart
-      </button>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
+        <button
+          onClick={() => navigate('cart')}
+          className="btn-secondary"
+          style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
+          <IconArrowLeft size={16} stroke={1.8} /> Back to Cart
+        </button>
+        <h1 style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
+          Secure Checkout
+        </h1>
+      </div>
 
-      <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '24px' }}>
-        Checkout & Confirmation
-      </h1>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
-        {/* Left Column: Address & Payment Methods */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px' }}>
+        {/* Left Column: Address & Payment */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {/* Step 1: Delivery Address */}
+          {/* Step 1: Address Card */}
           <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#22C55E', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   1
                 </div>
                 <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
@@ -106,7 +106,7 @@ export const CheckoutPage: React.FC = () => {
               </div>
               <button
                 onClick={openLocationModal}
-                style={{ background: 'none', border: 'none', color: '#1DB954', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: '#22C55E', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
               >
                 + Add / Change
               </button>
@@ -133,9 +133,9 @@ export const CheckoutPage: React.FC = () => {
                   width: '100%',
                   padding: '16px',
                   borderRadius: '12px',
-                  border: '1px dashed #1DB954',
-                  backgroundColor: 'rgba(29, 185, 84, 0.08)',
-                  color: '#1DB954',
+                  border: '1px dashed #22C55E',
+                  backgroundColor: 'rgba(34, 197, 94, 0.08)',
+                  color: '#22C55E',
                   fontSize: '14px',
                   fontWeight: 600,
                   cursor: 'pointer'
@@ -149,7 +149,7 @@ export const CheckoutPage: React.FC = () => {
           {/* Step 2: Payment Method */}
           <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#22C55E', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 2
               </div>
               <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
@@ -159,16 +159,16 @@ export const CheckoutPage: React.FC = () => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
-                { id: 'COD', label: 'Cash on Delivery (COD)', desc: 'Pay cash or scan QR upon doorstep arrival', icon: <Banknote size={18} /> },
-                { id: 'UPI', label: 'Instant UPI (Google Pay, PhonePe, Paytm)', desc: 'Instant UPI payment confirmation', icon: <Smartphone size={18} /> },
-                { id: 'CARD', label: 'Credit / Debit Cards', desc: 'Visa, MasterCard, RuPay & Corporate Cards', icon: <CreditCard size={18} /> }
+                { id: 'COD', label: 'Cash on Delivery (COD)', desc: 'Pay cash or scan QR upon doorstep arrival', icon: <IconCash size={18} stroke={1.8} /> },
+                { id: 'UPI', label: 'Instant UPI (Google Pay, PhonePe, Paytm)', desc: 'Instant UPI payment confirmation', icon: <IconDeviceMobile size={18} stroke={1.8} /> },
+                { id: 'CARD', label: 'Credit / Debit Cards', desc: 'Visa, MasterCard, RuPay & Corporate Cards', icon: <IconCreditCard size={18} stroke={1.8} /> }
               ].map((m) => (
                 <div
                   key={m.id}
                   onClick={() => setPaymentMethod(m.id as any)}
                   style={{
-                    backgroundColor: paymentMethod === m.id ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-secondary)',
-                    border: paymentMethod === m.id ? '1px solid #1DB954' : '1px solid var(--border-color)',
+                    backgroundColor: paymentMethod === m.id ? 'rgba(34, 197, 94, 0.08)' : 'var(--bg-secondary)',
+                    border: paymentMethod === m.id ? '1px solid #22C55E' : '1px solid var(--border-color)',
                     borderRadius: '14px',
                     padding: '16px',
                     display: 'flex',
@@ -179,7 +179,7 @@ export const CheckoutPage: React.FC = () => {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ color: paymentMethod === m.id ? '#1DB954' : 'var(--text-muted)' }}>{m.icon}</div>
+                    <div style={{ color: paymentMethod === m.id ? '#22C55E' : 'var(--text-muted)' }}>{m.icon}</div>
                     <div>
                       <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</div>
                       <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{m.desc}</div>
@@ -191,7 +191,7 @@ export const CheckoutPage: React.FC = () => {
                       width: '18px',
                       height: '18px',
                       borderRadius: '50%',
-                      border: paymentMethod === m.id ? '5px solid #1DB954' : '2px solid var(--border-highlight)',
+                      border: paymentMethod === m.id ? '5px solid #22C55E' : '2px solid var(--border-highlight)',
                       backgroundColor: 'transparent'
                     }}
                   />
@@ -210,8 +210,8 @@ export const CheckoutPage: React.FC = () => {
 
             {/* Target Shop */}
             {targetRetailer && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '14px', color: '#1DB954', fontSize: '13px', fontWeight: 600 }}>
-                <Store size={15} /> Fulfilling Store: <span style={{ color: 'var(--text-primary)' }}>{targetRetailer.shopName}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '14px', color: '#22C55E', fontSize: '13px', fontWeight: 600 }}>
+                <IconBuildingStore size={15} stroke={1.8} /> Fulfilling Store: <span style={{ color: 'var(--text-primary)' }}>{targetRetailer.shopName}</span>
               </div>
             )}
 
@@ -233,14 +233,14 @@ export const CheckoutPage: React.FC = () => {
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Delivery</span>
-                <span style={{ color: deliveryFee === 0 ? '#1DB954' : 'var(--text-primary)' }}>{deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}</span>
+                <span style={{ color: deliveryFee === 0 ? '#22C55E' : 'var(--text-primary)' }}>{deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Platform Fee</span>
                 <span style={{ color: 'var(--text-primary)' }}>₹{platformFee}</span>
               </div>
               {discount > 0 && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1DB954' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#22C55E' }}>
                   <span>Discount</span>
                   <span>-₹{discount}</span>
                 </div>
@@ -249,7 +249,7 @@ export const CheckoutPage: React.FC = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
               <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>Grand Total</span>
-              <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#1DB954' }}>
+              <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#22C55E' }}>
                 ₹{grandTotal}
               </span>
             </div>
@@ -270,7 +270,7 @@ export const CheckoutPage: React.FC = () => {
                 gap: '8px'
               }}
             >
-              {submitting ? <Loader2 size={18} className="spin" /> : `Place Order (₹${grandTotal})`}
+              {submitting ? <IconLoader2 size={18} stroke={1.8} className="spin" /> : `Place Order (₹${grandTotal})`}
             </button>
           </div>
         </div>

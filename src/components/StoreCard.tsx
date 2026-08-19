@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star, Clock, MapPin, Sparkles, ShieldCheck, Tag } from 'lucide-react';
+import { IconStar, IconClock, IconMapPin, IconSparkles, IconShieldCheck, IconTag } from '@tabler/icons-react';
 import { Retailer } from '../types';
 import { useGetora } from '../context/GetoraContext';
 
@@ -49,7 +49,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
             position: 'absolute',
             top: '10px',
             left: '10px',
-            backgroundColor: store.isOpen ? 'rgba(29, 185, 84, 0.9)' : 'rgba(255, 69, 58, 0.9)',
+            backgroundColor: store.isOpen ? 'rgba(34, 197, 94, 0.9)' : 'rgba(239, 68, 68, 0.9)',
             color: store.isOpen ? '#000' : '#fff',
             fontSize: '11px',
             fontWeight: 800,
@@ -79,7 +79,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
             backdropFilter: 'blur(4px)'
           }}
         >
-          <Clock size={12} color="#1DB954" /> 15-25 min
+          <IconClock size={13} stroke={1.8} color="#22C55E" /> 15-25 min
         </div>
       </div>
 
@@ -106,15 +106,15 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '3px',
-                  backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                  color: '#1DB954',
+                  backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                  color: '#22C55E',
                   fontSize: '12px',
                   fontWeight: 800,
                   padding: '2px 6px',
                   borderRadius: '6px'
                 }}
               >
-                <Star size={12} fill="#1DB954" /> {store.rating.toFixed(1)}
+                <IconStar size={13} stroke={1.8} color="#22C55E" /> {store.rating.toFixed(1)}
               </div>
             )}
           </div>
@@ -124,12 +124,12 @@ export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
           </div>
 
           <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <MapPin size={13} color="#1DB954" /> {store.city || 'Bengaluru'} {store.pincode ? `(${store.pincode})` : ''}
+            <IconMapPin size={14} stroke={1.8} color="#22C55E" /> {store.city || 'Bengaluru'} {store.pincode ? `(${store.pincode})` : ''}
           </div>
         </div>
 
         {/* Free delivery badge */}
-        <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#1DB954', fontWeight: 600 }}>
+        <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '11px', color: '#22C55E', fontWeight: 600 }}>
           <span>✓ Instant Dispatch</span>
           <span>Hyperlocal Fleet</span>
         </div>

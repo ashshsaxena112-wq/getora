@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  HelpCircle,
-  MessageSquare,
-  Phone,
-  Mail,
-  ChevronDown,
-  ChevronUp,
-  AlertCircle,
-  RotateCcw,
-  Truck,
-  CreditCard,
-  Package,
-  Send,
-  CheckCircle2
-} from 'lucide-react';
+  IconHelpCircle,
+  IconMessage,
+  IconPhone,
+  IconMail,
+  IconChevronDown,
+  IconChevronUp,
+  IconAlertCircle,
+  IconRotateClockwise,
+  IconTruckDelivery,
+  IconCreditCard,
+  IconPackage,
+  IconSend,
+  IconCircleCheck
+} from '@tabler/icons-react';
 
 export const SupportPage: React.FC = () => {
   const { orders, showToast } = useGetora();
@@ -25,11 +25,11 @@ export const SupportPage: React.FC = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const issueCategories = [
-    { id: 'delivery', label: 'Delivery Issue / Delay', icon: Truck },
-    { id: 'product', label: 'Damaged / Wrong Product', icon: Package },
-    { id: 'refund', label: 'Refund & Returns', icon: RotateCcw },
-    { id: 'payment', label: 'Payment & Billing Issue', icon: CreditCard },
-    { id: 'account', label: 'Account & Location Help', icon: HelpCircle }
+    { id: 'delivery', label: 'Delivery Issue / Delay', icon: IconTruckDelivery },
+    { id: 'product', label: 'Damaged / Wrong Product', icon: IconPackage },
+    { id: 'refund', label: 'Refund & Returns', icon: IconRotateClockwise },
+    { id: 'payment', label: 'Payment & Billing Issue', icon: IconCreditCard },
+    { id: 'account', label: 'Account & Location Help', icon: IconHelpCircle }
   ];
 
   const faqs = [
@@ -80,9 +80,9 @@ export const SupportPage: React.FC = () => {
               key={cat.id}
               onClick={() => setSelectedIssue(cat.id)}
               style={{
-                backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.12)' : 'var(--bg-card)',
+                backgroundColor: isSelected ? 'rgba(34, 197, 94, 0.12)' : 'var(--bg-card)',
                 border: '1px solid',
-                borderColor: isSelected ? '#1DB954' : 'var(--border-color)',
+                borderColor: isSelected ? '#22C55E' : 'var(--border-color)',
                 borderRadius: '14px',
                 padding: '16px 12px',
                 display: 'flex',
@@ -90,12 +90,12 @@ export const SupportPage: React.FC = () => {
                 alignItems: 'center',
                 textAlign: 'center',
                 gap: '8px',
-                color: isSelected ? '#1DB954' : 'var(--text-muted)',
+                color: isSelected ? '#22C55E' : 'var(--text-muted)',
                 cursor: 'pointer'
               }}
             >
-              <Icon size={22} color={isSelected ? '#1DB954' : 'var(--text-muted)'} />
-              <span style={{ fontSize: '12px', fontWeight: 600, color: isSelected ? '#1DB954' : 'var(--text-primary)' }}>
+              <Icon size={22} stroke={1.8} color={isSelected ? '#22C55E' : 'var(--text-muted)'} />
+              <span style={{ fontSize: '12px', fontWeight: 600, color: isSelected ? '#22C55E' : 'var(--text-primary)' }}>
                 {cat.label}
               </span>
             </button>
@@ -120,7 +120,7 @@ export const SupportPage: React.FC = () => {
 
           {ticketSubmitted ? (
             <div style={{ textAlign: 'center', padding: '24px 0' }}>
-              <CheckCircle2 size={40} color="#1DB954" style={{ margin: '0 auto 10px' }} />
+              <IconCircleCheck size={40} stroke={1.8} color="#22C55E" style={{ margin: '0 auto 10px' }} />
               <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
                 Support Ticket Created (#TKT-{Math.floor(10000 + Math.random() * 90000)})
               </h4>
@@ -173,8 +173,8 @@ export const SupportPage: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', gap: '10px' }}>
-                <button type="submit" className="btn-primary" style={{ padding: '10px 20px', borderRadius: '8px', fontSize: '13px' }}>
-                  <Send size={15} /> Submit Ticket
+                <button type="submit" className="btn-primary" style={{ padding: '10px 20px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <IconSend size={15} stroke={1.8} /> Submit Ticket
                 </button>
                 <button
                   type="button"
@@ -223,7 +223,7 @@ export const SupportPage: React.FC = () => {
                   <span style={{ fontSize: '14.5px', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {faq.q}
                   </span>
-                  {isOpen ? <ChevronUp size={18} color="#1DB954" /> : <ChevronDown size={18} color="var(--text-muted)" />}
+                  {isOpen ? <IconChevronUp size={18} stroke={1.8} color="#22C55E" /> : <IconChevronDown size={18} stroke={1.8} color="var(--text-muted)" />}
                 </div>
 
                 {isOpen && (
@@ -240,7 +240,7 @@ export const SupportPage: React.FC = () => {
       {/* Contact Channels */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
         <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Mail size={22} color="#1DB954" />
+          <IconMail size={22} stroke={1.8} color="#22C55E" />
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Email Support</div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>support@getora.in</div>
@@ -248,7 +248,7 @@ export const SupportPage: React.FC = () => {
         </div>
 
         <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <Phone size={22} color="#1DB954" />
+          <IconPhone size={22} stroke={1.8} color="#22C55E" />
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Toll Free Helpline</div>
             <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>1800-419-GETORA (9 AM - 11 PM)</div>

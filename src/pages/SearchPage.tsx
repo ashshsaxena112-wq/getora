@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import { ProductCard } from '../components/ProductCard';
 import { StoreCard } from '../components/StoreCard';
-import { Search, MapPin, Store as StoreIcon, Package } from 'lucide-react';
+import { IconSearch, IconMapPin, IconBuildingStore, IconPackage } from '@tabler/icons-react';
 
 export const SearchPage: React.FC = () => {
   const { viewParams, products, stores, searchQuery, setSearchQuery, navigate } = useGetora();
@@ -55,7 +55,7 @@ export const SearchPage: React.FC = () => {
               maxWidth: '680px'
             }}
           >
-            <Search size={18} color="var(--text-muted)" />
+            <IconSearch size={18} stroke={1.8} color="var(--text-muted)" />
             <input
               type="text"
               placeholder="Search products, stores, categories..."
@@ -75,7 +75,7 @@ export const SearchPage: React.FC = () => {
 
         {query && (
           <div style={{ marginTop: '14px', fontSize: '14px', color: 'var(--text-secondary)' }}>
-            Showing results for <strong style={{ color: '#1DB954' }}>"{query}"</strong>
+            Showing results for <strong style={{ color: '#22C55E' }}>"{query}"</strong>
           </div>
         )}
       </div>
@@ -107,7 +107,7 @@ export const SearchPage: React.FC = () => {
       {/* Results view */}
       {matchedProducts.length === 0 && matchedStores.length === 0 ? (
         <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '60px 20px', textAlign: 'center' }}>
-          <Package size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+          <IconPackage size={44} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
           <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '4px' }}>No matches found</h3>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Try searching with different keywords or check spelling.</p>
         </div>

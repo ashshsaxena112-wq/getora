@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import {
-  X,
-  MapPin,
-  Plus,
-  Home,
-  Briefcase,
-  Navigation,
-  Check,
-  Trash2,
-  AlertCircle,
-  Loader2
-} from 'lucide-react';
+  IconX,
+  IconMapPin,
+  IconPlus,
+  IconHome,
+  IconBriefcase,
+  IconNavigation,
+  IconCheck,
+  IconTrash,
+  IconAlertCircle,
+  IconLoader2
+} from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { CustomerAddress } from '../types';
 
@@ -116,8 +116,8 @@ export const LocationModal: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', padding: '8px', borderRadius: '10px' }}>
-              <MapPin size={18} />
+            <div style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E', padding: '8px', borderRadius: '10px' }}>
+              <IconMapPin size={18} stroke={1.8} />
             </div>
             <div>
               <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
@@ -144,7 +144,7 @@ export const LocationModal: React.FC = () => {
               cursor: 'pointer'
             }}
           >
-            <X size={16} />
+            <IconX size={16} stroke={1.8} />
           </button>
         </div>
 
@@ -163,9 +163,9 @@ export const LocationModal: React.FC = () => {
                       flex: 1,
                       padding: '8px',
                       borderRadius: '10px',
-                      border: addressType === type ? '1px solid #1DB954' : '1px solid var(--border-color)',
-                      backgroundColor: addressType === type ? 'rgba(29, 185, 84, 0.15)' : 'var(--bg-secondary)',
-                      color: addressType === type ? '#1DB954' : 'var(--text-secondary)',
+                      border: addressType === type ? '1px solid #22C55E' : '1px solid var(--border-color)',
+                      backgroundColor: addressType === type ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-secondary)',
+                      color: addressType === type ? '#22C55E' : 'var(--text-secondary)',
                       fontSize: '13px',
                       fontWeight: 600,
                       cursor: 'pointer'
@@ -280,7 +280,7 @@ export const LocationModal: React.FC = () => {
                   className="btn-primary"
                   style={{ flex: 2, padding: '12px', borderRadius: '10px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
-                  {submitting ? <Loader2 size={16} className="spin" /> : 'Save Address'}
+                  {submitting ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : 'Save Address'}
                 </button>
               </div>
             </form>
@@ -301,9 +301,9 @@ export const LocationModal: React.FC = () => {
                   width: '100%',
                   padding: '14px',
                   borderRadius: '12px',
-                  border: '1px dashed #1DB954',
-                  backgroundColor: 'rgba(29, 185, 84, 0.08)',
-                  color: '#1DB954',
+                  border: '1px dashed #22C55E',
+                  backgroundColor: 'rgba(34, 197, 94, 0.08)',
+                  color: '#22C55E',
                   fontSize: '14px',
                   fontWeight: 600,
                   display: 'flex',
@@ -314,13 +314,13 @@ export const LocationModal: React.FC = () => {
                   cursor: 'pointer'
                 }}
               >
-                <Plus size={16} /> Add New Delivery Address
+                <IconPlus size={16} stroke={1.8} /> Add New Delivery Address
               </button>
 
               {/* Saved Addresses List */}
               {savedAddresses.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '30px 20px', color: 'var(--text-muted)' }}>
-                  <MapPin size={36} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+                  <IconMapPin size={36} stroke={1.8} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
                   <p style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>No saved addresses found</p>
                   <p style={{ fontSize: '12px', marginTop: '4px' }}>Add your address to view neighborhood store inventory</p>
                 </div>
@@ -333,8 +333,8 @@ export const LocationModal: React.FC = () => {
                         key={addr.id}
                         onClick={() => selectLocation(addr)}
                         style={{
-                          backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-secondary)',
-                          border: isSelected ? '1px solid #1DB954' : '1px solid var(--border-color)',
+                          backgroundColor: isSelected ? 'rgba(34, 197, 94, 0.08)' : 'var(--bg-secondary)',
+                          border: isSelected ? '1px solid #22C55E' : '1px solid var(--border-color)',
                           borderRadius: '14px',
                           padding: '16px',
                           display: 'flex',
@@ -351,7 +351,7 @@ export const LocationModal: React.FC = () => {
                               width: '32px',
                               height: '32px',
                               borderRadius: '8px',
-                              backgroundColor: isSelected ? '#1DB954' : 'var(--bg-elevated)',
+                              backgroundColor: isSelected ? '#22C55E' : 'var(--bg-elevated)',
                               color: isSelected ? '#000' : 'var(--text-secondary)',
                               display: 'flex',
                               alignItems: 'center',
@@ -359,13 +359,13 @@ export const LocationModal: React.FC = () => {
                               flexShrink: 0
                             }}
                           >
-                            {addr.addressType === 'Home' ? <Home size={16} /> : <Briefcase size={16} />}
+                            {addr.addressType === 'Home' ? <IconHome size={16} stroke={1.8} /> : <IconBriefcase size={16} stroke={1.8} />}
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
                               <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{addr.addressType}</span>
                               {addr.isDefault && (
-                                <span style={{ fontSize: '10px', backgroundColor: 'rgba(29,185,84,0.2)', color: '#39D353', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                                <span style={{ fontSize: '10px', backgroundColor: 'rgba(34,197,94,0.2)', color: '#22C55E', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
                                   DEFAULT
                                 </span>
                               )}
@@ -386,7 +386,7 @@ export const LocationModal: React.FC = () => {
                             style={{ backgroundColor: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
                             title="Delete Address"
                           >
-                            <Trash2 size={15} />
+                            <IconTrash size={15} stroke={1.8} />
                           </button>
                         </div>
                       </div>

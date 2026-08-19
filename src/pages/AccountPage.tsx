@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { useGetora } from '../context/GetoraContext';
 import {
-  User,
-  ShoppingBag,
-  MapPin,
-  Tag,
-  HelpCircle,
-  Shield,
-  FileText,
-  LogOut,
-  ChevronRight,
-  Sparkles,
-  Phone,
-  Store,
-  Edit2,
-  Check,
-  Loader2,
-  Sun,
-  Moon,
-  Monitor
-} from 'lucide-react';
+  IconUser,
+  IconShoppingBag,
+  IconMapPin,
+  IconTag,
+  IconHelpCircle,
+  IconShieldCheck,
+  IconFileText,
+  IconLogout,
+  IconChevronRight,
+  IconSparkles,
+  IconPhone,
+  IconBuildingStore,
+  IconEdit,
+  IconCheck,
+  IconLoader2,
+  IconSun,
+  IconMoon,
+  IconDeviceDesktop
+} from '@tabler/icons-react';
 
 export const AccountPage: React.FC = () => {
   const {
@@ -46,8 +46,8 @@ export const AccountPage: React.FC = () => {
   if (!user) {
     return (
       <div style={{ maxWidth: '560px', margin: '40px auto', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '24px', padding: '48px 24px', textAlign: 'center' }}>
-        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-          <User size={32} />
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22C55E', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <IconUser size={32} stroke={1.8} />
         </div>
         <h2 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '8px' }}>
           Sign In to Your Account
@@ -58,9 +58,9 @@ export const AccountPage: React.FC = () => {
         <button
           className="btn-primary"
           onClick={openAuthModal}
-          style={{ padding: '12px 32px', borderRadius: '12px', fontSize: '15px', fontWeight: 700 }}
+          style={{ padding: '12px 32px', fontSize: '15px' }}
         >
-          Sign In / Create Account
+          Sign In / Register
         </button>
       </div>
     );
@@ -69,17 +69,14 @@ export const AccountPage: React.FC = () => {
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    await updateProfile({
-      fullName,
-      phone
-    });
+    await updateProfile({ fullName, phone });
     setSaving(false);
     setIsEditing(false);
   };
 
   return (
-    <div className="account-page-container" style={{ maxWidth: '840px', margin: '0 auto', padding: '0 16px 60px' }}>
-      {/* Profile Card */}
+    <div className="account-page-container" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 16px 60px' }}>
+      {/* Profile Header */}
       <div
         style={{
           backgroundColor: 'var(--bg-card)',
@@ -89,14 +86,14 @@ export const AccountPage: React.FC = () => {
           marginBottom: '32px'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div
               style={{
                 width: '68px',
                 height: '68px',
                 borderRadius: '50%',
-                backgroundColor: '#1DB954',
+                backgroundColor: '#22C55E',
                 color: '#000',
                 display: 'flex',
                 alignItems: 'center',
@@ -116,8 +113,8 @@ export const AccountPage: React.FC = () => {
                 </h1>
                 <span
                   style={{
-                    backgroundColor: 'rgba(29, 185, 84, 0.15)',
-                    color: '#1DB954',
+                    backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                    color: '#22C55E',
                     fontSize: '11px',
                     fontWeight: 700,
                     padding: '2px 8px',
@@ -144,7 +141,7 @@ export const AccountPage: React.FC = () => {
               }}
               style={{ padding: '8px 14px', borderRadius: '10px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              <Edit2 size={14} /> {isEditing ? 'Cancel' : 'Edit Profile'}
+              <IconEdit size={14} stroke={1.8} /> {isEditing ? 'Cancel' : 'Edit Profile'}
             </button>
             <button
               onClick={signOut}
@@ -154,14 +151,14 @@ export const AccountPage: React.FC = () => {
                 fontSize: '13px',
                 border: '1px solid var(--border-color)',
                 backgroundColor: 'transparent',
-                color: '#FF453A',
+                color: '#EF4444',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 cursor: 'pointer'
               }}
             >
-              <LogOut size={14} /> Sign Out
+              <IconLogout size={14} stroke={1.8} /> Sign Out
             </button>
           </div>
         </div>
@@ -195,7 +192,7 @@ export const AccountPage: React.FC = () => {
               className="btn-primary"
               style={{ padding: '10px 20px', borderRadius: '10px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              {saving ? <Loader2 size={15} className="spin" /> : 'Save Changes'}
+              {saving ? <IconLoader2 size={15} stroke={1.8} className="spin" /> : 'Save Changes'}
             </button>
           </form>
         )}
@@ -206,8 +203,8 @@ export const AccountPage: React.FC = () => {
         <div
           onClick={() => navigate('retailer-dashboard')}
           style={{
-            backgroundColor: 'rgba(29, 185, 84, 0.08)',
-            border: '1px solid #1DB954',
+            backgroundColor: 'rgba(34, 197, 94, 0.08)',
+            border: '1px solid #22C55E',
             borderRadius: '20px',
             padding: '20px 24px',
             display: 'flex',
@@ -218,22 +215,22 @@ export const AccountPage: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ backgroundColor: '#1DB954', color: '#000', padding: '10px', borderRadius: '12px' }}>
-              <Store size={22} />
+            <div style={{ backgroundColor: '#22C55E', color: '#000', padding: '10px', borderRadius: '12px' }}>
+              <IconBuildingStore size={22} stroke={1.8} />
             </div>
             <div>
               <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Retailer Management Portal</h3>
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Manage shop inventory, add new products & fulfill orders</p>
             </div>
           </div>
-          <ChevronRight size={20} color="#1DB954" />
+          <IconChevronRight size={20} stroke={1.8} color="#22C55E" />
         </div>
       )}
 
       {/* Appearance & Theme Settings */}
       <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px', marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-          <Sparkles size={18} color="var(--color-green)" />
+          <IconSparkles size={18} stroke={1.8} color="#22C55E" />
           <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
             Appearance & Theme Settings
           </h3>
@@ -259,11 +256,11 @@ export const AccountPage: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ color: themeMode === 'auto' ? 'var(--color-green)' : 'var(--text-secondary)' }}>
-                <Monitor size={22} />
+              <div style={{ color: themeMode === 'auto' ? '#22C55E' : 'var(--text-secondary)' }}>
+                <IconDeviceDesktop size={22} stroke={1.8} />
               </div>
               {themeMode === 'auto' && (
-                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: 'var(--color-green)', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: '#22C55E', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
                   ACTIVE
                 </span>
               )}
@@ -292,11 +289,11 @@ export const AccountPage: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ color: themeMode === 'dark' ? 'var(--color-green)' : 'var(--text-secondary)' }}>
-                <Moon size={22} />
+              <div style={{ color: themeMode === 'dark' ? '#22C55E' : 'var(--text-secondary)' }}>
+                <IconMoon size={22} stroke={1.8} />
               </div>
               {themeMode === 'dark' && (
-                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: 'var(--color-green)', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: '#22C55E', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
                   ACTIVE
                 </span>
               )}
@@ -325,11 +322,11 @@ export const AccountPage: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ color: themeMode === 'light' ? 'var(--color-green)' : 'var(--text-secondary)' }}>
-                <Sun size={22} />
+              <div style={{ color: themeMode === 'light' ? '#22C55E' : 'var(--text-secondary)' }}>
+                <IconSun size={22} stroke={1.8} />
               </div>
               {themeMode === 'light' && (
-                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: 'var(--color-green)', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: '#22C55E', color: '#000', padding: '2px 8px', borderRadius: '9999px' }}>
                   ACTIVE
                 </span>
               )}
@@ -375,7 +372,7 @@ export const AccountPage: React.FC = () => {
           </h3>
           <button
             onClick={openLocationModal}
-            style={{ background: 'none', border: 'none', color: '#1DB954', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+            style={{ background: 'none', border: 'none', color: '#22C55E', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
           >
             + Add New Address
           </button>
