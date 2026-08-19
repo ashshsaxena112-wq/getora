@@ -35,10 +35,10 @@ export const OrdersPage: React.FC = () => {
   return (
     <div className="orders-page-container" style={{ maxWidth: '960px', margin: '0 auto', padding: '0 16px 60px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '4px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '4px' }}>
           My Orders
         </h1>
-        <p style={{ color: '#A7A7A7', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           Track active orders in real-time or view your order history.
         </p>
       </div>
@@ -75,8 +75,8 @@ export const OrdersPage: React.FC = () => {
       ) : filteredOrders.length === 0 ? (
         <div
           style={{
-            backgroundColor: '#141414',
-            border: '1px solid #282828',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '20px',
             padding: '50px 20px',
             textAlign: 'center',
@@ -85,10 +85,10 @@ export const OrdersPage: React.FC = () => {
           }}
         >
           <ShoppingBag size={40} color="#1DB954" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '6px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>
             No {activeTab} orders found
           </h3>
-          <p style={{ color: '#A7A7A7', fontSize: '13.5px', marginBottom: '20px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '20px' }}>
             Explore verified neighborhood stores and start shopping.
           </p>
           <button className="btn-primary" onClick={() => navigate('stores')}>
@@ -105,25 +105,25 @@ export const OrdersPage: React.FC = () => {
               <div
                 key={ord.id}
                 style={{
-                  backgroundColor: '#141414',
-                  border: isLive ? '1px solid #1DB954' : '1px solid #282828',
+                  backgroundColor: 'var(--bg-card)',
+                  border: isLive ? '1.5px solid #1DB954' : '1px solid var(--border-color)',
                   borderRadius: '20px',
                   padding: '24px',
                   position: 'relative'
                 }}
               >
                 {/* Top bar: Order ID, Shop Name, Status */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', paddingBottom: '16px', borderBottom: '1px solid #222', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                       <span style={{ fontSize: '15px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
                         {ord.orderNumber}
                       </span>
-                      <span style={{ fontSize: '12px', color: '#8E8E93' }}>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         • {new Date(getPlacedAt(ord)).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: '#fff', fontWeight: 600 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>
                       <StoreIcon size={15} color="#1DB954" /> {ord.retailer?.shopName || 'Neighborhood Store'}
                     </div>
                   </div>
@@ -152,7 +152,7 @@ export const OrdersPage: React.FC = () => {
                     >
                       {st.replace(/_/g, ' ')}
                     </span>
-                    <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff', marginTop: '6px' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '6px' }}>
                       ₹{ord.totalAmount}
                     </div>
                   </div>
@@ -160,10 +160,10 @@ export const OrdersPage: React.FC = () => {
 
                 {/* Items preview */}
                 <div style={{ marginBottom: '20px' }}>
-                  <div style={{ fontSize: '13px', color: '#D1D5DB', marginBottom: '4px' }}>
+                  <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
                     {ord.items?.map((it) => `${it.productName} (×${it.quantity})`).join(', ') || 'Items details in tracking'}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#8E8E93', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
                     <MapPin size={13} color="#1DB954" /> Delivery to: {ord.address?.addressLine1 || 'Saved Address'}, {ord.address?.city || 'Bengaluru'}
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export const OrdersPage: React.FC = () => {
                   {ord.orderStatus === 'placed' && (
                     <button
                       onClick={() => cancelOrder(ord.id)}
-                      style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '13px', border: '1px solid #333', color: '#FF453A', background: 'none', cursor: 'pointer' }}
+                      style={{ padding: '8px 16px', borderRadius: '10px', fontSize: '13px', border: '1px solid var(--border-color)', color: '#FF453A', background: 'none', cursor: 'pointer' }}
                     >
                       Cancel Order
                     </button>

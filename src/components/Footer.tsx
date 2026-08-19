@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGetora } from '../context/GetoraContext';
+import { GetoraLogo } from './GetoraLogo';
 
 export const Footer: React.FC = () => {
   const { navigate } = useGetora();
@@ -17,33 +18,12 @@ export const Footer: React.FC = () => {
             }}
             onClick={() => navigate('home')}
           >
-            <div
-              style={{
-                height: '44px',
-                width: '150px',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start'
-              }}
-            >
-              <img
-                src="/getora-logo.png"
-                alt="GETORA"
-                style={{
-                  height: '115px',
-                  width: '150px',
-                  objectFit: 'cover',
-                  objectPosition: 'center',
-                  transform: 'scale(1.15)'
-                }}
-              />
-            </div>
+            <GetoraLogo size="md" />
           </div>
-          <p style={{ color: '#A7A7A7', fontSize: '13.5px', marginBottom: '14px', maxWidth: '280px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '14px', maxWidth: '280px' }}>
             GETORA connects customers with nearby local shops and fast delivery across India.
           </p>
-          <div style={{ color: '#6B6B6B', fontSize: '12px' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '12px' }}>
             © {new Date().getFullYear()} GETORA. All rights reserved.
           </div>
         </div>

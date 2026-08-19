@@ -35,10 +35,10 @@ export const OffersPage: React.FC = () => {
   return (
     <div className="offers-page-container" style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 16px 60px' }}>
       <div style={{ marginBottom: '28px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '4px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '4px' }}>
           Offers & Coupons
         </h1>
-        <p style={{ color: '#A7A7A7', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           Exclusive discounts and free delivery vouchers for neighborhood orders.
         </p>
       </div>
@@ -51,9 +51,9 @@ export const OffersPage: React.FC = () => {
             <div
               key={c.code}
               style={{
-                backgroundColor: '#141414',
+                backgroundColor: 'var(--bg-card)',
                 border: '1px solid',
-                borderColor: isApplied ? '#1DB954' : '#282828',
+                borderColor: isApplied ? '#1DB954' : 'var(--border-color)',
                 borderRadius: '20px',
                 padding: '24px',
                 display: 'flex',
@@ -112,30 +112,29 @@ export const OffersPage: React.FC = () => {
                   </span>
                 </div>
 
-                <p style={{ color: '#fff', fontSize: '14.5px', fontWeight: 600, marginBottom: '6px' }}>
+                <p style={{ color: 'var(--text-primary)', fontSize: '14.5px', fontWeight: 600, marginBottom: '6px' }}>
                   {c.description}
                 </p>
 
-                <div style={{ fontSize: '12.5px', color: '#A7A7A7', marginBottom: '20px' }}>
+                <div style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '20px' }}>
                   Min order value: ₹{c.minOrderValue} • {c.validUntil}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', borderTop: '1px solid #202020', paddingTop: '16px' }}>
-                <button
-                  className="btn-secondary"
-                  onClick={() => handleCopy(c.code)}
-                  style={{ flex: 1, padding: '10px', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                >
-                  <Copy size={14} /> Copy
-                </button>
-
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <button
                   className="btn-primary"
                   onClick={() => handleApply(c.code)}
-                  style={{ flex: 1, padding: '10px', borderRadius: '8px', fontSize: '13px' }}
+                  style={{ flex: 1, padding: '10px', fontSize: '13px' }}
                 >
-                  {isApplied ? 'Applied' : 'Apply to Cart'}
+                  Apply & Shop →
+                </button>
+                <button
+                  className="btn-secondary"
+                  onClick={() => handleCopy(c.code)}
+                  style={{ padding: '10px 14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Copy size={14} /> Copy
                 </button>
               </div>
             </div>

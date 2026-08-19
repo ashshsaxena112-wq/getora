@@ -63,13 +63,13 @@ export const DriverChatModal: React.FC = () => {
     <div className="modal-overlay" onClick={closeDriverChat}>
       <div
         style={{
-          backgroundColor: '#141414',
-          border: '1px solid #292929',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '18px',
           width: '100%',
           maxWidth: '440px',
           overflow: 'hidden',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.85)',
+          boxShadow: 'var(--shadow-card)',
           display: 'flex',
           flexDirection: 'column',
           height: '560px'
@@ -80,8 +80,8 @@ export const DriverChatModal: React.FC = () => {
         <div
           style={{
             padding: '16px 20px',
-            backgroundColor: '#181818',
-            borderBottom: '1px solid #292929',
+            backgroundColor: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
@@ -94,7 +94,7 @@ export const DriverChatModal: React.FC = () => {
               style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #1DB954' }}
             />
             <div>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{partner?.name || partner?.fullName || 'Delivery Partner'}</div>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>{partner?.name || partner?.fullName || 'Delivery Partner'}</div>
               <div style={{ fontSize: '12px', color: '#1DB954', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Star size={12} fill="#FFC107" color="#FFC107" /> {partner?.rating || 4.9} • {(partner?.vehicle || partner?.vehicleType || 'Electric Scooter').split('(')[0]}
               </div>
@@ -108,18 +108,19 @@ export const DriverChatModal: React.FC = () => {
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                backgroundColor: isCalling ? '#ff4d4f' : '#202020',
-                color: '#fff',
+                backgroundColor: isCalling ? '#ff4d4f' : 'var(--bg-elevated)',
+                color: 'var(--text-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                border: '1px solid #333'
+                border: '1px solid var(--border-color)',
+                cursor: 'pointer'
               }}
               title={isCalling ? 'End Call' : 'Call Partner'}
             >
               {isCalling ? <PhoneOff size={16} /> : <Phone size={16} color="#1DB954" />}
             </button>
-            <button onClick={closeDriverChat} style={{ color: '#A7A7A7', padding: '4px' }}>
+            <button onClick={closeDriverChat} style={{ color: 'var(--text-secondary)', padding: '4px', background: 'none', border: 'none', cursor: 'pointer' }}>
               <X size={20} />
             </button>
           </div>
@@ -136,7 +137,7 @@ export const DriverChatModal: React.FC = () => {
               justifyContent: 'center',
               padding: '30px',
               textAlign: 'center',
-              backgroundColor: '#0E0E0E'
+              backgroundColor: 'var(--bg-primary)'
             }}
           >
             <div
@@ -156,13 +157,13 @@ export const DriverChatModal: React.FC = () => {
                 style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
               />
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
               Calling {partner.name}...
             </h3>
             <p style={{ color: '#1DB954', fontSize: '13px', marginBottom: '24px' }}>
               Connected (Encrypted Local Call)
             </p>
-            <div style={{ color: '#A7A7A7', fontSize: '12px', marginBottom: '32px' }}>
+            <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '32px' }}>
               Vehicle: {partner.vehicle}
             </div>
             <button
@@ -176,7 +177,9 @@ export const DriverChatModal: React.FC = () => {
                 fontSize: '14px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '8px',
+                border: 'none',
+                cursor: 'pointer'
               }}
             >
               <PhoneOff size={18} /> End Call
@@ -193,15 +196,15 @@ export const DriverChatModal: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '12px',
-                backgroundColor: '#0B0B0B'
+                backgroundColor: 'var(--bg-primary)'
               }}
             >
               <div style={{ textAlign: 'center', margin: '8px 0' }}>
                 <span
                   style={{
-                    backgroundColor: '#181818',
-                    border: '1px solid #292929',
-                    color: '#6B6B6B',
+                    backgroundColor: 'var(--bg-secondary)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--text-muted)',
                     fontSize: '11px',
                     padding: '4px 10px',
                     borderRadius: '9999px'
@@ -226,15 +229,16 @@ export const DriverChatModal: React.FC = () => {
                     style={{
                       padding: '10px 14px',
                       borderRadius: m.sender === 'user' ? '14px 14px 2px 14px' : '14px 14px 14px 2px',
-                      backgroundColor: m.sender === 'user' ? '#1DB954' : '#1F1F1F',
-                      color: m.sender === 'user' ? '#000' : '#fff',
+                      backgroundColor: m.sender === 'user' ? '#1DB954' : 'var(--bg-card)',
+                      color: m.sender === 'user' ? '#000' : 'var(--text-primary)',
+                      border: m.sender === 'user' ? 'none' : '1px solid var(--border-color)',
                       fontSize: '13.5px',
                       lineHeight: '1.4'
                     }}
                   >
                     {m.text}
                   </div>
-                  <span style={{ fontSize: '10.5px', color: '#6B6B6B', marginTop: '3px', padding: '0 4px' }}>
+                  <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '3px', padding: '0 4px' }}>
                     {m.time} {m.sender === 'user' && <Check size={11} style={{ display: 'inline', marginLeft: '2px' }} />}
                   </span>
                 </div>
@@ -246,8 +250,8 @@ export const DriverChatModal: React.FC = () => {
               onSubmit={handleSendMessage}
               style={{
                 padding: '12px 16px',
-                backgroundColor: '#141414',
-                borderTop: '1px solid #292929',
+                backgroundColor: 'var(--bg-card)',
+                borderTop: '1px solid var(--border-subtle)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px'
@@ -260,11 +264,11 @@ export const DriverChatModal: React.FC = () => {
                 onChange={(e) => setInputVal(e.target.value)}
                 style={{
                   flex: 1,
-                  backgroundColor: '#1E1E1E',
-                  border: '1px solid #333',
+                  backgroundColor: 'var(--bg-input)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '9999px',
                   padding: '10px 16px',
-                  color: '#fff',
+                  color: 'var(--text-primary)',
                   fontSize: '13.5px'
                 }}
               />
@@ -279,7 +283,9 @@ export const DriverChatModal: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexShrink: 0
+                  flexShrink: 0,
+                  border: 'none',
+                  cursor: 'pointer'
                 }}
               >
                 <Send size={16} />

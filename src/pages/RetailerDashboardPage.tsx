@@ -110,11 +110,12 @@ export const RetailerDashboardPage: React.FC = () => {
       {/* Top Banner / Store Header */}
       <div
         style={{
-          backgroundColor: '#141414',
-          border: '1px solid #282828',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '24px',
           padding: '28px',
-          marginBottom: '32px'
+          marginBottom: '32px',
+          boxShadow: 'var(--shadow-card)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
@@ -136,7 +137,7 @@ export const RetailerDashboardPage: React.FC = () => {
 
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <h1 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+                <h1 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
                   {retailerProfile.shopName}
                 </h1>
                 <span
@@ -152,7 +153,7 @@ export const RetailerDashboardPage: React.FC = () => {
                   {retailerProfile.isOpen ? 'OPEN FOR ORDERS' : 'STORE CLOSED'}
                 </span>
               </div>
-              <div style={{ color: '#8E8E93', fontSize: '13px', marginTop: '2px' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '2px' }}>
                 Owner: {retailerProfile.ownerName} • {retailerProfile.city || 'Local Neighborhood'}
               </div>
             </div>
@@ -209,10 +210,10 @@ export const RetailerDashboardPage: React.FC = () => {
       {activeTab === 'orders' && (
         <div>
           {retailerOrders.length === 0 ? (
-            <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '20px', padding: '60px', textAlign: 'center' }}>
-              <Clock size={44} color="#333" style={{ margin: '0 auto 12px' }} />
-              <h3 style={{ fontSize: '18px', color: '#fff', fontWeight: 700 }}>No Orders Received Yet</h3>
-              <p style={{ fontSize: '13px', color: '#8E8E93', marginTop: '4px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '60px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
+              <Clock size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+              <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700 }}>No Orders Received Yet</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
                 When customers order products from your shop, they will appear here in real-time.
               </p>
             </div>
@@ -222,18 +223,19 @@ export const RetailerDashboardPage: React.FC = () => {
                 <div
                   key={ord.id}
                   style={{
-                    backgroundColor: '#141414',
-                    border: '1px solid #282828',
+                    backgroundColor: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '20px',
-                    padding: '24px'
+                    padding: '24px',
+                    boxShadow: 'var(--shadow-card)'
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '14px', borderBottom: '1px solid #222', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '14px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                     <div>
                       <div style={{ fontSize: '16px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
                         Order #{ord.orderNumber}
                       </div>
-                      <div style={{ fontSize: '12px', color: '#8E8E93' }}>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                         Placed on {new Date(ord.placedAt || ord.createdAt || new Date()).toLocaleTimeString()}
                       </div>
                     </div>
@@ -257,7 +259,7 @@ export const RetailerDashboardPage: React.FC = () => {
 
                   {/* Order Items */}
                   <div style={{ marginBottom: '16px' }}>
-                    <div style={{ fontSize: '13px', color: '#D1D5DB' }}>
+                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
                       {ord.items?.map((it) => (
                         <div key={it.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
                           <span>{it.productName} × {it.quantity}</span>
@@ -268,7 +270,7 @@ export const RetailerDashboardPage: React.FC = () => {
                   </div>
 
                   {/* Status Transition Action Buttons */}
-                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', paddingTop: '12px', borderTop: '1px solid #222' }}>
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
                     {ord.orderStatus === 'placed' && (
                       <button
                         className="btn-primary"
@@ -330,10 +332,10 @@ export const RetailerDashboardPage: React.FC = () => {
       {activeTab === 'inventory' && (
         <div>
           {shopProducts.length === 0 ? (
-            <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '20px', padding: '60px', textAlign: 'center' }}>
-              <Package size={44} color="#333" style={{ margin: '0 auto 12px' }} />
-              <h3 style={{ fontSize: '18px', color: '#fff', fontWeight: 700 }}>No Products in Catalog</h3>
-              <p style={{ fontSize: '13px', color: '#8E8E93', marginTop: '4px', marginBottom: '16px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '60px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
+              <Package size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+              <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700 }}>No Products in Catalog</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px', marginBottom: '16px' }}>
                 Add your hardware, electrical, or tech inventory to start receiving orders.
               </p>
               <button className="btn-primary" onClick={() => setActiveTab('add-product')} style={{ padding: '10px 20px', borderRadius: '10px', fontSize: '13px' }}>
@@ -346,33 +348,34 @@ export const RetailerDashboardPage: React.FC = () => {
                 <div
                   key={p.id}
                   style={{
-                    backgroundColor: '#141414',
-                    border: '1px solid #282828',
+                    backgroundColor: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '16px',
                     padding: '16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    boxShadow: 'var(--shadow-card)'
                   }}
                 >
                   <div>
-                    <div style={{ width: '100%', height: '140px', backgroundColor: '#1E1E1E', borderRadius: '10px', overflow: 'hidden', marginBottom: '12px' }}>
+                    <div style={{ width: '100%', height: '140px', backgroundColor: 'var(--bg-secondary)', borderRadius: '10px', overflow: 'hidden', marginBottom: '12px' }}>
                       <img
                         src={p.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'}
                         alt={p.name}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     </div>
-                    <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{p.name}</h4>
+                    <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{p.name}</h4>
                     <div style={{ fontSize: '13px', color: '#1DB954', fontWeight: 700, marginBottom: '6px' }}>
-                      ₹{p.sellingPrice} <span style={{ fontSize: '11px', color: '#8E8E93', textDecoration: 'line-through' }}>₹{p.price}</span>
+                      ₹{p.sellingPrice} <span style={{ fontSize: '11px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>₹{p.price}</span>
                     </div>
-                    <div style={{ fontSize: '12px', color: '#8E8E93' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                       Stock Quantity: <strong>{p.stockQuantity}</strong> {p.unit}
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '14px', paddingTop: '10px', borderTop: '1px solid #222' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
                     <button
                       onClick={() => deleteProduct(p.id)}
                       style={{ background: 'none', border: 'none', color: '#FF453A', cursor: 'pointer', padding: '4px' }}
@@ -392,40 +395,41 @@ export const RetailerDashboardPage: React.FC = () => {
       {activeTab === 'add-product' && (
         <div
           style={{
-            backgroundColor: '#141414',
-            border: '1px solid #282828',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '24px',
             padding: '32px',
-            maxWidth: '720px'
+            maxWidth: '720px',
+            boxShadow: 'var(--shadow-card)'
           }}
         >
-          <h2 style={{ fontSize: '20px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '20px' }}>
             List New Product in Store
           </h2>
 
           <form onSubmit={handleCreateProduct}>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Product Title *</label>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Product Title *</label>
               <input
                 type="text"
                 placeholder="e.g. 10mm Impact Drill Machine"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '14px' }}
+                style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '14px' }}
               />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
               <div>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Category *</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Category *</label>
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '14px' }}
                 >
                   {categories.map((c) => (
-                    <option key={c.id} value={c.id} style={{ backgroundColor: '#181818' }}>
+                    <option key={c.id} value={c.id} style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-primary)' }}>
                       {c.name}
                     </option>
                   ))}
@@ -433,55 +437,55 @@ export const RetailerDashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Brand / Manufacturer</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Brand / Manufacturer</label>
                 <input
                   type="text"
                   placeholder="e.g. Bosch, Philips, Havells"
                   value={brand}
                   onChange={(e) => setBrand(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '14px' }}
                 />
               </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px', marginBottom: '16px' }}>
               <div>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>MRP (₹)</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>MRP (₹)</label>
                 <input
                   type="number"
                   placeholder="e.g. 1999"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '14px' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Selling Price (₹) *</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Selling Price (₹) *</label>
                 <input
                   type="number"
                   placeholder="e.g. 1499"
                   value={sellingPrice}
                   onChange={(e) => setSellingPrice(e.target.value)}
                   required
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#1DB954', fontWeight: 700, fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: '#1DB954', fontWeight: 700, fontSize: '14px' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Available Stock</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Available Stock</label>
                 <input
                   type="number"
                   value={stockQuantity}
                   onChange={(e) => setStockQuantity(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '14px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '14px' }}
                 />
               </div>
             </div>
 
             {/* Photo Upload to Supabase Storage */}
             <div style={{ marginBottom: '20px' }}>
-              <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                 Upload Product Photo (Supabase Storage: product-images)
               </label>
               <input
@@ -490,29 +494,29 @@ export const RetailerDashboardPage: React.FC = () => {
                 onChange={handleImageChange}
                 style={{
                   width: '100%',
-                  backgroundColor: '#181818',
-                  border: '1px dashed #333',
+                  backgroundColor: 'var(--bg-input)',
+                  border: '1px dashed var(--border-color)',
                   borderRadius: '12px',
                   padding: '12px',
-                  color: '#fff',
+                  color: 'var(--text-primary)',
                   fontSize: '13px'
                 }}
               />
               {imagePreview && (
-                <div style={{ marginTop: '10px', width: '100px', height: '100px', borderRadius: '10px', overflow: 'hidden', border: '1px solid #333' }}>
+                <div style={{ marginTop: '10px', width: '100px', height: '100px', borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
                   <img src={imagePreview} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               )}
             </div>
 
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '6px' }}>Product Description</label>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Product Description</label>
               <textarea
                 rows={3}
                 placeholder="Product specs, warranty, features..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '12px', padding: '12px 14px', color: '#fff', fontSize: '13px' }}
+                style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 14px', color: 'var(--text-primary)', fontSize: '13px' }}
               />
             </div>
 

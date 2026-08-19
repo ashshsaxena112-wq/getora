@@ -45,14 +45,14 @@ export const AccountPage: React.FC = () => {
 
   if (!user) {
     return (
-      <div style={{ maxWidth: '560px', margin: '40px auto', backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '24px', padding: '48px 24px', textAlign: 'center' }}>
+      <div style={{ maxWidth: '560px', margin: '40px auto', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '24px', padding: '48px 24px', textAlign: 'center' }}>
         <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(29, 185, 84, 0.15)', color: '#1DB954', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
           <User size={32} />
         </div>
-        <h2 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '8px' }}>
+        <h2 style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '8px' }}>
           Sign In to Your Account
         </h2>
-        <p style={{ color: '#A7A7A7', fontSize: '14px', marginBottom: '24px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
           View orders, manage delivery addresses, and track real-time dispatches with Supabase Auth.
         </p>
         <button
@@ -82,8 +82,8 @@ export const AccountPage: React.FC = () => {
       {/* Profile Card */}
       <div
         style={{
-          backgroundColor: '#141414',
-          border: '1px solid #282828',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '24px',
           padding: '28px',
           marginBottom: '32px'
@@ -111,7 +111,7 @@ export const AccountPage: React.FC = () => {
 
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <h1 style={{ fontSize: '22px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+                <h1 style={{ fontSize: '22px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
                   {profile?.fullName || user.email?.split('@')[0]}
                 </h1>
                 <span
@@ -128,7 +128,7 @@ export const AccountPage: React.FC = () => {
                   {role}
                 </span>
               </div>
-              <div style={{ color: '#8E8E93', fontSize: '13px', marginTop: '2px' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '2px' }}>
                 {user.email} {profile?.phone ? `• ${profile.phone}` : ''}
               </div>
             </div>
@@ -152,7 +152,7 @@ export const AccountPage: React.FC = () => {
                 padding: '8px 14px',
                 borderRadius: '10px',
                 fontSize: '13px',
-                border: '1px solid #333',
+                border: '1px solid var(--border-color)',
                 backgroundColor: 'transparent',
                 color: '#FF453A',
                 display: 'flex',
@@ -168,24 +168,24 @@ export const AccountPage: React.FC = () => {
 
         {/* Edit Form */}
         {isEditing && (
-          <form onSubmit={handleSaveProfile} style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid #222' }}>
+          <form onSubmit={handleSaveProfile} style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
               <div>
-                <label style={{ fontSize: '12px', color: '#8E8E93', display: 'block', marginBottom: '4px' }}>Full Name</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Full Name</label>
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                 />
               </div>
               <div>
-                <label style={{ fontSize: '12px', color: '#8E8E93', display: 'block', marginBottom: '4px' }}>Phone Number</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>Phone Number</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                 />
               </div>
             </div>
@@ -222,8 +222,8 @@ export const AccountPage: React.FC = () => {
               <Store size={22} />
             </div>
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Retailer Management Portal</h3>
-              <p style={{ fontSize: '13px', color: '#A7A7A7' }}>Manage shop inventory, add new products & fulfill orders</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Retailer Management Portal</h3>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Manage shop inventory, add new products & fulfill orders</p>
             </div>
           </div>
           <ChevronRight size={20} color="#1DB954" />
@@ -368,9 +368,9 @@ export const AccountPage: React.FC = () => {
       </div>
 
       {/* Manage Locations */}
-      <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
+      <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', fontFamily: 'Outfit' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
             Saved Delivery Addresses
           </h3>
           <button
@@ -382,14 +382,14 @@ export const AccountPage: React.FC = () => {
         </div>
 
         {savedAddresses.length === 0 ? (
-          <p style={{ color: '#8E8E93', fontSize: '13px' }}>No saved addresses yet. Click above to add one.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No saved addresses yet. Click above to add one.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {savedAddresses.map((a) => (
-              <div key={a.id} style={{ backgroundColor: '#181818', border: '1px solid #222', borderRadius: '12px', padding: '14px', display: 'flex', justifyContent: 'space-between' }}>
+              <div key={a.id} style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '12px', padding: '14px', display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>{a.addressType}</div>
-                  <div style={{ fontSize: '13px', color: '#A7A7A7', marginTop: '2px' }}>{a.addressLine1}, {a.city} ({a.pincode})</div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{a.addressType}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '2px' }}>{a.addressLine1}, {a.city} ({a.pincode})</div>
                 </div>
               </div>
             ))}

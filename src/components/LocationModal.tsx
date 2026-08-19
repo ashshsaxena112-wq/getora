@@ -83,7 +83,7 @@ export const LocationModal: React.FC = () => {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
         backdropFilter: 'blur(8px)',
         zIndex: 9999,
         display: 'flex',
@@ -97,10 +97,10 @@ export const LocationModal: React.FC = () => {
         style={{
           width: '100%',
           maxWidth: '520px',
-          backgroundColor: '#121212',
-          border: '1px solid #292929',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '24px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
+          boxShadow: 'var(--shadow-card)',
           overflow: 'hidden'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -109,7 +109,7 @@ export const LocationModal: React.FC = () => {
         <div
           style={{
             padding: '20px 24px',
-            borderBottom: '1px solid #202020',
+            borderBottom: '1px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between'
@@ -120,10 +120,10 @@ export const LocationModal: React.FC = () => {
               <MapPin size={18} />
             </div>
             <div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', fontFamily: 'Outfit' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
                 {isAddingNew ? 'Add New Address' : 'Select Delivery Location'}
               </h3>
-              <p style={{ fontSize: '12px', color: '#8E8E93' }}>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                 {isAddingNew ? 'Enter delivery details' : 'Choose where to deliver your order'}
               </p>
             </div>
@@ -135,9 +135,9 @@ export const LocationModal: React.FC = () => {
               width: '32px',
               height: '32px',
               borderRadius: '50%',
-              backgroundColor: '#1C1C1E',
+              backgroundColor: 'var(--bg-elevated)',
               border: 'none',
-              color: '#A7A7A7',
+              color: 'var(--text-secondary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -163,9 +163,9 @@ export const LocationModal: React.FC = () => {
                       flex: 1,
                       padding: '8px',
                       borderRadius: '10px',
-                      border: addressType === type ? '1px solid #1DB954' : '1px solid #282828',
-                      backgroundColor: addressType === type ? 'rgba(29, 185, 84, 0.15)' : '#181818',
-                      color: addressType === type ? '#1DB954' : '#A7A7A7',
+                      border: addressType === type ? '1px solid #1DB954' : '1px solid var(--border-color)',
+                      backgroundColor: addressType === type ? 'rgba(29, 185, 84, 0.15)' : 'var(--bg-secondary)',
+                      color: addressType === type ? '#1DB954' : 'var(--text-secondary)',
                       fontSize: '13px',
                       fontWeight: 600,
                       cursor: 'pointer'
@@ -178,90 +178,90 @@ export const LocationModal: React.FC = () => {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>Receiver Name</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Receiver Name</label>
                   <input
                     type="text"
                     placeholder="Full Name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>Phone Number</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Phone Number</label>
                   <input
                     type="tel"
                     placeholder="Mobile Number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
               </div>
 
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>House / Flat / Block No. & Street *</label>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>House / Flat / Block No. & Street *</label>
                 <input
                   type="text"
                   placeholder="e.g. Flat 402, Green Valley Apts, 10th Cross"
                   value={addressLine1}
                   onChange={(e) => setAddressLine1(e.target.value)}
                   required
-                  style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                  style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                 />
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>Area / Locality</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Area / Locality</label>
                   <input
                     type="text"
                     placeholder="e.g. Koramangala"
                     value={addressLine2}
                     onChange={(e) => setAddressLine2(e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>Landmark</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Landmark</label>
                   <input
                     type="text"
                     placeholder="Near BDA Complex"
                     value={landmark}
                     onChange={(e) => setLandmark(e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px', marginBottom: '18px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>City *</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>City *</label>
                   <input
                     type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     required
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>State</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>State</label>
                   <input
                     type="text"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', color: '#A7A7A7', display: 'block', marginBottom: '4px' }}>Pincode *</label>
+                  <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Pincode *</label>
                   <input
                     type="text"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
                     required
-                    style={{ width: '100%', backgroundColor: '#181818', border: '1px solid #282828', borderRadius: '10px', padding: '10px 12px', color: '#fff', fontSize: '13px' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                   />
                 </div>
               </div>
@@ -270,7 +270,7 @@ export const LocationModal: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsAddingNew(false)}
-                  style={{ flex: 1, padding: '12px', borderRadius: '10px', border: '1px solid #282828', backgroundColor: 'transparent', color: '#A7A7A7', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
                 >
                   Cancel
                 </button>
@@ -319,9 +319,9 @@ export const LocationModal: React.FC = () => {
 
               {/* Saved Addresses List */}
               {savedAddresses.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '30px 20px', color: '#8E8E93' }}>
-                  <MapPin size={36} color="#333" style={{ margin: '0 auto 10px' }} />
-                  <p style={{ fontSize: '14px', color: '#fff', fontWeight: 600 }}>No saved addresses found</p>
+                <div style={{ textAlign: 'center', padding: '30px 20px', color: 'var(--text-muted)' }}>
+                  <MapPin size={36} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+                  <p style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: 600 }}>No saved addresses found</p>
                   <p style={{ fontSize: '12px', marginTop: '4px' }}>Add your address to view neighborhood store inventory</p>
                 </div>
               ) : (
@@ -333,8 +333,8 @@ export const LocationModal: React.FC = () => {
                         key={addr.id}
                         onClick={() => selectLocation(addr)}
                         style={{
-                          backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.08)' : '#181818',
-                          border: isSelected ? '1px solid #1DB954' : '1px solid #282828',
+                          backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-secondary)',
+                          border: isSelected ? '1px solid #1DB954' : '1px solid var(--border-color)',
                           borderRadius: '14px',
                           padding: '16px',
                           display: 'flex',
@@ -351,8 +351,8 @@ export const LocationModal: React.FC = () => {
                               width: '32px',
                               height: '32px',
                               borderRadius: '8px',
-                              backgroundColor: isSelected ? '#1DB954' : '#242424',
-                              color: isSelected ? '#000' : '#A7A7A7',
+                              backgroundColor: isSelected ? '#1DB954' : 'var(--bg-elevated)',
+                              color: isSelected ? '#000' : 'var(--text-secondary)',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -363,18 +363,18 @@ export const LocationModal: React.FC = () => {
                           </div>
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                              <span style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>{addr.addressType}</span>
+                              <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{addr.addressType}</span>
                               {addr.isDefault && (
                                 <span style={{ fontSize: '10px', backgroundColor: 'rgba(29,185,84,0.2)', color: '#39D353', padding: '2px 6px', borderRadius: '4px', fontWeight: 700 }}>
                                   DEFAULT
                                 </span>
                               )}
                             </div>
-                            <p style={{ fontSize: '13px', color: '#D1D5DB', lineHeight: 1.4 }}>
+                            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                               {addr.addressLine1}
                               {addr.addressLine2 && `, ${addr.addressLine2}`}
                             </p>
-                            <p style={{ fontSize: '12px', color: '#8E8E93', marginTop: '2px' }}>
+                            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
                               {addr.city}, {addr.state} - {addr.pincode}
                             </p>
                           </div>
@@ -383,7 +383,7 @@ export const LocationModal: React.FC = () => {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => deleteAddress(addr.id)}
-                            style={{ backgroundColor: 'transparent', border: 'none', color: '#6B6B6B', cursor: 'pointer', padding: '4px' }}
+                            style={{ backgroundColor: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
                             title="Delete Address"
                           >
                             <Trash2 size={15} />

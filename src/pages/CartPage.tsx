@@ -61,8 +61,8 @@ export const CartPage: React.FC = () => {
     return (
       <div
         style={{
-          backgroundColor: '#121212',
-          border: '1px solid #292929',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '20px',
           padding: '60px 20px',
           textAlign: 'center',
@@ -105,7 +105,7 @@ export const CartPage: React.FC = () => {
   return (
     <div className="cart-page-container" style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 16px 60px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
           Shopping Cart ({cart.reduce((a, b) => a + b.quantity, 0)} Items)
         </h1>
         <button
@@ -123,22 +123,22 @@ export const CartPage: React.FC = () => {
             <div
               key={gIdx}
               style={{
-                backgroundColor: '#141414',
-                border: '1px solid #282828',
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '20px',
                 padding: '20px',
                 overflow: 'hidden'
               }}
             >
               {/* Retailer Header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '1px solid #222', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <StoreIcon size={18} color="#1DB954" />
                   <div>
-                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>
                       {group.retailer?.shopName || 'Local Retailer'}
                     </h3>
-                    <div style={{ fontSize: '12px', color: '#8E8E93' }}>{group.retailer?.city || 'Neighborhood Area'}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{group.retailer?.city || 'Neighborhood Area'}</div>
                   </div>
                 </div>
 
@@ -162,11 +162,11 @@ export const CartPage: React.FC = () => {
                       justifyContent: 'space-between',
                       gap: '14px',
                       paddingBottom: '14px',
-                      borderBottom: '1px solid #1E1E1E'
+                      borderBottom: '1px solid var(--border-subtle)'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1 }}>
-                      <div style={{ width: '56px', height: '56px', borderRadius: '10px', backgroundColor: '#1E1E1E', overflow: 'hidden', flexShrink: 0 }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '10px', backgroundColor: 'var(--bg-secondary)', overflow: 'hidden', flexShrink: 0 }}>
                         <img
                           src={item.product.imageUrl || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80'}
                           alt={item.product.name}
@@ -174,11 +174,11 @@ export const CartPage: React.FC = () => {
                         />
                       </div>
                       <div>
-                        <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#fff', marginBottom: '2px' }}>
+                        <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px' }}>
                           {item.product.name}
                         </h4>
                         <div style={{ fontSize: '13px', color: '#1DB954', fontWeight: 700 }}>
-                          ₹{item.unitPrice} <span style={{ fontSize: '11px', color: '#8E8E93', fontWeight: 400 }}>each</span>
+                          ₹{item.unitPrice} <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 400 }}>each</span>
                         </div>
                       </div>
                     </div>
@@ -189,8 +189,8 @@ export const CartPage: React.FC = () => {
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          backgroundColor: '#202020',
-                          border: '1px solid #333',
+                          backgroundColor: 'var(--bg-elevated)',
+                          border: '1px solid var(--border-color)',
                           borderRadius: '8px',
                           padding: '4px 8px',
                           gap: '10px'
@@ -198,26 +198,26 @@ export const CartPage: React.FC = () => {
                       >
                         <button
                           onClick={() => updateCartQuantity(item.productId, item.quantity - 1)}
-                          style={{ border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', display: 'flex' }}
+                          style={{ border: 'none', background: 'transparent', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex' }}
                         >
                           <Minus size={13} />
                         </button>
-                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>{item.quantity}</span>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{item.quantity}</span>
                         <button
                           onClick={() => updateCartQuantity(item.productId, item.quantity + 1)}
-                          style={{ border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', display: 'flex' }}
+                          style={{ border: 'none', background: 'transparent', color: 'var(--text-primary)', cursor: 'pointer', display: 'flex' }}
                         >
                           <Plus size={13} />
                         </button>
                       </div>
 
-                      <div style={{ fontSize: '15px', fontWeight: 800, color: '#fff', minWidth: '60px', textAlign: 'right' }}>
+                      <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', minWidth: '60px', textAlign: 'right' }}>
                         ₹{item.unitPrice * item.quantity}
                       </div>
 
                       <button
                         onClick={() => removeFromCart(item.productId)}
-                        style={{ border: 'none', background: 'transparent', color: '#6B6B6B', cursor: 'pointer', padding: '4px' }}
+                        style={{ border: 'none', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
                       >
                         <Trash2 size={15} />
                       </button>
@@ -234,31 +234,31 @@ export const CartPage: React.FC = () => {
           {/* Bill Summary Card */}
           <div
             style={{
-              backgroundColor: '#141414',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '20px',
               padding: '24px',
               marginBottom: '20px'
             }}
           >
-            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit', marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit', marginBottom: '16px' }}>
               Bill Summary
             </h3>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: '#A7A7A7', paddingBottom: '16px', borderBottom: '1px solid #222' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '14px', color: 'var(--text-secondary)', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Item Subtotal</span>
-                <span style={{ color: '#fff', fontWeight: 600 }}>₹{subtotal}</span>
+                <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>₹{subtotal}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Delivery Fee</span>
-                <span style={{ color: deliveryFee === 0 ? '#1DB954' : '#fff', fontWeight: 600 }}>
+                <span style={{ color: deliveryFee === 0 ? '#1DB954' : 'var(--text-primary)', fontWeight: 600 }}>
                   {deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Platform Fee</span>
-                <span style={{ color: '#fff', fontWeight: 600 }}>₹{platformFee}</span>
+                <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>₹{platformFee}</span>
               </div>
               {discount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1DB954' }}>
@@ -269,7 +269,7 @@ export const CartPage: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '16px', marginBottom: '24px' }}>
-              <span style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>To Pay</span>
+              <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>To Pay</span>
               <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#1DB954' }}>
                 ₹{grandTotal}
               </span>
@@ -279,8 +279,8 @@ export const CartPage: React.FC = () => {
             <div
               onClick={openLocationModal}
               style={{
-                backgroundColor: '#181818',
-                border: '1px solid #282828',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '12px',
                 padding: '12px 14px',
                 display: 'flex',
@@ -293,10 +293,10 @@ export const CartPage: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <MapPin size={16} color="#1DB954" />
                 <div style={{ fontSize: '13px' }}>
-                  <div style={{ color: '#fff', fontWeight: 600 }}>
+                  <div style={{ color: 'var(--text-primary)', fontWeight: 600 }}>
                     {selectedAddress ? `${selectedAddress.addressType}: ${selectedAddress.city}` : 'Choose Address'}
                   </div>
-                  <div style={{ color: '#8E8E93', fontSize: '11px' }}>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '11px' }}>
                     {selectedAddress?.addressLine1 || 'Select delivery location'}
                   </div>
                 </div>
@@ -316,15 +316,15 @@ export const CartPage: React.FC = () => {
           {/* Coupon Box */}
           <div
             style={{
-              backgroundColor: '#141414',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '16px',
               padding: '18px'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <Tag size={16} color="#1DB954" />
-              <span style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>Apply Promo Code</span>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Apply Promo Code</span>
             </div>
 
             {appliedCoupon ? (
@@ -343,11 +343,11 @@ export const CartPage: React.FC = () => {
                   onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                   style={{
                     flex: 1,
-                    backgroundColor: '#181818',
-                    border: '1px solid #2A2A2A',
+                    backgroundColor: 'var(--bg-input)',
+                    border: '1px solid var(--border-color)',
                     borderRadius: '10px',
                     padding: '10px 12px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                     fontSize: '13px'
                   }}
                 />

@@ -86,7 +86,7 @@ export const CheckoutPage: React.FC = () => {
         <ArrowLeft size={16} /> Back to Cart
       </button>
 
-      <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '24px' }}>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '24px' }}>
         Checkout & Confirmation
       </h1>
 
@@ -94,13 +94,13 @@ export const CheckoutPage: React.FC = () => {
         {/* Left Column: Address & Payment Methods */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* Step 1: Delivery Address */}
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   1
                 </div>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', fontFamily: 'Outfit' }}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
                   Delivery Address
                 </h3>
               </div>
@@ -113,16 +113,16 @@ export const CheckoutPage: React.FC = () => {
             </div>
 
             {selectedAddress ? (
-              <div style={{ backgroundColor: '#181818', border: '1px solid #292929', borderRadius: '14px', padding: '16px' }}>
+              <div style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>{selectedAddress.addressType}</span>
-                  <span style={{ fontSize: '12px', color: '#8E8E93' }}>• {selectedAddress.city}</span>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{selectedAddress.addressType}</span>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>• {selectedAddress.city}</span>
                 </div>
-                <p style={{ fontSize: '13px', color: '#D1D5DB', lineHeight: 1.4 }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                   {selectedAddress.addressLine1}
                   {selectedAddress.addressLine2 && `, ${selectedAddress.addressLine2}`}
                 </p>
-                <p style={{ fontSize: '12px', color: '#8E8E93', marginTop: '4px' }}>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
                   Pincode: {selectedAddress.pincode} • Phone: {selectedAddress.phone || user?.phone || 'On file'}
                 </p>
               </div>
@@ -147,12 +147,12 @@ export const CheckoutPage: React.FC = () => {
           </div>
 
           {/* Step 2: Payment Method */}
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', fontWeight: 800, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 2
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', fontFamily: 'Outfit' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
                 Select Payment Method
               </h3>
             </div>
@@ -167,8 +167,8 @@ export const CheckoutPage: React.FC = () => {
                   key={m.id}
                   onClick={() => setPaymentMethod(m.id as any)}
                   style={{
-                    backgroundColor: paymentMethod === m.id ? 'rgba(29, 185, 84, 0.08)' : '#181818',
-                    border: paymentMethod === m.id ? '1px solid #1DB954' : '1px solid #282828',
+                    backgroundColor: paymentMethod === m.id ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-secondary)',
+                    border: paymentMethod === m.id ? '1px solid #1DB954' : '1px solid var(--border-color)',
                     borderRadius: '14px',
                     padding: '16px',
                     display: 'flex',
@@ -179,10 +179,10 @@ export const CheckoutPage: React.FC = () => {
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ color: paymentMethod === m.id ? '#1DB954' : '#A7A7A7' }}>{m.icon}</div>
+                    <div style={{ color: paymentMethod === m.id ? '#1DB954' : 'var(--text-muted)' }}>{m.icon}</div>
                     <div>
-                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>{m.label}</div>
-                      <div style={{ fontSize: '12px', color: '#8E8E93' }}>{m.desc}</div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>{m.label}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{m.desc}</div>
                     </div>
                   </div>
 
@@ -191,8 +191,8 @@ export const CheckoutPage: React.FC = () => {
                       width: '18px',
                       height: '18px',
                       borderRadius: '50%',
-                      border: paymentMethod === m.id ? '5px solid #1DB954' : '2px solid #555',
-                      backgroundColor: '#000'
+                      border: paymentMethod === m.id ? '5px solid #1DB954' : '2px solid var(--border-highlight)',
+                      backgroundColor: 'transparent'
                     }}
                   />
                 </div>
@@ -203,41 +203,41 @@ export const CheckoutPage: React.FC = () => {
 
         {/* Right Column: Order Items & Pay Button */}
         <div>
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#fff', fontFamily: 'Outfit', marginBottom: '16px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit', marginBottom: '16px' }}>
               Order Review ({itemsToCheckout.length} Items)
             </h3>
 
             {/* Target Shop */}
             {targetRetailer && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '12px', borderBottom: '1px solid #222', marginBottom: '14px', color: '#1DB954', fontSize: '13px', fontWeight: 600 }}>
-                <Store size={15} /> Fulfilling Store: <span style={{ color: '#fff' }}>{targetRetailer.shopName}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '14px', color: '#1DB954', fontSize: '13px', fontWeight: 600 }}>
+                <Store size={15} /> Fulfilling Store: <span style={{ color: 'var(--text-primary)' }}>{targetRetailer.shopName}</span>
               </div>
             )}
 
             {/* Items list */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '200px', overflowY: 'auto', paddingBottom: '14px', borderBottom: '1px solid #222', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '200px', overflowY: 'auto', paddingBottom: '14px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
               {itemsToCheckout.map((it) => (
                 <div key={it.productId} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
-                  <span style={{ color: '#D1D5DB' }}>{it.product.name} × {it.quantity}</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>₹{it.unitPrice * it.quantity}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>{it.product.name} × {it.quantity}</span>
+                  <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>₹{it.unitPrice * it.quantity}</span>
                 </div>
               ))}
             </div>
 
             {/* Bill breakdown */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#A7A7A7', paddingBottom: '16px', borderBottom: '1px solid #222', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: 'var(--text-secondary)', paddingBottom: '16px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Subtotal</span>
-                <span style={{ color: '#fff' }}>₹{subtotal}</span>
+                <span style={{ color: 'var(--text-primary)' }}>₹{subtotal}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Delivery</span>
-                <span style={{ color: deliveryFee === 0 ? '#1DB954' : '#fff' }}>{deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}</span>
+                <span style={{ color: deliveryFee === 0 ? '#1DB954' : 'var(--text-primary)' }}>{deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span>Platform Fee</span>
-                <span style={{ color: '#fff' }}>₹{platformFee}</span>
+                <span style={{ color: 'var(--text-primary)' }}>₹{platformFee}</span>
               </div>
               {discount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1DB954' }}>
@@ -248,7 +248,7 @@ export const CheckoutPage: React.FC = () => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
-              <span style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>Grand Total</span>
+              <span style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>Grand Total</span>
               <span style={{ fontSize: '24px', fontWeight: 900, fontFamily: 'Outfit', color: '#1DB954' }}>
                 ₹{grandTotal}
               </span>

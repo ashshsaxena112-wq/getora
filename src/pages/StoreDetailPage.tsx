@@ -150,14 +150,14 @@ export const StoreDetailPage: React.FC = () => {
       {/* Store In-Store Search */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', fontFamily: 'Outfit' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'Outfit' }}>
             Store Catalog ({storeProducts.length} Items)
           </h2>
-          <p style={{ fontSize: '13px', color: '#8E8E93' }}>All items packed directly by {store.ownerName}</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>All items packed directly by {store.ownerName}</p>
         </div>
 
         <div style={{ width: '100%', maxWidth: '320px', position: 'relative' }}>
-          <Search size={16} color="#8E8E93" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+          <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
             placeholder="Search items in this shop..."
@@ -165,11 +165,11 @@ export const StoreDetailPage: React.FC = () => {
             onChange={(e) => setInStoreSearch(e.target.value)}
             style={{
               width: '100%',
-              backgroundColor: '#181818',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-input)',
+              border: '1px solid var(--border-color)',
               borderRadius: '12px',
               padding: '10px 14px 10px 36px',
-              color: '#fff',
+              color: 'var(--text-primary)',
               fontSize: '13px'
             }}
           />
@@ -178,10 +178,10 @@ export const StoreDetailPage: React.FC = () => {
 
       {/* Product Grid */}
       {displayedProducts.length === 0 ? (
-        <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '16px', padding: '48px 24px', textAlign: 'center' }}>
-          <Package size={40} color="#333" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '16px', color: '#fff', fontWeight: 700 }}>No products found</h3>
-          <p style={{ fontSize: '13px', color: '#8E8E93', marginTop: '4px' }}>This shop has not listed matching products yet.</p>
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '48px 24px', textAlign: 'center' }}>
+          <Package size={40} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+          <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700 }}>No products found</h3>
+          <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>This shop has not listed matching products yet.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>

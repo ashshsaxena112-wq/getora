@@ -20,12 +20,12 @@ export const OrderConfirmationPage: React.FC = () => {
     <div className="order-confirmation-page" style={{ maxWidth: '640px', margin: '40px auto', padding: '0 16px 60px' }}>
       <div
         style={{
-          backgroundColor: '#141414',
-          border: '1px solid #282828',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '24px',
           padding: '36px 28px',
           textAlign: 'center',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
+          boxShadow: 'var(--shadow-card)'
         }}
       >
         {/* Animated Check Icon */}
@@ -46,39 +46,39 @@ export const OrderConfirmationPage: React.FC = () => {
           <CheckCircle2 size={42} />
         </div>
 
-        <h1 style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '8px' }}>
+        <h1 style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '8px' }}>
           Order Successfully Placed!
         </h1>
 
-        <p style={{ color: '#A7A7A7', fontSize: '14px', marginBottom: '24px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
           Your order has been transmitted directly to the store merchant. Packing will commence within 5 minutes.
         </p>
 
         {order && (
           <div
             style={{
-              backgroundColor: '#181818',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
               borderRadius: '16px',
               padding: '20px',
               textAlign: 'left',
               marginBottom: '28px'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid #222', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '12px' }}>
               <div>
-                <div style={{ fontSize: '11px', color: '#8E8E93', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Order Number</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Order Number</div>
                 <div style={{ fontSize: '15px', fontWeight: 800, color: '#1DB954', fontFamily: 'monospace' }}>
                   {order.orderNumber}
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '11px', color: '#8E8E93', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Amount</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fff' }}>₹{order.totalAmount}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total Amount</div>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>₹{order.totalAmount}</div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#D1D5DB' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--text-secondary)' }}>
               <Clock size={16} color="#1DB954" />
               <span>Estimated Delivery: <strong>15–25 Minutes</strong></span>
             </div>

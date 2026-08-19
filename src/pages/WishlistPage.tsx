@@ -9,12 +9,12 @@ export const WishlistPage: React.FC = () => {
   const wishlistedProducts = products.filter((p) => wishlist.includes(p.id));
 
   return (
-    <div className="wishlist-page-container">
+    <div className="wishlist-page-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 16px 60px' }}>
       <div style={{ marginBottom: '28px' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '4px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '4px' }}>
           My Wishlist ({wishlistedProducts.length})
         </h1>
-        <p style={{ color: '#A7A7A7', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           Saved products from your local neighborhood stores ready for fast dispatch.
         </p>
       </div>
@@ -22,8 +22,8 @@ export const WishlistPage: React.FC = () => {
       {wishlistedProducts.length === 0 ? (
         <div
           style={{
-            backgroundColor: '#121212',
-            border: '1px solid #292929',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '20px',
             padding: '60px 20px',
             textAlign: 'center',
@@ -46,10 +46,10 @@ export const WishlistPage: React.FC = () => {
           >
             <Heart size={30} />
           </div>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>
             Your Wishlist is Empty
           </h2>
-          <p style={{ color: '#A7A7A7', fontSize: '13.5px', marginBottom: '24px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px', marginBottom: '24px' }}>
             Save items you love by clicking the heart icon on any product card.
           </p>
           <button className="btn-primary" onClick={() => navigate('stores')}>

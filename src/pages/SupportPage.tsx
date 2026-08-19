@@ -59,12 +59,12 @@ export const SupportPage: React.FC = () => {
   };
 
   return (
-    <div className="support-page-container" style={{ maxWidth: '820px', margin: '0 auto' }}>
+    <div className="support-page-container" style={{ maxWidth: '820px', margin: '0 auto', padding: '0 16px 60px' }}>
       <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '6px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '6px' }}>
           Customer Help & Support
         </h1>
-        <p style={{ color: '#A7A7A7', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           We are here to assist you with fast resolution for orders, deliveries, and local store queries.
         </p>
       </div>
@@ -80,9 +80,9 @@ export const SupportPage: React.FC = () => {
               key={cat.id}
               onClick={() => setSelectedIssue(cat.id)}
               style={{
-                backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.12)' : '#121212',
+                backgroundColor: isSelected ? 'rgba(29, 185, 84, 0.12)' : 'var(--bg-card)',
                 border: '1px solid',
-                borderColor: isSelected ? '#1DB954' : '#292929',
+                borderColor: isSelected ? '#1DB954' : 'var(--border-color)',
                 borderRadius: '14px',
                 padding: '16px 12px',
                 display: 'flex',
@@ -90,11 +90,12 @@ export const SupportPage: React.FC = () => {
                 alignItems: 'center',
                 textAlign: 'center',
                 gap: '8px',
-                color: isSelected ? '#1DB954' : '#A7A7A7'
+                color: isSelected ? '#1DB954' : 'var(--text-muted)',
+                cursor: 'pointer'
               }}
             >
-              <Icon size={22} color={isSelected ? '#1DB954' : '#A7A7A7'} />
-              <span style={{ fontSize: '12px', fontWeight: 600, color: isSelected ? '#fff' : '#A7A7A7' }}>
+              <Icon size={22} color={isSelected ? '#1DB954' : 'var(--text-muted)'} />
+              <span style={{ fontSize: '12px', fontWeight: 600, color: isSelected ? '#1DB954' : 'var(--text-primary)' }}>
                 {cat.label}
               </span>
             </button>
@@ -106,24 +107,24 @@ export const SupportPage: React.FC = () => {
       {selectedIssue && (
         <div
           style={{
-            backgroundColor: '#121212',
-            border: '1px solid #292929',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '18px',
             padding: '24px',
             marginBottom: '36px'
           }}
         >
-          <h3 style={{ fontSize: '17px', fontWeight: 700, fontFamily: 'Outfit', color: '#fff', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '17px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '16px' }}>
             Report Issue
           </h3>
 
           {ticketSubmitted ? (
             <div style={{ textAlign: 'center', padding: '24px 0' }}>
               <CheckCircle2 size={40} color="#1DB954" style={{ margin: '0 auto 10px' }} />
-              <h4 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
                 Support Ticket Created (#TKT-{Math.floor(10000 + Math.random() * 90000)})
               </h4>
-              <p style={{ color: '#A7A7A7', fontSize: '13px', marginBottom: '16px' }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginBottom: '16px' }}>
                 A dedicated support specialist is reviewing your issue and will respond via SMS & app notification shortly.
               </p>
               <button
@@ -142,15 +143,15 @@ export const SupportPage: React.FC = () => {
             <form onSubmit={handleTicketSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {orders.length > 0 && (
                 <div className="input-field-group">
-                  <label>Select Related Order</label>
+                  <label style={{ color: 'var(--text-primary)' }}>Select Related Order</label>
                   <select
                     value={selectedOrder}
                     onChange={(e) => setSelectedOrder(e.target.value)}
                     className="input-styled"
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', backgroundColor: 'var(--bg-input)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
                   >
                     {orders.map((o) => (
-                      <option key={o.id} value={o.id} style={{ backgroundColor: '#181818', color: '#fff' }}>
+                      <option key={o.id} value={o.id}>
                         Order #{o.orderNumber} ({o.retailer?.shopName || o.storeName || 'Store'}) - ₹{o.totalAmount || o.grandTotal || 0}
                       </option>
                     ))}
@@ -159,12 +160,12 @@ export const SupportPage: React.FC = () => {
               )}
 
               <div className="input-field-group">
-                <label>Describe the issue in detail</label>
+                <label style={{ color: 'var(--text-primary)' }}>Describe the issue in detail</label>
                 <textarea
                   rows={4}
                   placeholder="Please describe what happened so our support team can resolve it immediately..."
                   className="input-styled"
-                  style={{ resize: 'none', lineHeight: '1.4' }}
+                  style={{ resize: 'none', lineHeight: '1.4', backgroundColor: 'var(--bg-input)', color: 'var(--text-primary)', border: '1px solid var(--border-color)' }}
                   value={ticketMessage}
                   onChange={(e) => setTicketMessage(e.target.value)}
                   required
@@ -191,7 +192,7 @@ export const SupportPage: React.FC = () => {
 
       {/* Frequently Asked Questions */}
       <section style={{ marginBottom: '36px' }}>
-        <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Outfit', color: '#fff', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '16px' }}>
           Frequently Asked Questions
         </h3>
 
@@ -203,8 +204,8 @@ export const SupportPage: React.FC = () => {
               <div
                 key={idx}
                 style={{
-                  backgroundColor: '#121212',
-                  border: '1px solid #292929',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '12px',
                   overflow: 'hidden'
                 }}
@@ -219,14 +220,14 @@ export const SupportPage: React.FC = () => {
                     cursor: 'pointer'
                   }}
                 >
-                  <span style={{ fontSize: '14.5px', fontWeight: 600, color: '#fff' }}>
+                  <span style={{ fontSize: '14.5px', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {faq.q}
                   </span>
-                  {isOpen ? <ChevronUp size={18} color="#1DB954" /> : <ChevronDown size={18} color="#A7A7A7" />}
+                  {isOpen ? <ChevronUp size={18} color="#1DB954" /> : <ChevronDown size={18} color="var(--text-muted)" />}
                 </div>
 
                 {isOpen && (
-                  <div style={{ padding: '0 20px 16px', color: '#A7A7A7', fontSize: '13.5px', lineHeight: '1.6', borderTop: '1px solid #1c1c1c', paddingTop: '12px' }}>
+                  <div style={{ padding: '0 20px 16px', color: 'var(--text-secondary)', fontSize: '13.5px', lineHeight: '1.6', borderTop: '1px solid var(--border-subtle)', paddingTop: '12px' }}>
                     {faq.a}
                   </div>
                 )}
@@ -237,20 +238,20 @@ export const SupportPage: React.FC = () => {
       </section>
 
       {/* Contact Channels */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-        <div style={{ backgroundColor: '#121212', border: '1px solid #292929', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Mail size={22} color="#1DB954" />
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#fff' }}>Email Support</div>
-            <div style={{ fontSize: '12px', color: '#A7A7A7' }}>support@getora.in</div>
+            <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Email Support</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>support@getora.in</div>
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#121212', border: '1px solid #292929', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '14px', padding: '18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <Phone size={22} color="#1DB954" />
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#fff' }}>Toll Free Helpline</div>
-            <div style={{ fontSize: '12px', color: '#A7A7A7' }}>1800-419-GETORA (9 AM - 11 PM)</div>
+            <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Toll Free Helpline</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>1800-419-GETORA (9 AM - 11 PM)</div>
           </div>
         </div>
       </div>

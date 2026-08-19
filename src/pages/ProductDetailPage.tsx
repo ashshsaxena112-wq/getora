@@ -75,8 +75,8 @@ export const ProductDetailPage: React.FC = () => {
           {/* Main Selected Image */}
           <div
             style={{
-              backgroundColor: '#181818',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '20px',
               overflow: 'hidden',
               height: '420px',
@@ -123,10 +123,10 @@ export const ProductDetailPage: React.FC = () => {
                     width: '72px',
                     height: '72px',
                     borderRadius: '12px',
-                    border: selectedImgIndex === idx ? '2px solid #1DB954' : '1px solid #282828',
+                    border: selectedImgIndex === idx ? '2px solid #1DB954' : '1px solid var(--border-color)',
                     overflow: 'hidden',
                     cursor: 'pointer',
-                    backgroundColor: '#181818',
+                    backgroundColor: 'var(--bg-secondary)',
                     flexShrink: 0
                   }}
                 >
@@ -147,8 +147,8 @@ export const ProductDetailPage: React.FC = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                backgroundColor: '#181818',
-                border: '1px solid #282828',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '8px',
                 padding: '6px 12px',
                 fontSize: '13px',
@@ -157,36 +157,36 @@ export const ProductDetailPage: React.FC = () => {
                 cursor: 'pointer'
               }}
             >
-              <Store size={14} /> Sold & Packed by <strong style={{ color: '#fff' }}>{store.shopName}</strong>
+              <Store size={14} /> Sold & Packed by <strong style={{ color: 'var(--text-primary)' }}>{store.shopName}</strong>
             </div>
           )}
 
-          <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', lineHeight: 1.25, marginBottom: '8px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', lineHeight: 1.25, marginBottom: '8px' }}>
             {product.name}
           </h1>
 
           {product.brand && (
-            <div style={{ fontSize: '14px', color: '#A7A7A7', marginBottom: '16px' }}>
-              Brand: <strong style={{ color: '#fff' }}>{product.brand}</strong> • SKU: {product.sku || 'VERIFIED'}
+            <div style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+              Brand: <strong style={{ color: 'var(--text-primary)' }}>{product.brand}</strong> • SKU: {product.sku || 'VERIFIED'}
             </div>
           )}
 
           {/* Pricing Block */}
           <div
             style={{
-              backgroundColor: '#141414',
-              border: '1px solid #242424',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '16px',
               padding: '20px',
               marginBottom: '24px'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '32px', fontWeight: 900, fontFamily: 'Outfit', color: '#FFFFFF' }}>
+              <span style={{ fontSize: '32px', fontWeight: 900, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
                 ₹{product.sellingPrice}
               </span>
               {product.price > product.sellingPrice && (
-                <span style={{ fontSize: '18px', color: '#6B6B6B', textDecoration: 'line-through' }}>
+                <span style={{ fontSize: '18px', color: 'var(--text-muted)', textDecoration: 'line-through' }}>
                   ₹{product.price}
                 </span>
               )}
@@ -196,7 +196,7 @@ export const ProductDetailPage: React.FC = () => {
                 </span>
               )}
             </div>
-            <div style={{ fontSize: '12px', color: '#8E8E93' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
               Inclusive of all taxes • Unit: {product.unit || '1 pc'}
             </div>
 
@@ -209,8 +209,8 @@ export const ProductDetailPage: React.FC = () => {
                     width: '100%',
                     padding: '14px',
                     borderRadius: '12px',
-                    backgroundColor: '#202020',
-                    color: '#8E8E93',
+                    backgroundColor: 'var(--bg-elevated)',
+                    color: 'var(--text-muted)',
                     fontSize: '15px',
                     fontWeight: 700,
                     cursor: 'not-allowed',
@@ -269,21 +269,21 @@ export const ProductDetailPage: React.FC = () => {
 
           {/* Value Props Strip */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
-            <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Truck size={18} color="#1DB954" />
-              <span style={{ fontSize: '12px', color: '#D1D5DB' }}>15–25 Min Delivery</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>15–25 Min Delivery</span>
             </div>
-            <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <ShieldCheck size={18} color="#1DB954" />
-              <span style={{ fontSize: '12px', color: '#D1D5DB' }}>100% Genuine Item</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>100% Genuine Item</span>
             </div>
           </div>
 
           {/* Description */}
           {product.description && (
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Product Overview</h3>
-              <p style={{ color: '#A7A7A7', fontSize: '14px', lineHeight: 1.6 }}>{product.description}</p>
+              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Product Overview</h3>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6 }}>{product.description}</p>
             </div>
           )}
         </div>

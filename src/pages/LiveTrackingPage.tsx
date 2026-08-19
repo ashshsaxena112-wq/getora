@@ -65,7 +65,7 @@ export const LiveTrackingPage: React.FC = () => {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ color: '#8E8E93', fontSize: '13px' }}>Order:</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Order:</span>
           <span style={{ color: '#1DB954', fontWeight: 800, fontSize: '14px', fontFamily: 'monospace' }}>
             {order.orderNumber}
           </span>
@@ -78,8 +78,8 @@ export const LiveTrackingPage: React.FC = () => {
           {/* ETA Card */}
           <div
             style={{
-              backgroundColor: '#141414',
-              border: '1px solid #282828',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '20px',
               padding: '24px',
               display: 'flex',
@@ -89,14 +89,14 @@ export const LiveTrackingPage: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ fontSize: '12px', color: '#8E8E93', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Estimated Delivery
               </div>
               <div style={{ fontSize: '26px', fontWeight: 800, fontFamily: 'Outfit', color: '#1DB954', marginTop: '2px' }}>
                 {currentStatus === 'delivered' ? 'Order Delivered!' : '15–25 Minutes'}
               </div>
-              <div style={{ fontSize: '13px', color: '#D1D5DB', marginTop: '4px' }}>
-                Status: <strong style={{ color: '#fff', textTransform: 'capitalize' }}>{currentStatus.replace(/_/g, ' ')}</strong>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+                Status: <strong style={{ color: 'var(--text-primary)', textTransform: 'capitalize' }}>{currentStatus.replace(/_/g, ' ')}</strong>
               </div>
             </div>
 
@@ -117,8 +117,8 @@ export const LiveTrackingPage: React.FC = () => {
           </div>
 
           {/* Stepper Timeline */}
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '24px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '20px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '20px' }}>
               Delivery Progress
             </h3>
 
@@ -134,8 +134,8 @@ export const LiveTrackingPage: React.FC = () => {
                         width: '24px',
                         height: '24px',
                         borderRadius: '50%',
-                        backgroundColor: isPassed ? '#1DB954' : '#222',
-                        color: isPassed ? '#000' : '#555',
+                        backgroundColor: isPassed ? '#1DB954' : 'var(--bg-elevated)',
+                        color: isPassed ? '#000' : 'var(--text-muted)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -148,7 +148,7 @@ export const LiveTrackingPage: React.FC = () => {
                     </div>
 
                     <div>
-                      <div style={{ fontSize: '14px', fontWeight: isCurrent ? 800 : isPassed ? 600 : 400, color: isPassed ? '#fff' : '#666' }}>
+                      <div style={{ fontSize: '14px', fontWeight: isCurrent ? 800 : isPassed ? 600 : 400, color: isPassed ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                         {step.label}
                       </div>
                     </div>
@@ -162,31 +162,31 @@ export const LiveTrackingPage: React.FC = () => {
         {/* Right Column: Store & Delivery Partner Info */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Store Info Card */}
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#202020', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1DB954' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1DB954' }}>
                 <StoreIcon size={20} />
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: '#8E8E93' }}>Fulfilling Store</div>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{order.retailer?.shopName || 'Neighborhood Shop'}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Fulfilling Store</div>
+                <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>{order.retailer?.shopName || 'Neighborhood Shop'}</div>
               </div>
             </div>
-            <div style={{ fontSize: '13px', color: '#A7A7A7' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
               {order.retailer?.addressLine1 || order.retailer?.city || 'Local Neighborhood'}
             </div>
           </div>
 
           {/* Delivery Partner Card */}
           {order.deliveryPartner && (
-            <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+            <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                 <div style={{ width: '42px', height: '42px', borderRadius: '50%', backgroundColor: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
                   <Bike size={20} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#8E8E93' }}>Assigned Rider</div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>{order.deliveryPartner.fullName}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Assigned Rider</div>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>{order.deliveryPartner.fullName}</div>
                   <div style={{ fontSize: '12px', color: '#1DB954' }}>{order.deliveryPartner.vehicleType || 'Electric Two-Wheeler'} ({order.deliveryPartner.vehicleNumber || 'EV-Fleet'})</div>
                 </div>
               </div>
@@ -194,15 +194,15 @@ export const LiveTrackingPage: React.FC = () => {
           )}
 
           {/* Delivery Address */}
-          <div style={{ backgroundColor: '#141414', border: '1px solid #282828', borderRadius: '20px', padding: '20px' }}>
+          <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#1DB954', fontSize: '13px', fontWeight: 700, marginBottom: '8px' }}>
               <Home size={15} /> Delivery Destination
             </div>
-            <p style={{ fontSize: '13px', color: '#D1D5DB', lineHeight: 1.4 }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
               {order.address?.addressLine1}
               {order.address?.addressLine2 && `, ${order.address.addressLine2}`}
             </p>
-            <p style={{ fontSize: '12px', color: '#8E8E93', marginTop: '4px' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
               {order.address?.city} - {order.address?.pincode}
             </p>
           </div>

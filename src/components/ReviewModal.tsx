@@ -24,13 +24,13 @@ export const ReviewModal: React.FC = () => {
     <div className="modal-overlay" onClick={closeReviewModal}>
       <div
         style={{
-          backgroundColor: '#141414',
-          border: '1px solid #292929',
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
           borderRadius: '18px',
           width: '100%',
           maxWidth: '460px',
           overflow: 'hidden',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.85)',
+          boxShadow: 'var(--shadow-card)',
           padding: '28px'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -38,16 +38,16 @@ export const ReviewModal: React.FC = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Sparkles size={18} color="#1DB954" />
-            <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Outfit', color: '#fff' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
               Rate & Review Order
             </h3>
           </div>
-          <button onClick={closeReviewModal} style={{ color: '#A7A7A7' }}>
+          <button onClick={closeReviewModal} style={{ color: 'var(--text-secondary)', background: 'none', border: 'none', cursor: 'pointer' }}>
             <X size={18} />
           </button>
         </div>
 
-        <p style={{ fontSize: '13.5px', color: '#A7A7A7', marginBottom: '20px' }}>
+        <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
           How was your experience with <strong>{activeReviewModal.storeName}</strong>?
         </p>
 

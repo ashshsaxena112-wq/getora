@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useGetora } from '../context/GetoraContext';
 import { UserRole } from '../types';
+import { GetoraLogo } from './GetoraLogo';
 
 export const AuthModal: React.FC = () => {
   const {
@@ -262,29 +263,7 @@ export const AuthModal: React.FC = () => {
         >
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div
-                style={{
-                  height: '32px',
-                  width: '115px',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '6px'
-                }}
-              >
-                <img
-                  src="/getora-logo.png"
-                  alt="GETORA"
-                  style={{
-                    height: '85px',
-                    width: '115px',
-                    objectFit: 'cover',
-                    objectPosition: 'center',
-                    transform: 'scale(1.15)'
-                  }}
-                />
-              </div>
+              <GetoraLogo size="sm" />
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-elevated)', padding: '2px 8px', borderRadius: '6px' }}>
                 Supabase Auth
               </span>

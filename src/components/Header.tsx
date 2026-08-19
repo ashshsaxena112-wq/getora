@@ -27,6 +27,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useGetora } from '../context/GetoraContext';
+import { GetoraLogo } from './GetoraLogo';
 
 const HEADER_CATEGORIES = [
   { id: 'cat-hardware', name: 'Hardware', icon: Wrench, color: '#FF9500' },
@@ -143,18 +144,9 @@ export const Header: React.FC = () => {
           <div
             className="header-brand"
             onClick={() => navigate('home')}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
           >
-            <div className="brand-logo-box">
-              <img
-                src="/getora-logo.png"
-                alt="GETORA"
-                className="brand-logo-img"
-              />
-            </div>
-            <span className="brand-badge-desktop">
-              HYPERLOCAL
-            </span>
+            <GetoraLogo size="md" showBadge={true} />
           </div>
 
           {/* Categories Dropdown Trigger (Desktop / Tablet) */}

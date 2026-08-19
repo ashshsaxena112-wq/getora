@@ -39,7 +39,7 @@ export const PaymentPage: React.FC = () => {
   };
 
   return (
-    <div className="payment-page-container" style={{ maxWidth: '780px', margin: '0 auto' }}>
+    <div className="payment-page-container" style={{ maxWidth: '780px', margin: '0 auto', padding: '0 16px 60px' }}>
       <button
         onClick={() => navigate('checkout', { storeId })}
         className="btn-secondary"
@@ -48,17 +48,17 @@ export const PaymentPage: React.FC = () => {
         <ArrowLeft size={16} /> Back to Checkout
       </button>
 
-      <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff', marginBottom: '6px' }}>
+      <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)', marginBottom: '6px' }}>
         Select Payment Method
       </h1>
-      <p style={{ color: '#A7A7A7', fontSize: '14px', marginBottom: '28px' }}>
+      <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginBottom: '28px' }}>
         All transactions are secured with 256-bit bank grade encryption.
       </p>
 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1.2fr 1fr',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '28px'
         }}
         className="payment-grid-layout"
@@ -69,9 +69,9 @@ export const PaymentPage: React.FC = () => {
           <div
             onClick={() => setPaymentMethod('UPI')}
             style={{
-              backgroundColor: paymentMethod === 'UPI' ? 'rgba(29, 185, 84, 0.08)' : '#121212',
+              backgroundColor: paymentMethod === 'UPI' ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-card)',
               border: '1px solid',
-              borderColor: paymentMethod === 'UPI' ? '#1DB954' : '#292929',
+              borderColor: paymentMethod === 'UPI' ? '#1DB954' : 'var(--border-color)',
               borderRadius: '14px',
               padding: '16px 18px',
               cursor: 'pointer'
@@ -79,12 +79,12 @@ export const PaymentPage: React.FC = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: paymentMethod === 'UPI' ? '12px' : '0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Smartphone size={22} color={paymentMethod === 'UPI' ? '#1DB954' : '#A7A7A7'} />
+                <Smartphone size={22} color={paymentMethod === 'UPI' ? '#1DB954' : 'var(--text-muted)'} />
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
                     UPI / Instant Pay
                   </div>
-                  <div style={{ fontSize: '12px', color: '#A7A7A7' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     Google Pay, PhonePe, Paytm, QR
                   </div>
                 </div>
@@ -93,18 +93,18 @@ export const PaymentPage: React.FC = () => {
             </div>
 
             {paymentMethod === 'UPI' && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', paddingTop: '10px', borderTop: '1px solid #222' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
                 <button
                   type="button"
                   onClick={() => setUpiOption('gpay')}
                   style={{
                     padding: '8px',
                     borderRadius: '8px',
-                    backgroundColor: upiOption === 'gpay' ? '#1DB954' : '#181818',
-                    color: upiOption === 'gpay' ? '#000' : '#fff',
+                    backgroundColor: upiOption === 'gpay' ? '#1DB954' : 'var(--bg-secondary)',
+                    color: upiOption === 'gpay' ? '#000' : 'var(--text-primary)',
                     fontWeight: 600,
                     fontSize: '12px',
-                    border: '1px solid #333'
+                    border: '1px solid var(--border-color)'
                   }}
                 >
                   Google Pay
@@ -115,11 +115,11 @@ export const PaymentPage: React.FC = () => {
                   style={{
                     padding: '8px',
                     borderRadius: '8px',
-                    backgroundColor: upiOption === 'phonepe' ? '#1DB954' : '#181818',
-                    color: upiOption === 'phonepe' ? '#000' : '#fff',
+                    backgroundColor: upiOption === 'phonepe' ? '#1DB954' : 'var(--bg-secondary)',
+                    color: upiOption === 'phonepe' ? '#000' : 'var(--text-primary)',
                     fontWeight: 600,
                     fontSize: '12px',
-                    border: '1px solid #333'
+                    border: '1px solid var(--border-color)'
                   }}
                 >
                   PhonePe
@@ -130,11 +130,11 @@ export const PaymentPage: React.FC = () => {
                   style={{
                     padding: '8px',
                     borderRadius: '8px',
-                    backgroundColor: upiOption === 'paytm' ? '#1DB954' : '#181818',
-                    color: upiOption === 'paytm' ? '#000' : '#fff',
+                    backgroundColor: upiOption === 'paytm' ? '#1DB954' : 'var(--bg-secondary)',
+                    color: upiOption === 'paytm' ? '#000' : 'var(--text-primary)',
                     fontWeight: 600,
                     fontSize: '12px',
-                    border: '1px solid #333'
+                    border: '1px solid var(--border-color)'
                   }}
                 >
                   Paytm UPI
@@ -145,11 +145,11 @@ export const PaymentPage: React.FC = () => {
                   style={{
                     padding: '8px',
                     borderRadius: '8px',
-                    backgroundColor: upiOption === 'qr' ? '#1DB954' : '#181818',
-                    color: upiOption === 'qr' ? '#000' : '#fff',
+                    backgroundColor: upiOption === 'qr' ? '#1DB954' : 'var(--bg-secondary)',
+                    color: upiOption === 'qr' ? '#000' : 'var(--text-primary)',
                     fontWeight: 600,
                     fontSize: '12px',
-                    border: '1px solid #333',
+                    border: '1px solid var(--border-color)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -166,9 +166,9 @@ export const PaymentPage: React.FC = () => {
           <div
             onClick={() => setPaymentMethod('CARD')}
             style={{
-              backgroundColor: paymentMethod === 'CARD' ? 'rgba(29, 185, 84, 0.08)' : '#121212',
+              backgroundColor: paymentMethod === 'CARD' ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-card)',
               border: '1px solid',
-              borderColor: paymentMethod === 'CARD' ? '#1DB954' : '#292929',
+              borderColor: paymentMethod === 'CARD' ? '#1DB954' : 'var(--border-color)',
               borderRadius: '14px',
               padding: '16px 18px',
               cursor: 'pointer'
@@ -176,12 +176,12 @@ export const PaymentPage: React.FC = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <CreditCard size={22} color={paymentMethod === 'CARD' ? '#1DB954' : '#A7A7A7'} />
+                <CreditCard size={22} color={paymentMethod === 'CARD' ? '#1DB954' : 'var(--text-muted)'} />
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
                     Credit / Debit Card
                   </div>
-                  <div style={{ fontSize: '12px', color: '#A7A7A7' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     Visa, MasterCard, RuPay, Amex
                   </div>
                 </div>
@@ -194,9 +194,9 @@ export const PaymentPage: React.FC = () => {
           <div
             onClick={() => setPaymentMethod('NETBANKING')}
             style={{
-              backgroundColor: paymentMethod === 'NETBANKING' ? 'rgba(29, 185, 84, 0.08)' : '#121212',
+              backgroundColor: paymentMethod === 'NETBANKING' ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-card)',
               border: '1px solid',
-              borderColor: paymentMethod === 'NETBANKING' ? '#1DB954' : '#292929',
+              borderColor: paymentMethod === 'NETBANKING' ? '#1DB954' : 'var(--border-color)',
               borderRadius: '14px',
               padding: '16px 18px',
               cursor: 'pointer'
@@ -204,12 +204,12 @@ export const PaymentPage: React.FC = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Building size={22} color={paymentMethod === 'NETBANKING' ? '#1DB954' : '#A7A7A7'} />
+                <Building size={22} color={paymentMethod === 'NETBANKING' ? '#1DB954' : 'var(--text-muted)'} />
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
                     Net Banking
                   </div>
-                  <div style={{ fontSize: '12px', color: '#A7A7A7' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     HDFC, ICICI, SBI, Axis & all Indian banks
                   </div>
                 </div>
@@ -222,9 +222,9 @@ export const PaymentPage: React.FC = () => {
           <div
             onClick={() => setPaymentMethod('COD')}
             style={{
-              backgroundColor: paymentMethod === 'COD' ? 'rgba(29, 185, 84, 0.08)' : '#121212',
+              backgroundColor: paymentMethod === 'COD' ? 'rgba(29, 185, 84, 0.08)' : 'var(--bg-card)',
               border: '1px solid',
-              borderColor: paymentMethod === 'COD' ? '#1DB954' : '#292929',
+              borderColor: paymentMethod === 'COD' ? '#1DB954' : 'var(--border-color)',
               borderRadius: '14px',
               padding: '16px 18px',
               cursor: 'pointer'
@@ -232,12 +232,12 @@ export const PaymentPage: React.FC = () => {
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Banknote size={22} color={paymentMethod === 'COD' ? '#1DB954' : '#A7A7A7'} />
+                <Banknote size={22} color={paymentMethod === 'COD' ? '#1DB954' : 'var(--text-muted)'} />
                 <div>
-                  <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
                     Cash on Delivery (COD)
                   </div>
-                  <div style={{ fontSize: '12px', color: '#A7A7A7' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
                     Pay cash or UPI at your doorstep on delivery
                   </div>
                 </div>
@@ -251,20 +251,20 @@ export const PaymentPage: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div
             style={{
-              backgroundColor: '#121212',
-              border: '1px solid #292929',
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
               borderRadius: '16px',
               padding: '24px'
             }}
           >
-            <div style={{ fontSize: '13px', color: '#A7A7A7', marginBottom: '4px' }}>
+            <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
               Total Payable Amount
             </div>
             <div style={{ fontSize: '32px', fontWeight: 800, fontFamily: 'Outfit', color: '#1DB954', marginBottom: '16px' }}>
               ₹{grandTotal.toLocaleString('en-IN')}
             </div>
 
-            <div style={{ padding: '12px', backgroundColor: '#181818', borderRadius: '10px', fontSize: '12.5px', color: '#D1D1D1', marginBottom: '20px' }}>
+            <div style={{ padding: '12px', backgroundColor: 'var(--bg-secondary)', borderRadius: '10px', fontSize: '12.5px', color: 'var(--text-primary)', marginBottom: '20px' }}>
               Selected: <strong>{paymentMethod}</strong>
             </div>
 
@@ -283,7 +283,7 @@ export const PaymentPage: React.FC = () => {
               {isProcessing ? 'Processing Secure Payment...' : `Place Order (₹${grandTotal})`}
             </button>
 
-            <div style={{ textAlign: 'center', color: '#6B6B6B', fontSize: '11.5px', marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '11.5px', marginTop: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <Lock size={13} color="#1DB954" /> 256-Bit Encrypted Payment
             </div>
           </div>

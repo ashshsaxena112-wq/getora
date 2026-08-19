@@ -19,10 +19,10 @@ export const NearbyStoresPage: React.FC = () => {
       <div style={{ marginBottom: '28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+            <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
               Nearby Stores in {selectedAddress?.city || 'Bengaluru'}
             </h1>
-            <p style={{ color: '#A7A7A7', fontSize: '14px', marginTop: '4px' }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '4px' }}>
               Direct ordering from local neighborhood merchants with 15–25 min doorstep delivery.
             </p>
           </div>
@@ -65,10 +65,10 @@ export const NearbyStoresPage: React.FC = () => {
           <Loader2 size={24} className="spin" /> Loading nearby stores...
         </div>
       ) : filteredStores.length === 0 ? (
-        <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '16px', padding: '48px 24px', textAlign: 'center' }}>
-          <Store size={44} color="#333" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '18px', color: '#fff', fontWeight: 700, marginBottom: '6px' }}>No Stores Found</h3>
-          <p style={{ fontSize: '14px', color: '#8E8E93', marginBottom: '20px' }}>
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '48px 24px', textAlign: 'center', boxShadow: 'var(--shadow-card)' }}>
+          <Store size={44} color="var(--text-muted)" style={{ margin: '0 auto 12px' }} />
+          <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', fontWeight: 700, marginBottom: '6px' }}>No Stores Found</h3>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '20px' }}>
             No registered stores match your current filter.
           </p>
           <button className="btn-primary" onClick={openAuthModal} style={{ padding: '10px 22px', borderRadius: '10px', fontSize: '14px' }}>

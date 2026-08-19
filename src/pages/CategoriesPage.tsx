@@ -39,11 +39,11 @@ export const CategoriesPage: React.FC = () => {
               <ArrowLeft size={16} /> All Categories
             </button>
           )}
-          <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: '#fff' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
             {selectedCategory ? selectedCategory.name : 'Explore All Categories'}
           </h1>
         </div>
-        <p style={{ color: '#A7A7A7', fontSize: '14px' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
           {selectedCategory?.description ||
             'Browse verified neighborhood stores and authentic products across all local categories.'}
         </p>
@@ -78,7 +78,7 @@ export const CategoriesPage: React.FC = () => {
           {categoryStores.length > 0 && (
             <section style={{ marginBottom: '44px' }}>
               <div className="section-header" style={{ marginBottom: '16px' }}>
-                <h2 className="section-title" style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'Outfit', color: '#fff' }}>
+                <h2 className="section-title" style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
                   {selectedCategory ? `Nearby ${selectedCategory.name} Stores` : 'Featured Local Stores'}
                 </h2>
               </div>
@@ -94,10 +94,10 @@ export const CategoriesPage: React.FC = () => {
           <section>
             <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
               <div>
-                <h2 className="section-title" style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'Outfit', color: '#fff' }}>
+                <h2 className="section-title" style={{ fontSize: '20px', fontWeight: 700, fontFamily: 'Outfit', color: 'var(--text-primary)' }}>
                   Available Products ({displayedProducts.length})
                 </h2>
-                <p style={{ color: '#A7A7A7', fontSize: '13px' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
                   Delivered in 15-25 minutes from local stores
                 </p>
               </div>
@@ -129,10 +129,10 @@ export const CategoriesPage: React.FC = () => {
             </div>
 
             {displayedProducts.length === 0 ? (
-              <div style={{ backgroundColor: '#141414', border: '1px solid #222', borderRadius: '16px', padding: '40px', textAlign: 'center' }}>
-                <Package size={36} color="#333" style={{ margin: '0 auto 10px' }} />
-                <h3 style={{ fontSize: '16px', color: '#fff', fontWeight: 700 }}>No products listed in this category</h3>
-                <p style={{ fontSize: '13px', color: '#8E8E93', marginTop: '4px' }}>Check back soon as local stores update their inventories.</p>
+              <div className="empty-state-card" style={{ padding: '40px', textAlign: 'center' }}>
+                <Package size={36} color="var(--text-muted)" style={{ margin: '0 auto 10px' }} />
+                <h3 style={{ fontSize: '16px', color: 'var(--text-primary)', fontWeight: 700 }}>No products listed in this category</h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Check back soon as local stores update their inventories.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '20px' }}>
