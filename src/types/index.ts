@@ -182,6 +182,13 @@ export interface Product {
   stockQuantity: number;
   inStock?: boolean;
   unit?: string;
+  unitType?: 'count' | 'weight';
+  unitOptions?: number[];
+  variantLabel?: string;
+  weightUnit?: 'g' | 'kg' | 'mg' | string;
+  subCategory?: string;
+  subCategoryIcon?: string;
+  subCategoryImageUrl?: string;
   packInfo?: string;
   imageUrl?: string;
   features?: (string | { label: string; value: string })[];
