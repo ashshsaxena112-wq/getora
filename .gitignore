@@ -43,3 +43,12 @@ Thumbs.db
 *.tar.gz
 *.rar
 .netlify/
+
+# Android & Gradle
+.gradle/
+android/.gradle/
+android/app/build/
+android/build/
+*.apk
+*.aab
+

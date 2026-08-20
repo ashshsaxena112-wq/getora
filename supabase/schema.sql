@@ -172,10 +172,46 @@ CREATE TABLE public.categories (
     updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- 6. PRODUCTS
+-- 5.1 MASTER PRODUCTS CATALOG (GETORA Pre-built Master Catalog)
+CREATE TABLE public.master_products (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    brand TEXT NOT NULL,
+    category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    description TEXT,
+    suggested_price NUMERIC(12,2) NOT NULL DEFAULT 0,
+    suggested_selling_price NUMERIC(12,2) NOT NULL DEFAULT 0,
+    unit TEXT DEFAULT '1 pc',
+    pack_info TEXT,
+    image_url TEXT NOT NULL,
+    sku TEXT UNIQUE,
+    is_popular BOOLEAN DEFAULT false,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 5.2 PRODUCT REQUESTS (Retailers requesting new items to be added to Master Catalog)
+CREATE TABLE public.product_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    retailer_id UUID NOT NULL REFERENCES public.retailers(id) ON DELETE CASCADE,
+    retailer_name TEXT,
+    name TEXT NOT NULL,
+    brand TEXT,
+    category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    expected_price NUMERIC(12,2),
+    unit TEXT DEFAULT '1 pc',
+    notes TEXT,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 6. PRODUCTS (Retailer Specific Inventory / Shop Listings)
 CREATE TABLE public.products (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     retailer_id UUID NOT NULL REFERENCES public.retailers(id) ON DELETE CASCADE,
+    master_product_id TEXT REFERENCES public.master_products(id) ON DELETE SET NULL,
     category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT,

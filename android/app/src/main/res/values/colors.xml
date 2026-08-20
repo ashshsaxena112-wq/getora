@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- GETORA Brand Colors -->
+    <color name="getora_primary_green">#22C55E</color>
+    <color name="getora_primary_green_dark">#16A34A</color>
+    <color name="getora_primary_green_light">#4ADE80</color>
+    <color name="getora_primary_green_dim">#1F22C55E</color>
+
+    <!-- Dark Theme Backgrounds -->
+    <color name="getora_dark_bg">#0A0F0D</color>
+    <color name="getora_dark_card">#0F1B15</color>
+    <color name="getora_dark_elevated">#14241D</color>
+    <color name="getora_dark_input">#0B1410</color>
+    <color name="getora_dark_border">#2622C55E</color>
+
+    <!-- Light Theme Backgrounds -->
+    <color name="getora_light_bg">#F7FBF8</color>
+    <color name="getora_light_card">#FFFFFF</color>
+    <color name="getora_light_elevated">#F0FDF4</color>
+    <color name="getora_light_border">#DCFCE7</color>
+
+    <!-- Typography Colors -->
+    <color name="getora_text_white">#F5F5F5</color>
+    <color name="getora_text_black">#111827</color>
+    <color name="getora_text_muted">#6B7280</color>
+    <color name="getora_text_gray">#9CA3AF</color>
+
+    <!-- Status Colors -->
+    <color name="getora_error">#EF4444</color>
+    <color name="getora_warning">#EAB308</color>
+    <color name="getora_info">#3B82F6</color>
+</resources>

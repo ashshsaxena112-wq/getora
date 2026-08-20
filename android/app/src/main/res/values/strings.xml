@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GETORA</string>
+    <string name="tagline">Fast Delivery from Local Shops</string>
+    <string name="deliver_to">Deliver to</string>
+    <string name="search_placeholder">Search products, brands, or shops…</string>
+    <string name="explore_categories">Explore Categories</string>
+    <string name="nearby_shops">Nearby Local Stores</string>
+    <string name="popular_products">Popular Near You</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="cart">Cart</string>
+    <string name="checkout">Checkout</string>
+    <string name="orders">Orders</string>
+    <string name="account">Account</string>
+    <string name="retailer_portal">Retailer Portal</string>
+    <string name="delivery_portal">Delivery Partner</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="notification_channel_name">Order Updates</string>
+    <string name="notification_channel_desc">Real-time status updates for your orders</string>
+</resources>
