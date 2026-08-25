@@ -318,7 +318,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // 1. ADD RETAILER
   const addRetailer = async (newShop: Partial<RetailerItem>) => {
-    const id = newShop.id || `store-${Date.now()}`;
+    const id = newShop.id && newShop.id.length === 36 ? newShop.id : crypto.randomUUID();
     const retailerObj: RetailerItem = {
       id,
       retailer: newShop.retailer || 'New Merchant Shop',
@@ -345,7 +345,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setRetailers((prev) => [retailerObj, ...prev]);
 
     try {
-      await supabase.from('retailers').insert({
+      const { error } = await supabase.from('retailers').insert({
         id: retailerObj.id,
         shop_name: retailerObj.retailer,
         owner_name: retailerObj.owner,
@@ -356,16 +356,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         address_line1: retailerObj.address,
         is_active: retailerObj.status === 'Active',
         is_verified: retailerObj.isVerified,
-        gstin: retailerObj.gstin,
-        commission_percentage: retailerObj.commissionRate,
+        gst_number: retailerObj.gstin,
         opening_time: retailerObj.openTime,
         closing_time: retailerObj.closeTime,
         rating: retailerObj.rating,
         total_orders: 0
       });
-      return true;
-    } catch {
-      return true;
+
+      if (error) console.error('Supabase add retailer error:', error);
+      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      return !error;
+    } catch (err) {
+      console.error('Supabase add retailer exception:', err);
+      return false;
     }
   };
 
@@ -386,13 +389,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (updatedData.city) updates.city = updatedData.city;
       if (updatedData.status) updates.is_active = updatedData.status === 'Active';
       if (updatedData.isVerified !== undefined) updates.is_verified = updatedData.isVerified;
-      if (updatedData.gstin) updates.gstin = updatedData.gstin;
-      if (updatedData.commissionRate) updates.commission_percentage = updatedData.commissionRate;
+      if (updatedData.gstin) updates.gst_number = updatedData.gstin;
 
-      await supabase.from('retailers').update(updates).eq('id', retailerId);
-      return true;
-    } catch {
-      return true;
+      const { error } = await supabase.from('retailers').update(updates).eq('id', retailerId);
+      if (error) console.error('Supabase update retailer error:', error);
+      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      return !error;
+    } catch (err) {
+      console.error('Supabase update retailer exception:', err);
+      return false;
     }
   };
 
@@ -401,10 +406,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setRetailers((prev) => prev.filter((r) => r.id !== retailerId));
 
     try {
-      await supabase.from('retailers').delete().eq('id', retailerId);
-      return true;
-    } catch {
-      return true;
+      const { error } = await supabase.from('retailers').delete().eq('id', retailerId);
+      if (error) console.error('Supabase delete retailer error:', error);
+      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      return !error;
+    } catch (err) {
+      console.error('Supabase delete retailer exception:', err);
+      return false;
     }
   };
 

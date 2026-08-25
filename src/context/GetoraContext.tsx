@@ -820,6 +820,30 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   useEffect(() => {
     refreshCatalog();
+
+    // Supabase Realtime Channels for Retailers & Products
+    const catalogChannel = supabase
+      .channel('customer-catalog-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'retailers' }, () => {
+        refreshCatalog();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+        refreshCatalog();
+      })
+      .subscribe();
+
+    // Local Storage cross-window event sync
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'getora_stores_updated') {
+        refreshCatalog();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      supabase.removeChannel(catalogChannel);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [refreshCatalog]);
 
   const getStoreById = (id: string) => stores.find((s) => s.id === id);
