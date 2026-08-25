@@ -620,55 +620,7 @@ export const AuthModal: React.FC = () => {
                 </button>
               </div>
 
-              {/* Role Selection (Customer vs Retailer) for Signup */}
-              {authMode === 'signup' && (
-                <div style={{ marginBottom: '18px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
-                    I want to join GETORA as:
-                  </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div
-                      onClick={() => setRole('customer')}
-                      style={{
-                        padding: '12px',
-                        borderRadius: '12px',
-                        backgroundColor: role === 'customer' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
-                        border: role === 'customer' ? '1px solid #22C55E' : '1px solid var(--border-color)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                      }}
-                    >
-                      <IconUser size={18} stroke={1.8} color={role === 'customer' ? '#22C55E' : 'var(--text-secondary)'} />
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Customer</div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Order essentials</div>
-                      </div>
-                    </div>
 
-                    <div
-                      onClick={() => setRole('retailer')}
-                      style={{
-                        padding: '12px',
-                        borderRadius: '12px',
-                        backgroundColor: role === 'retailer' ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
-                        border: role === 'retailer' ? '1px solid #22C55E' : '1px solid var(--border-color)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '10px'
-                      }}
-                    >
-                      <IconBuildingStore size={18} stroke={1.8} color={role === 'retailer' ? '#22C55E' : 'var(--text-secondary)'} />
-                      <div>
-                        <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Retailer</div>
-                        <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Sell products</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Auth Method Selector */}
               <div style={{ display: 'flex', gap: '8px', marginBottom: '18px' }}>

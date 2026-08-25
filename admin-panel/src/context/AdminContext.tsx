@@ -364,7 +364,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
 
       if (error) console.error('Supabase add retailer error:', error);
-      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      try {
+        localStorage.setItem('getora_stores_updated', Date.now().toString());
+        localStorage.setItem('getora_sync_event', JSON.stringify({ type: 'RETAILERS_UPDATED', timestamp: Date.now() }));
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('getora_sync_channel');
+          bc.postMessage({ type: 'RETAILERS_UPDATED', retailer: retailerObj });
+          bc.close();
+        }
+      } catch {}
       return !error;
     } catch (err) {
       console.error('Supabase add retailer exception:', err);
@@ -393,7 +401,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       const { error } = await supabase.from('retailers').update(updates).eq('id', retailerId);
       if (error) console.error('Supabase update retailer error:', error);
-      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      try {
+        localStorage.setItem('getora_stores_updated', Date.now().toString());
+        localStorage.setItem('getora_sync_event', JSON.stringify({ type: 'RETAILERS_UPDATED', timestamp: Date.now() }));
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('getora_sync_channel');
+          bc.postMessage({ type: 'RETAILERS_UPDATED', retailerId, updates });
+          bc.close();
+        }
+      } catch {}
       return !error;
     } catch (err) {
       console.error('Supabase update retailer exception:', err);
@@ -408,7 +424,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const { error } = await supabase.from('retailers').delete().eq('id', retailerId);
       if (error) console.error('Supabase delete retailer error:', error);
-      try { localStorage.setItem('getora_stores_updated', Date.now().toString()); } catch {}
+      try {
+        localStorage.setItem('getora_stores_updated', Date.now().toString());
+        localStorage.setItem('getora_sync_event', JSON.stringify({ type: 'RETAILERS_UPDATED', timestamp: Date.now() }));
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('getora_sync_channel');
+          bc.postMessage({ type: 'RETAILERS_UPDATED', retailerId, deleted: true });
+          bc.close();
+        }
+      } catch {}
       return !error;
     } catch (err) {
       console.error('Supabase delete retailer exception:', err);

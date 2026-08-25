@@ -152,61 +152,32 @@ export const Header: React.FC = () => {
             <IconChevronDown size={14} color="var(--text-muted)" />
           </button>
 
-          {/* Right micro-actions: Offers & Retailer Portal */}
+          {/* Right micro-actions: Customer Guarantee & Offers */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <span style={{ fontSize: '11px', color: 'var(--color-green)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <IconSparkles size={13} />
+              <span>⚡ 15-Min Delivery</span>
+            </span>
+
             <button
               onClick={() => navigate('offers')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-secondary)',
-                cursor: 'pointer',
+                background: 'var(--color-green-dim)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--color-green)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '2px 10px',
                 fontSize: '11px',
-                fontWeight: 600
+                fontWeight: 700,
+                cursor: 'pointer'
               }}
             >
               <IconTag size={13} color="var(--color-green)" />
-              <span>Flat ₹50 OFF</span>
+              <span>Use GETORA10 for ₹50 OFF</span>
             </button>
-
-            {role === 'retailer' ? (
-              <button
-                onClick={() => navigate('retailer-dashboard')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  background: 'var(--color-green-dim)',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--color-green)',
-                  borderRadius: 'var(--radius-pill)',
-                  padding: '2px 8px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  cursor: 'pointer'
-                }}
-              >
-                <IconBuildingStore size={13} />
-                <span>Shop Dashboard</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => navigate('retailer-dashboard')}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  fontWeight: 500
-                }}
-              >
-                Partner with GETORA
-              </button>
-            )}
           </div>
         </div>
       </div>

@@ -821,7 +821,7 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   useEffect(() => {
     refreshCatalog();
 
-    // Supabase Realtime Channels for Retailers & Products
+    // 1. Supabase Realtime Channels for Retailers & Products
     const catalogChannel = supabase
       .channel('customer-catalog-realtime')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'retailers' }, () => {
@@ -830,19 +830,42 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
         refreshCatalog();
       })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
+        refreshCatalog();
+      })
       .subscribe();
 
-    // Local Storage cross-window event sync
+    // 2. BroadcastChannel cross-window instant communication
+    let broadcastChannel: BroadcastChannel | null = null;
+    try {
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        broadcastChannel = new BroadcastChannel('getora_sync_channel');
+        broadcastChannel.onmessage = (msg) => {
+          if (msg.data?.type === 'RETAILERS_UPDATED' || msg.data?.type === 'PRODUCTS_UPDATED') {
+            refreshCatalog();
+          }
+        };
+      }
+    } catch {}
+
+    // 3. Local Storage cross-window event sync
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'getora_stores_updated') {
+      if (e.key === 'getora_stores_updated' || e.key === 'getora_sync_event') {
         refreshCatalog();
       }
     };
     window.addEventListener('storage', handleStorageChange);
 
+    // 4. Polling heartbeat every 4 seconds to ensure 100% fresh data
+    const syncInterval = setInterval(() => {
+      refreshCatalog();
+    }, 4000);
+
     return () => {
       supabase.removeChannel(catalogChannel);
+      if (broadcastChannel) broadcastChannel.close();
       window.removeEventListener('storage', handleStorageChange);
+      clearInterval(syncInterval);
     };
   }, [refreshCatalog]);
 
