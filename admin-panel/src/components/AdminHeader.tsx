@@ -169,6 +169,16 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           </kbd>
         </div>
 
+        {/* Quick Add Button */}
+        <button
+          onClick={() => setActiveTab('retailers')}
+          className="px-3 py-1.5 rounded-xl bg-[#1DB954] hover:bg-[#39D353] text-black text-xs font-extrabold flex items-center gap-1.5 shadow-sm cursor-pointer transition-transform active:scale-95"
+          title="Add New Retailer Shop"
+        >
+          <span className="text-sm font-black">+</span>
+          <span className="hidden sm:inline">Add Shop</span>
+        </button>
+
         {/* Date Selector Pill */}
         <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#181818] border border-[#292929] text-xs font-semibold text-[#FFFFFF] cursor-pointer hover:border-[#1DB954]/50 transition-colors">
           <Calendar className="w-3.5 h-3.5 text-[#1DB954]" />

@@ -14,7 +14,9 @@ import {
   AlertTriangle,
   Store,
   Clock,
-  Download
+  Download,
+  LayoutGrid,
+  List
 } from 'lucide-react';
 import { useAdmin, RetailerItem } from '../context/AdminContext';
 
@@ -30,6 +32,7 @@ export const AdminRetailersView: React.FC = () => {
 
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
   const [selectedRetailer, setSelectedRetailer] = useState<RetailerItem | null>(null);
   const [editingRetailer, setEditingRetailer] = useState<RetailerItem | null>(null);
   const [deletingRetailer, setDeletingRetailer] = useState<RetailerItem | null>(null);
@@ -160,22 +163,32 @@ export const AdminRetailersView: React.FC = () => {
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
-      {/* Top Header & Add Retailer Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      
+      {/* Top Banner with High-Visibility "Add New Shop" Button */}
+      <div className="p-4 rounded-2xl bg-[#14532D]/30 border border-[#1DB954]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Retailer & Store Network Control</h2>
-          <p className="text-xs text-[#A7A7A7]">Add, edit, delete, verify KYC and manage commission rates for all merchant shops (Full Admin Authority)</p>
+          <div className="flex items-center gap-2">
+            <Store className="w-5 h-5 text-[#1DB954]" />
+            <h2 className="text-xl font-black font-['Outfit',sans-serif] text-white">
+              Retailer & Merchant Shops Control
+            </h2>
+            <span className="px-2 py-0.5 rounded-full bg-[#1DB954] text-black font-black text-[10px]">
+              {retailers.length} Active Stores
+            </span>
+          </div>
+          <p className="text-xs text-[#A7A7A7] mt-1">
+            Complete store authority: Add new merchant, edit details, delete stores, approve KYC, and configure 12% commission.
+          </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button
-            onClick={handleOpenAdd}
-            className="px-4 py-2 bg-[#1DB954] hover:bg-[#39D353] active:bg-[#169C46] text-black font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" />
-            <span>Add New Shop</span>
-          </button>
-        </div>
+        {/* PROMINENT ADD SHOP BUTTON */}
+        <button
+          onClick={handleOpenAdd}
+          className="px-5 py-2.5 bg-[#1DB954] hover:bg-[#39D353] active:bg-[#169C46] text-black font-black text-sm rounded-xl shadow-lg shadow-[#1DB954]/30 transition-all flex items-center justify-center gap-2 cursor-pointer flex-shrink-0"
+        >
+          <Plus className="w-5 h-5 stroke-[3]" />
+          <span>+ Add New Shop</span>
+        </button>
       </div>
 
       {/* Filter and Search Bar */}
@@ -196,115 +209,215 @@ export const AdminRetailersView: React.FC = () => {
           ))}
         </div>
 
-        <div className="relative w-full md:w-64">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6F6F6F]" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search shop, owner, locality..."
-            className="w-full pl-9 pr-3 py-1.5 bg-[#121212] border border-[#292929] rounded-xl text-xs text-white placeholder-[#6F6F6F] focus:outline-none focus:border-[#1DB954]"
-          />
+        <div className="flex items-center gap-2">
+          <div className="relative w-full md:w-64">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6F6F6F]" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search shop, owner, locality..."
+              className="w-full pl-9 pr-3 py-1.5 bg-[#121212] border border-[#292929] rounded-xl text-xs text-white placeholder-[#6F6F6F] focus:outline-none focus:border-[#1DB954]"
+            />
+          </div>
+
+          <div className="flex items-center bg-[#121212] border border-[#292929] rounded-xl p-0.5">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`p-1.5 rounded-lg text-xs cursor-pointer ${viewMode === 'table' ? 'bg-[#202020] text-[#1DB954]' : 'text-[#6F6F6F]'}`}
+              title="Table View"
+            >
+              <List className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-lg text-xs cursor-pointer ${viewMode === 'grid' ? 'bg-[#202020] text-[#1DB954]' : 'text-[#6F6F6F]'}`}
+              title="Grid View"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Main Retailers Table */}
-      <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#121212] text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-              <tr>
-                <th className="py-3 px-4">Shop Name</th>
-                <th className="py-3 px-4">Category</th>
-                <th className="py-3 px-4">Owner & Phone</th>
-                <th className="py-3 px-4">Locality</th>
-                <th className="py-3 px-4">Orders</th>
-                <th className="py-3 px-4">Gross Revenue</th>
-                <th className="py-3 px-4">Commission %</th>
-                <th className="py-3 px-4">KYC Status</th>
-                <th className="py-3 px-4">Shop Status</th>
-                <th className="py-3 px-4 text-right">Admin Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#292929] text-[11px]">
-              {filteredRetailers.map((r) => (
-                <tr key={r.id} className="hover:bg-[#202020] transition-colors">
-                  <td className="py-3 px-4 font-bold text-white flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-[#14532D]/40 text-[#1DB954] flex items-center justify-center font-black text-xs flex-shrink-0">
+      {/* Main View: Table or Grid */}
+      {viewMode === 'table' ? (
+        <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#121212] text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+                <tr>
+                  <th className="py-3 px-4">Shop Name</th>
+                  <th className="py-3 px-4">Category</th>
+                  <th className="py-3 px-4">Owner & Phone</th>
+                  <th className="py-3 px-4">Locality</th>
+                  <th className="py-3 px-4">Orders</th>
+                  <th className="py-3 px-4">Gross Revenue</th>
+                  <th className="py-3 px-4">KYC Status</th>
+                  <th className="py-3 px-4">Shop Status</th>
+                  <th className="py-3 px-4 text-center bg-[#14532D]/20">Actions (Edit / Delete)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#292929] text-[11px]">
+                {filteredRetailers.map((r) => (
+                  <tr key={r.id} className="hover:bg-[#202020] transition-colors">
+                    <td className="py-3 px-4 font-bold text-white flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-[#14532D]/40 text-[#1DB954] flex items-center justify-center font-black text-xs flex-shrink-0">
+                        {r.retailer.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-white leading-none">{r.retailer}</p>
+                        <p className="text-[10px] text-[#A7A7A7] mt-0.5">{r.openTime || '9 AM'} - {r.closeTime || '10 PM'}</p>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-[#A7A7A7]">{r.category}</td>
+                    <td className="py-3 px-4">
+                      <p className="text-white font-medium">{r.owner}</p>
+                      <p className="text-[10px] text-[#6F6F6F]">{r.phone || '+91 98290 12345'}</p>
+                    </td>
+                    <td className="py-3 px-4 text-[#A7A7A7]">{r.locality}, {r.city}</td>
+                    <td className="py-3 px-4 font-bold font-mono text-white">{r.orders}</td>
+                    <td className="py-3 px-4 font-bold font-mono text-[#1DB954]">{r.revenue}</td>
+                    <td className="py-3 px-4">
+                      {r.isVerified ? (
+                        <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] font-extrabold text-[10px] flex items-center gap-1 w-fit border border-[#1DB954]/40">
+                          <ShieldCheck className="w-3 h-3" /> Verified
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => approveRetailerKYC(r.id)}
+                          className="px-2 py-0.5 rounded bg-[#F59E0B]/20 text-[#F59E0B] hover:bg-[#F59E0B] hover:text-black font-extrabold text-[10px] transition-colors cursor-pointer border border-[#F59E0B]/40"
+                        >
+                          Approve KYC
+                        </button>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <button
+                        onClick={() => toggleRetailerStatus(r.id)}
+                        className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold cursor-pointer transition-colors ${
+                          r.status === 'Active'
+                            ? 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40 hover:bg-[#EF4444]/20 hover:text-[#EF4444]'
+                            : 'bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40 hover:bg-[#1DB954]/20 hover:text-[#1DB954]'
+                        }`}
+                        title="Click to toggle status"
+                      >
+                        {r.status}
+                      </button>
+                    </td>
+                    <td className="py-3 px-4 text-center bg-[#14532D]/10">
+                      {/* PROMINENT LABELED ACTION BUTTONS */}
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          onClick={() => setSelectedRetailer(r)}
+                          className="p-1.5 px-2 rounded-lg bg-[#202020] hover:bg-[#14532D] text-[#A7A7A7] hover:text-white border border-[#292929] text-[10px] font-bold flex items-center gap-1 cursor-pointer transition-colors"
+                          title="View Details"
+                        >
+                          <Eye className="w-3 h-3 text-[#1DB954]" />
+                          <span>View</span>
+                        </button>
+                        
+                        <button
+                          onClick={() => handleOpenEdit(r)}
+                          className="p-1.5 px-2.5 rounded-lg bg-[#3B82F6]/20 hover:bg-[#3B82F6] text-[#3B82F6] hover:text-white border border-[#3B82F6]/40 text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition-colors"
+                          title="Edit Shop Information"
+                        >
+                          <Edit2 className="w-3 h-3" />
+                          <span>Edit</span>
+                        </button>
+                        
+                        <button
+                          onClick={() => setDeletingRetailer(r)}
+                          className="p-1.5 px-2.5 rounded-lg bg-[#EF4444]/20 hover:bg-[#EF4444] text-[#EF4444] hover:text-white border border-[#EF4444]/40 text-[10px] font-extrabold flex items-center gap-1 cursor-pointer transition-colors"
+                          title="Delete Shop Permanently"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        /* Grid Cards View */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredRetailers.map((r) => (
+            <div
+              key={r.id}
+              className="p-4 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#1DB954]/40 transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-xl bg-[#14532D]/60 text-[#1DB954] flex items-center justify-center font-bold text-base flex-shrink-0">
                       {r.retailer.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-bold text-white leading-none">{r.retailer}</p>
-                      <p className="text-[10px] text-[#A7A7A7] mt-0.5">{r.openTime || '9 AM'} - {r.closeTime || '10 PM'}</p>
+                      <h3 className="font-bold text-white text-sm">{r.retailer}</h3>
+                      <p className="text-[11px] text-[#A7A7A7]">{r.category}</p>
                     </div>
-                  </td>
-                  <td className="py-3 px-4 text-[#A7A7A7]">{r.category}</td>
-                  <td className="py-3 px-4">
-                    <p className="text-white font-medium">{r.owner}</p>
-                    <p className="text-[10px] text-[#6F6F6F]">{r.phone || '+91 98290 12345'}</p>
-                  </td>
-                  <td className="py-3 px-4 text-[#A7A7A7]">{r.locality}, {r.city}</td>
-                  <td className="py-3 px-4 font-bold font-mono text-white">{r.orders}</td>
-                  <td className="py-3 px-4 font-bold font-mono text-[#1DB954]">{r.revenue}</td>
-                  <td className="py-3 px-4 font-mono font-bold text-[#A7A7A7]">{r.commissionRate || 12}%</td>
-                  <td className="py-3 px-4">
-                    {r.isVerified ? (
-                      <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] font-extrabold text-[10px] flex items-center gap-1 w-fit border border-[#1DB954]/40">
-                        <ShieldCheck className="w-3 h-3" /> Verified
-                      </span>
-                    ) : (
-                      <button
-                        onClick={() => approveRetailerKYC(r.id)}
-                        className="px-2 py-0.5 rounded bg-[#F59E0B]/20 text-[#F59E0B] hover:bg-[#F59E0B] hover:text-black font-extrabold text-[10px] transition-colors cursor-pointer border border-[#F59E0B]/40"
-                      >
-                        Approve KYC
-                      </button>
-                    )}
-                  </td>
-                  <td className="py-3 px-4">
-                    <button
-                      onClick={() => toggleRetailerStatus(r.id)}
-                      className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold cursor-pointer transition-colors ${
-                        r.status === 'Active'
-                          ? 'bg-[#1DB954]/20 text-[#1DB954] border border-[#1DB954]/40 hover:bg-[#EF4444]/20 hover:text-[#EF4444] hover:border-[#EF4444]/40'
-                          : 'bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/40 hover:bg-[#1DB954]/20 hover:text-[#1DB954] hover:border-[#1DB954]/40'
-                      }`}
-                      title="Click to toggle status"
-                    >
-                      {r.status}
-                    </button>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button
-                        onClick={() => setSelectedRetailer(r)}
-                        className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#14532D] text-white hover:text-[#1DB954] transition-colors cursor-pointer"
-                        title="View Shop Details"
-                      >
-                        <Eye className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleOpenEdit(r)}
-                        className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#3B82F6]/20 text-white hover:text-[#3B82F6] transition-colors cursor-pointer"
-                        title="Edit Shop Information"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => setDeletingRetailer(r)}
-                        className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] transition-colors cursor-pointer"
-                        title="Delete Shop Permanently"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  <span
+                    className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                      r.status === 'Active' ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
+                    }`}
+                  >
+                    {r.status}
+                  </span>
+                </div>
+
+                <div className="my-3 p-3 rounded-xl bg-[#121212] border border-[#292929] space-y-1 text-xs">
+                  <p className="text-[#A7A7A7] flex items-center justify-between">
+                    <span>Owner:</span>
+                    <strong className="text-white">{r.owner}</strong>
+                  </p>
+                  <p className="text-[#A7A7A7] flex items-center justify-between">
+                    <span>Locality:</span>
+                    <strong className="text-white">{r.locality}, {r.city}</strong>
+                  </p>
+                  <p className="text-[#A7A7A7] flex items-center justify-between">
+                    <span>Orders:</span>
+                    <strong className="text-white font-mono">{r.orders}</strong>
+                  </p>
+                  <p className="text-[#A7A7A7] flex items-center justify-between">
+                    <span>Revenue:</span>
+                    <strong className="text-[#1DB954] font-mono">{r.revenue}</strong>
+                  </p>
+                </div>
+              </div>
+
+              {/* Grid Card Action Buttons */}
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between gap-2">
+                <button
+                  onClick={() => setSelectedRetailer(r)}
+                  className="flex-1 py-1.5 bg-[#202020] hover:bg-[#292929] text-white text-xs font-bold rounded-xl border border-[#292929] flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <Eye className="w-3.5 h-3.5 text-[#1DB954]" />
+                  <span>View</span>
+                </button>
+                <button
+                  onClick={() => handleOpenEdit(r)}
+                  className="flex-1 py-1.5 bg-[#3B82F6]/20 hover:bg-[#3B82F6] text-[#3B82F6] hover:text-white text-xs font-extrabold rounded-xl border border-[#3B82F6]/40 flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                  <span>Edit</span>
+                </button>
+                <button
+                  onClick={() => setDeletingRetailer(r)}
+                  className="p-1.5 px-3 bg-[#EF4444]/20 hover:bg-[#EF4444] text-[#EF4444] hover:text-white text-xs font-extrabold rounded-xl border border-[#EF4444]/40 flex items-center justify-center cursor-pointer transition-colors"
+                  title="Delete Shop"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      )}
 
       {/* ========================================================================= */}
       {/* ADD / EDIT RETAILER MODAL                                                 */}
@@ -527,7 +640,7 @@ export const AdminRetailersView: React.FC = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold text-white">Delete Retailer Shop?</h3>
-                <p className="text-[11px] text-[#A7A7A7]">Permanent removal action</p>
+                <p className="text-[11px] text-[#A7A7A7]">Permanent database removal</p>
               </div>
             </div>
 
@@ -625,7 +738,7 @@ export const AdminRetailersView: React.FC = () => {
                   setSelectedRetailer(null);
                   handleOpenEdit(selectedRetailer);
                 }}
-                className="flex-1 py-2 bg-[#202020] hover:bg-[#3B82F6]/20 text-[#3B82F6] font-bold text-xs rounded-xl border border-[#292929] cursor-pointer"
+                className="flex-1 py-2 bg-[#3B82F6]/20 hover:bg-[#3B82F6] text-[#3B82F6] hover:text-white font-bold text-xs rounded-xl border border-[#3B82F6]/40 cursor-pointer transition-colors"
               >
                 Edit Shop Details
               </button>
@@ -634,7 +747,7 @@ export const AdminRetailersView: React.FC = () => {
                   setSelectedRetailer(null);
                   setDeletingRetailer(selectedRetailer);
                 }}
-                className="py-2 px-3 bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] font-bold text-xs rounded-xl border border-[#292929] cursor-pointer"
+                className="py-2 px-4 bg-[#EF4444]/20 hover:bg-[#EF4444] text-[#EF4444] hover:text-white font-bold text-xs rounded-xl border border-[#EF4444]/40 cursor-pointer transition-colors"
               >
                 Delete
               </button>

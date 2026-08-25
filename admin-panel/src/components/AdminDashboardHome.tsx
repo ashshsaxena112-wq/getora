@@ -622,13 +622,21 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <h2 className="text-xs sm:text-sm font-bold text-white font-['Outfit',sans-serif]">
               Top Retailers
             </h2>
-            <button
-              onClick={() => setActiveTab('retailers')}
-              className="text-[11px] text-[#A7A7A7] hover:text-[#1DB954] flex items-center gap-1 font-semibold transition-colors cursor-pointer"
-            >
-              <span>View all</span>
-              <ChevronRight className="w-3 h-3" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveTab('retailers')}
+                className="px-2 py-0.5 rounded bg-[#1DB954] hover:bg-[#39D353] text-black text-[10px] font-black cursor-pointer"
+              >
+                + Add Shop
+              </button>
+              <button
+                onClick={() => setActiveTab('retailers')}
+                className="text-[11px] text-[#A7A7A7] hover:text-[#1DB954] flex items-center gap-1 font-semibold transition-colors cursor-pointer"
+              >
+                <span>All</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
