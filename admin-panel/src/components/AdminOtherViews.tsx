@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Clock,
   Send,
-  Trash2
+  Trash2,
+  PackageCheck
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 
@@ -49,7 +50,7 @@ export const AdminCustomersView: React.FC = () => {
             <Users className="w-5 h-5 text-[#1DB954]" />
             <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Customer Accounts & Profiles</h2>
             <span className="px-2 py-0.5 rounded-full bg-[#14532D] text-[#1DB954] text-xs font-bold font-mono">
-              {customers.length} Live in Supabase
+              {customers.length} Live
             </span>
           </div>
           <p className="text-xs text-[#A7A7A7] mt-1">
@@ -78,39 +79,47 @@ export const AdminCustomersView: React.FC = () => {
           />
         </div>
 
-        <table className="w-full text-left text-xs">
-          <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-            <tr>
-              <th className="pb-2">Customer Name</th>
-              <th className="pb-2">Contact</th>
-              <th className="pb-2">Address / Locality</th>
-              <th className="pb-2">Total Orders</th>
-              <th className="pb-2">Total Spent</th>
-              <th className="pb-2 text-right">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#292929] text-[11px]">
-            {filtered.map((c) => (
-              <tr key={c.id} className="hover:bg-[#202020] transition-colors">
-                <td className="py-2.5 font-bold text-white flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#14532D] text-[#1DB954] flex items-center justify-center font-bold text-xs">
-                    {c.fullName.charAt(0)}
-                  </div>
-                  <span>{c.fullName}</span>
-                </td>
-                <td className="py-2.5 text-[#A7A7A7] font-mono">{c.phone}</td>
-                <td className="py-2.5 text-[#A7A7A7]">{c.locality}</td>
-                <td className="py-2.5 font-bold font-mono text-white">{c.totalOrders}</td>
-                <td className="py-2.5 font-bold font-mono text-[#1DB954]">{c.totalSpent}</td>
-                <td className="py-2.5 text-right">
-                  <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
-                    {c.status}
-                  </span>
-                </td>
+        {filtered.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7]">
+            <Users className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No customers registered yet</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Customer profiles created upon signup will appear here.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left text-xs">
+            <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+              <tr>
+                <th className="pb-2">Customer Name</th>
+                <th className="pb-2">Contact</th>
+                <th className="pb-2">Address / Locality</th>
+                <th className="pb-2">Total Orders</th>
+                <th className="pb-2">Total Spent</th>
+                <th className="pb-2 text-right">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#292929] text-[11px]">
+              {filtered.map((c) => (
+                <tr key={c.id} className="hover:bg-[#202020] transition-colors">
+                  <td className="py-2.5 font-bold text-white flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-[#14532D] text-[#1DB954] flex items-center justify-center font-bold text-xs">
+                      {c.fullName.charAt(0)}
+                    </div>
+                    <span>{c.fullName}</span>
+                  </td>
+                  <td className="py-2.5 text-[#A7A7A7] font-mono">{c.phone}</td>
+                  <td className="py-2.5 text-[#A7A7A7]">{c.locality}</td>
+                  <td className="py-2.5 font-bold font-mono text-white">{c.totalOrders}</td>
+                  <td className="py-2.5 font-bold font-mono text-[#1DB954]">{c.totalSpent}</td>
+                  <td className="py-2.5 text-right">
+                    <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
+                      {c.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Add Customer Modal */}
@@ -209,37 +218,45 @@ export const AdminDeliveryView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {deliveryPartners.map((d) => (
-          <div key={d.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-[#14532D] text-[#1DB954] flex items-center justify-center font-bold">
-                  <Bike className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="font-bold text-white text-xs">{d.name}</p>
-                  <p className="text-[10px] text-[#A7A7A7] font-mono">{d.phone}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => toggleDeliveryPartnerStatus(d.id)}
-                className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer transition-colors ${
-                  d.status === 'Available' ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
-                }`}
-                title="Click to toggle rider availability"
-              >
-                {d.status}
-              </button>
-            </div>
-            <p className="text-[11px] text-[#A7A7A7] bg-[#121212] p-2 rounded-xl border border-[#292929]">
-              🚗 {d.vehicle} &bull; <span className="font-mono text-white">{d.vehicleNumber}</span>
-            </p>
-            <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[11px]">
-              <span>Total Deliveries: <strong className="text-white font-mono">{d.deliveries}</strong></span>
-              <span className="text-[#F59E0B] font-bold">★ {d.rating}</span>
-            </div>
+        {deliveryPartners.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <Bike className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No delivery partners in fleet</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Add Rider Partner" above to register delivery personnel.</p>
           </div>
-        ))}
+        ) : (
+          deliveryPartners.map((d) => (
+            <div key={d.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-[#14532D] text-[#1DB954] flex items-center justify-center font-bold">
+                    <Bike className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-white text-xs">{d.name}</p>
+                    <p className="text-[10px] text-[#A7A7A7] font-mono">{d.phone}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => toggleDeliveryPartnerStatus(d.id)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer transition-colors ${
+                    d.status === 'Available' ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
+                  }`}
+                  title="Click to toggle rider availability"
+                >
+                  {d.status}
+                </button>
+              </div>
+              <p className="text-[11px] text-[#A7A7A7] bg-[#121212] p-2 rounded-xl border border-[#292929]">
+                🚗 {d.vehicle} &bull; <span className="font-mono text-white">{d.vehicleNumber}</span>
+              </p>
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[11px]">
+                <span>Total Deliveries: <strong className="text-white font-mono">{d.deliveries}</strong></span>
+                <span className="text-[#F59E0B] font-bold">★ {d.rating}</span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Add Rider Modal */}
@@ -320,43 +337,51 @@ export const AdminInventoryView: React.FC = () => {
       </div>
 
       <div className="bg-[#181818] border border-[#292929] rounded-2xl p-4 overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-            <tr>
-              <th className="pb-2">Product Name</th>
-              <th className="pb-2">Brand / SKU</th>
-              <th className="pb-2">Current Stock</th>
-              <th className="pb-2">Selling Price</th>
-              <th className="pb-2 text-right">Stock Alert</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#292929] text-[11px]">
-            {products.map((p) => {
-              const stock = Number(p.stock_quantity || p.stock || 25);
-              const isCritical = stock <= 10;
-              return (
-                <tr key={p.id} className="hover:bg-[#202020] transition-colors">
-                  <td className="py-2.5 font-bold text-white flex items-center gap-2">
-                    <img src={p.image_url || p.imageUrl} alt="" className="w-8 h-8 rounded-lg object-cover bg-[#121212]" />
-                    <span>{p.name}</span>
-                  </td>
-                  <td className="py-2.5 text-[#A7A7A7] font-mono">{p.brand || 'GETORA'}</td>
-                  <td className="py-2.5 font-mono font-bold text-white">{stock} units</td>
-                  <td className="py-2.5 font-mono font-bold text-[#1DB954]">₹{p.selling_price || p.price || 199}</td>
-                  <td className="py-2.5 text-right">
-                    <span
-                      className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
-                        isCritical ? 'bg-[#EF4444]/20 text-[#EF4444]' : 'bg-[#1DB954]/20 text-[#1DB954]'
-                      }`}
-                    >
-                      {isCritical ? 'Low Stock' : 'Healthy'}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {products.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7]">
+            <PackageCheck className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No inventory tracked yet</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Inventory will show here as products are added by shops.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left text-xs">
+            <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+              <tr>
+                <th className="pb-2">Product Name</th>
+                <th className="pb-2">Brand / SKU</th>
+                <th className="pb-2">Current Stock</th>
+                <th className="pb-2">Selling Price</th>
+                <th className="pb-2 text-right">Stock Alert</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#292929] text-[11px]">
+              {products.map((p) => {
+                const stock = Number(p.stock_quantity || p.stock || 25);
+                const isCritical = stock <= 10;
+                return (
+                  <tr key={p.id} className="hover:bg-[#202020] transition-colors">
+                    <td className="py-2.5 font-bold text-white flex items-center gap-2">
+                      <img src={p.image_url || p.imageUrl} alt="" className="w-8 h-8 rounded-lg object-cover bg-[#121212]" />
+                      <span>{p.name}</span>
+                    </td>
+                    <td className="py-2.5 text-[#A7A7A7] font-mono">{p.brand || 'GETORA'}</td>
+                    <td className="py-2.5 font-mono font-bold text-white">{stock} units</td>
+                    <td className="py-2.5 font-mono font-bold text-[#1DB954]">₹{p.selling_price || p.price || 199}</td>
+                    <td className="py-2.5 text-right">
+                      <span
+                        className={`px-2 py-0.5 rounded text-[10px] font-extrabold ${
+                          isCritical ? 'bg-[#EF4444]/20 text-[#EF4444]' : 'bg-[#1DB954]/20 text-[#1DB954]'
+                        }`}
+                      >
+                        {isCritical ? 'Low Stock' : 'Healthy'}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
@@ -411,34 +436,42 @@ export const AdminCouponsView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-        {coupons.map((c) => (
-          <div key={c.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-xl bg-[#14532D] text-[#1DB954] font-black font-mono text-sm tracking-wider">
-                {c.code}
-              </span>
-              <button
-                onClick={() => toggleCouponStatus(c.id)}
-                className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
-                  c.isActive ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
-                }`}
-              >
-                {c.isActive ? 'Active' : 'Disabled'}
-              </button>
-            </div>
-            <div>
-              <p className="font-bold text-white text-xs">{c.title}</p>
-              <p className="text-[11px] text-[#A7A7A7]">{c.description}</p>
-            </div>
-            <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
-              <span>Min Order: <strong className="text-white">₹{c.minOrder}</strong></span>
-              <span>Used: <strong className="text-[#1DB954] font-mono">{c.usageCount} times</strong></span>
-              <button onClick={() => deleteCoupon(c.id)} className="p-1 hover:text-[#EF4444] cursor-pointer">
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
+        {coupons.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <Tag className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No promotional coupons created</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Create Coupon" above to configure your first checkout discount.</p>
           </div>
-        ))}
+        ) : (
+          coupons.map((c) => (
+            <div key={c.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-xl bg-[#14532D] text-[#1DB954] font-black font-mono text-sm tracking-wider">
+                  {c.code}
+                </span>
+                <button
+                  onClick={() => toggleCouponStatus(c.id)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
+                    c.isActive ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
+                  }`}
+                >
+                  {c.isActive ? 'Active' : 'Disabled'}
+                </button>
+              </div>
+              <div>
+                <p className="font-bold text-white text-xs">{c.title}</p>
+                <p className="text-[11px] text-[#A7A7A7]">{c.description}</p>
+              </div>
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
+                <span>Min Order: <strong className="text-white">₹{c.minOrder}</strong></span>
+                <span>Used: <strong className="text-[#1DB954] font-mono">{c.usageCount} times</strong></span>
+                <button onClick={() => deleteCoupon(c.id)} className="p-1 hover:text-[#EF4444] cursor-pointer">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Add Coupon Modal */}
@@ -559,35 +592,43 @@ export const AdminZonesView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {zones.map((z) => (
-          <div key={z.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-white text-sm">{z.name}</h3>
-              <button
-                onClick={() => toggleZoneStatus(z.id)}
-                className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
-                  z.isActive ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
-                }`}
-              >
-                {z.isActive ? 'Live' : 'Paused'}
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-[#121212] border border-[#292929]">
-                <span className="text-[#A7A7A7] text-[10px]">Min Order Value:</span>
-                <p className="font-bold text-white font-mono mt-0.5">₹{z.minOrder}</p>
-              </div>
-              <div className="p-2.5 rounded-xl bg-[#121212] border border-[#292929]">
-                <span className="text-[#A7A7A7] text-[10px]">Base Delivery Fee:</span>
-                <p className="font-bold text-[#1DB954] font-mono mt-0.5">₹{z.deliveryFee}</p>
-              </div>
-            </div>
-            <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[11px] text-[#A7A7A7]">
-              <span>Active Fleet: <strong className="text-white">{z.activeRiders} Riders</strong></span>
-              <span>City: <strong className="text-white">{z.city}</strong></span>
-            </div>
+        {zones.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <MapPin className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No delivery zones created</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Add Zone" above to define serviceable areas in Jaipur.</p>
           </div>
-        ))}
+        ) : (
+          zones.map((z) => (
+            <div key={z.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-white text-sm">{z.name}</h3>
+                <button
+                  onClick={() => toggleZoneStatus(z.id)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${
+                    z.isActive ? 'bg-[#1DB954]/20 text-[#1DB954]' : 'bg-[#EF4444]/20 text-[#EF4444]'
+                  }`}
+                >
+                  {z.isActive ? 'Live' : 'Paused'}
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded-xl bg-[#121212] border border-[#292929]">
+                  <span className="text-[#A7A7A7] text-[10px]">Min Order Value:</span>
+                  <p className="font-bold text-white font-mono mt-0.5">₹{z.minOrder}</p>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[#121212] border border-[#292929]">
+                  <span className="text-[#A7A7A7] text-[10px]">Base Delivery Fee:</span>
+                  <p className="font-bold text-[#1DB954] font-mono mt-0.5">₹{z.deliveryFee}</p>
+                </div>
+              </div>
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[11px] text-[#A7A7A7]">
+                <span>Active Fleet: <strong className="text-white">{z.activeRiders} Riders</strong></span>
+                <span>City: <strong className="text-white">{z.city}</strong></span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Add Zone Modal */}
@@ -666,7 +707,7 @@ export const AdminSupportView: React.FC = () => {
             <HelpCircle className="w-5 h-5 text-[#1DB954]" />
             <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Support & Ticket Desk</h2>
             <span className="px-2 py-0.5 rounded-full bg-[#14532D] text-[#1DB954] text-xs font-bold font-mono">
-              {supportTickets.length} Tickets in Supabase
+              {supportTickets.length} Tickets
             </span>
           </div>
           <p className="text-xs text-[#A7A7A7] mt-1">
@@ -684,50 +725,58 @@ export const AdminSupportView: React.FC = () => {
       </div>
 
       <div className="bg-[#181818] border border-[#292929] rounded-2xl p-4 overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-            <tr>
-              <th className="pb-2">Ticket ID</th>
-              <th className="pb-2">Customer & Phone</th>
-              <th className="pb-2">Issue Category</th>
-              <th className="pb-2">Subject</th>
-              <th className="pb-2">Priority</th>
-              <th className="pb-2 text-right">Status Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#292929] text-[11px]">
-            {supportTickets.map((t) => (
-              <tr key={t.id} className="hover:bg-[#202020] transition-colors">
-                <td className="py-2.5 font-bold font-mono text-white">{t.ticketNumber}</td>
-                <td className="py-2.5">
-                  <p className="font-bold text-white">{t.customerName}</p>
-                  <p className="text-[10px] text-[#A7A7A7] font-mono">{t.customerPhone}</p>
-                </td>
-                <td className="py-2.5 text-[#A7A7A7]">{t.category}</td>
-                <td className="py-2.5 text-white max-w-[200px] truncate">{t.subject}</td>
-                <td className="py-2.5">
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    t.priority === 'High' || t.priority === 'Critical' ? 'bg-[#EF4444]/20 text-[#EF4444]' : 'bg-[#F59E0B]/20 text-[#F59E0B]'
-                  }`}>
-                    {t.priority}
-                  </span>
-                </td>
-                <td className="py-2.5 text-right">
-                  <select
-                    value={t.status}
-                    onChange={(e) => updateTicketStatus(t.id, e.target.value as any)}
-                    className="px-2 py-1 bg-[#121212] border border-[#292929] rounded-lg text-[10px] font-bold text-[#1DB954] focus:outline-none cursor-pointer"
-                  >
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Resolved">Resolved</option>
-                    <option value="Closed">Closed</option>
-                  </select>
-                </td>
+        {supportTickets.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7]">
+            <HelpCircle className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No support tickets</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Incoming customer support tickets will be listed here.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left text-xs">
+            <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+              <tr>
+                <th className="pb-2">Ticket ID</th>
+                <th className="pb-2">Customer & Phone</th>
+                <th className="pb-2">Issue Category</th>
+                <th className="pb-2">Subject</th>
+                <th className="pb-2">Priority</th>
+                <th className="pb-2 text-right">Status Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#292929] text-[11px]">
+              {supportTickets.map((t) => (
+                <tr key={t.id} className="hover:bg-[#202020] transition-colors">
+                  <td className="py-2.5 font-bold font-mono text-white">{t.ticketNumber}</td>
+                  <td className="py-2.5">
+                    <p className="font-bold text-white">{t.customerName}</p>
+                    <p className="text-[10px] text-[#A7A7A7] font-mono">{t.customerPhone}</p>
+                  </td>
+                  <td className="py-2.5 text-[#A7A7A7]">{t.category}</td>
+                  <td className="py-2.5 text-white max-w-[200px] truncate">{t.subject}</td>
+                  <td className="py-2.5">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      t.priority === 'High' || t.priority === 'Critical' ? 'bg-[#EF4444]/20 text-[#EF4444]' : 'bg-[#F59E0B]/20 text-[#F59E0B]'
+                    }`}>
+                      {t.priority}
+                    </span>
+                  </td>
+                  <td className="py-2.5 text-right">
+                    <select
+                      value={t.status}
+                      onChange={(e) => updateTicketStatus(t.id, e.target.value as any)}
+                      className="px-2 py-1 bg-[#121212] border border-[#292929] rounded-lg text-[10px] font-bold text-[#1DB954] focus:outline-none cursor-pointer"
+                    >
+                      <option value="Open">Open</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Resolved">Resolved</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Add Ticket Modal */}
@@ -826,27 +875,35 @@ export const AdminMarketingView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {marketingCampaigns.map((m) => (
-          <div key={m.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="px-2 py-0.5 rounded bg-[#3B82F6]/20 text-[#3B82F6] text-[10px] font-bold">
-                {m.channel}
-              </span>
-              <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
-                {m.status}
-              </span>
-            </div>
-            <div>
-              <h3 className="font-bold text-white text-sm">{m.title}</h3>
-              <p className="text-xs text-[#A7A7A7] mt-1 leading-relaxed">{m.message}</p>
-            </div>
-            <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
-              <span>Sent: <strong className="text-white font-mono">{m.sentCount}</strong></span>
-              <span>Clicked: <strong className="text-[#1DB954] font-mono">{m.clickedCount}</strong></span>
-              <span>Audience: <strong className="text-white">{m.targetAudience}</strong></span>
-            </div>
+        {marketingCampaigns.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <Megaphone className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No active marketing broadcasts</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Launch Campaign" above to trigger push notifications to customers.</p>
           </div>
-        ))}
+        ) : (
+          marketingCampaigns.map((m) => (
+            <div key={m.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="px-2 py-0.5 rounded bg-[#3B82F6]/20 text-[#3B82F6] text-[10px] font-bold">
+                  {m.channel}
+                </span>
+                <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
+                  {m.status}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm">{m.title}</h3>
+                <p className="text-xs text-[#A7A7A7] mt-1 leading-relaxed">{m.message}</p>
+              </div>
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
+                <span>Sent: <strong className="text-white font-mono">{m.sentCount}</strong></span>
+                <span>Clicked: <strong className="text-[#1DB954] font-mono">{m.clickedCount}</strong></span>
+                <span>Audience: <strong className="text-white">{m.targetAudience}</strong></span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* Add Campaign Modal */}
@@ -915,24 +972,32 @@ export const AdminReviewsView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {reviews.map((r) => (
-          <div key={r.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1 text-[#F59E0B] font-bold text-sm">
-                {'★'.repeat(r.rating)}
-                <span className="text-xs text-white font-mono ml-1">({r.rating}.0)</span>
-              </div>
-              <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
-                Published
-              </span>
-            </div>
-            <p className="text-xs text-white italic">"{r.comment}"</p>
-            <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
-              <span>Customer: <strong className="text-white">{r.customerName}</strong></span>
-              <span>Shop: <strong className="text-white">{r.storeName}</strong></span>
-            </div>
+        {reviews.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <Star className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
+            <p className="font-bold text-white text-sm">No customer reviews yet</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Verified reviews posted by buyers will appear here for moderation.</p>
           </div>
-        ))}
+        ) : (
+          reviews.map((r) => (
+            <div key={r.id} className="p-4 rounded-2xl bg-[#181818] border border-[#292929] space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1 text-[#F59E0B] font-bold text-sm">
+                  {'★'.repeat(r.rating)}
+                  <span className="text-xs text-white font-mono ml-1">({r.rating}.0)</span>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-[#1DB954]/20 text-[#1DB954] text-[10px] font-bold">
+                  Published
+                </span>
+              </div>
+              <p className="text-xs text-white italic">"{r.comment}"</p>
+              <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[10px] text-[#A7A7A7]">
+                <span>Customer: <strong className="text-white">{r.customerName}</strong></span>
+                <span>Shop: <strong className="text-white">{r.storeName}</strong></span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
@@ -942,45 +1007,46 @@ export const AdminReviewsView: React.FC = () => {
 // 9. ANALYTICS & SEARCH DEMAND (LIVE SUPABASE)
 // ============================================================================
 export const AdminAnalyticsView: React.FC = () => {
-  const { kpiData, overviewChart } = useAdmin();
+  const { kpiData } = useAdmin();
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
       <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
         <div className="flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-[#1DB954]" />
-          <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Marketplace Analytics & Demand</h2>
+          <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Marketplace Analytics & Live Performance</h2>
         </div>
         <p className="text-xs text-[#A7A7A7] mt-1">
-          Top searching keywords, conversion rates, and revenue velocity in Jaipur.
+          Live conversion metrics, order volume velocity, and fulfillment SLA.
         </p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
-          <span className="text-xs text-[#A7A7A7]">Search Volume</span>
-          <p className="text-2xl font-black text-white font-mono mt-1">28,490</p>
-          <span className="text-[10px] text-[#1DB954] font-bold">+24.2% vs last week</span>
+          <span className="text-xs text-[#A7A7A7]">Total Platform Orders</span>
+          <p className="text-2xl font-black text-white font-mono mt-1">{kpiData.totalOrders.value}</p>
+          <span className="text-[10px] text-[#A7A7A7]">{kpiData.totalOrders.trend}</span>
         </div>
         <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
-          <span className="text-xs text-[#A7A7A7]">Conversion Rate</span>
-          <p className="text-2xl font-black text-[#1DB954] font-mono mt-1">18.4%</p>
-          <span className="text-[10px] text-[#1DB954] font-bold">High intent buyers</span>
+          <span className="text-xs text-[#A7A7A7]">Gross Revenue</span>
+          <p className="text-2xl font-black text-[#1DB954] font-mono mt-1">{kpiData.todayRevenue.value}</p>
+          <span className="text-[10px] text-[#A7A7A7]">{kpiData.todayRevenue.trend}</span>
         </div>
         <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
-          <span className="text-xs text-[#A7A7A7]">Avg Basket Size</span>
-          <p className="text-2xl font-black text-white font-mono mt-1">₹680</p>
-          <span className="text-[10px] text-[#A7A7A7]">Across all 6 stores</span>
+          <span className="text-xs text-[#A7A7A7]">Active Shops</span>
+          <p className="text-2xl font-black text-white font-mono mt-1">{kpiData.activeRetailers.value}</p>
+          <span className="text-[10px] text-[#A7A7A7]">{kpiData.activeRetailers.trend}</span>
         </div>
         <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
-          <span className="text-xs text-[#A7A7A7]">Avg 15-Min SLA</span>
-          <p className="text-2xl font-black text-[#1DB954] font-mono mt-1">12.4m</p>
-          <span className="text-[10px] text-[#1DB954] font-bold">Fastest in Vaishali</span>
+          <span className="text-xs text-[#A7A7A7]">Instant SLA Target</span>
+          <p className="text-2xl font-black text-[#1DB954] font-mono mt-1">15 Min</p>
+          <span className="text-[10px] text-[#1DB954] font-bold">Standard promise</span>
         </div>
       </div>
     </div>
   );
 };
+
 // ============================================================================
 // 10. AUDIT LOGS & SECURITY VIEW (LIVE SUPABASE)
 // ============================================================================
@@ -997,28 +1063,35 @@ export const AdminAuditLogsView: React.FC = () => {
       </div>
 
       <div className="bg-[#181818] border border-[#292929] rounded-2xl p-4 overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-            <tr>
-              <th className="pb-2">Timestamp</th>
-              <th className="pb-2">Admin User</th>
-              <th className="pb-2">Action</th>
-              <th className="pb-2">Target Entity</th>
-              <th className="pb-2 text-right">IP Address</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#292929] text-[11px]">
-            {auditLogs.map((log) => (
-              <tr key={log.id} className="hover:bg-[#202020] transition-colors">
-                <td className="py-2.5 font-mono text-[#A7A7A7]">{log.time}</td>
-                <td className="py-2.5 font-bold text-white">{log.actor}</td>
-                <td className="py-2.5 text-[#1DB954]">{log.action}</td>
-                <td className="py-2.5 text-white">{log.target}</td>
-                <td className="py-2.5 text-right font-mono text-[#6F6F6F]">{log.ip}</td>
+        {auditLogs.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7]">
+            <p className="font-bold text-white text-sm">No audit logs recorded</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Administrative actions and security events will be logged here.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left text-xs">
+            <thead className="text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+              <tr>
+                <th className="pb-2">Timestamp</th>
+                <th className="pb-2">Admin User</th>
+                <th className="pb-2">Action</th>
+                <th className="pb-2">Target Entity</th>
+                <th className="pb-2 text-right">IP Address</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#292929] text-[11px]">
+              {auditLogs.map((log) => (
+                <tr key={log.id} className="hover:bg-[#202020] transition-colors">
+                  <td className="py-2.5 font-mono text-[#A7A7A7]">{log.time}</td>
+                  <td className="py-2.5 font-bold text-white">{log.actor}</td>
+                  <td className="py-2.5 text-[#1DB954]">{log.action}</td>
+                  <td className="py-2.5 text-white">{log.target}</td>
+                  <td className="py-2.5 text-right font-mono text-[#6F6F6F]">{log.ip}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

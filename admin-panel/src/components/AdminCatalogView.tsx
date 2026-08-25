@@ -104,42 +104,49 @@ export const AdminCatalogView: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {filteredProducts.map((p) => (
-          <div
-            key={p.id}
-            className="p-4 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#1DB954]/40 transition-all flex flex-col justify-between"
-          >
-            <div>
-              <div className="relative h-36 w-full rounded-xl bg-[#121212] overflow-hidden mb-3 border border-[#292929]">
-                <img src={p.imageUrl || p.image_url || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500'} alt={p.name} className="w-full h-full object-cover" />
-                <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-xs text-[9px] font-mono text-white">
-                  {p.sku || 'SKU-GEN'}
-                </span>
-              </div>
-
-              <p className="text-[10px] text-[#1DB954] font-bold uppercase tracking-wider">{p.brand}</p>
-              <h3 className="text-xs font-bold text-white line-clamp-2 mt-0.5">{p.name}</h3>
-              <p className="text-[10px] text-[#A7A7A7] mt-1">{p.categoryName || 'General'}</p>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-[#292929] flex items-center justify-between">
-              <div>
-                <span className="text-sm font-extrabold text-[#1DB954] font-mono">₹{p.suggestedSellingPrice || p.selling_price || 399}</span>
-                <span className="text-[10px] text-[#6F6F6F] line-through ml-1.5 font-mono">₹{p.suggestedPrice || p.price || 499}</span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => deleteProduct(p.id)}
-                  className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] transition-colors cursor-pointer"
-                  title="Delete"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
+        {filteredProducts.length === 0 ? (
+          <div className="py-12 text-center text-xs text-[#A7A7A7] col-span-full bg-[#181818] border border-[#292929] rounded-2xl">
+            <p className="font-bold text-white text-sm">No products in catalog</p>
+            <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Add Master Product" above to add products to the database.</p>
           </div>
-        ))}
+        ) : (
+          filteredProducts.map((p) => (
+            <div
+              key={p.id}
+              className="p-4 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#1DB954]/40 transition-all flex flex-col justify-between"
+            >
+              <div>
+                <div className="relative h-36 w-full rounded-xl bg-[#121212] overflow-hidden mb-3 border border-[#292929]">
+                  <img src={p.imageUrl || p.image_url || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500'} alt={p.name} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-xs text-[9px] font-mono text-white">
+                    {p.sku || 'SKU-GEN'}
+                  </span>
+                </div>
+
+                <p className="text-[10px] text-[#1DB954] font-bold uppercase tracking-wider">{p.brand}</p>
+                <h3 className="text-xs font-bold text-white line-clamp-2 mt-0.5">{p.name}</h3>
+                <p className="text-[10px] text-[#A7A7A7] mt-1">{p.categoryName || 'General'}</p>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-[#292929] flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-extrabold text-[#1DB954] font-mono">₹{p.suggestedSellingPrice || p.selling_price || 399}</span>
+                  <span className="text-[10px] text-[#6F6F6F] line-through ml-1.5 font-mono">₹{p.suggestedPrice || p.price || 499}</span>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => deleteProduct(p.id)}
+                    className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] transition-colors cursor-pointer"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {isAddModalOpen && (

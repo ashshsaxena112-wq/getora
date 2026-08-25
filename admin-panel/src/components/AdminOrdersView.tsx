@@ -57,11 +57,11 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
         <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
           {[
             { id: 'all', label: `All Orders (${orders.length})` },
-            { id: 'pending', label: 'Pending (27)' },
-            { id: 'active', label: 'Active (518)' },
-            { id: 'completed', label: 'Completed (598)' },
-            { id: 'cancelled', label: 'Cancelled (31)' },
-            { id: 'refunds', label: 'Refunds (17)' }
+            { id: 'pending', label: `Pending (${orders.filter((o) => o.status === 'pending').length})` },
+            { id: 'active', label: `Active (${orders.filter((o) => o.status === 'preparing' || o.status === 'out_for_delivery' || o.status === 'confirmed').length})` },
+            { id: 'completed', label: `Completed (${orders.filter((o) => o.status === 'delivered').length})` },
+            { id: 'cancelled', label: `Cancelled (${orders.filter((o) => o.status === 'cancelled').length})` },
+            { id: 'refunds', label: 'Refunds (0)' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -91,62 +91,69 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
 
       <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-[#121212] text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
-              <tr>
-                <th className="py-3 px-4">Order ID</th>
-                <th className="py-3 px-4">Customer</th>
-                <th className="py-3 px-4">Merchant Retailer</th>
-                <th className="py-3 px-4">Items</th>
-                <th className="py-3 px-4">Amount</th>
-                <th className="py-3 px-4">Payment</th>
-                <th className="py-3 px-4">Delivery Partner</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#292929] text-[11px]">
-              {filteredOrders.map((o) => (
-                <tr key={o.id} className="hover:bg-[#202020] transition-colors">
-                  <td className="py-3 px-4 font-bold font-mono text-white">{o.orderNumber}</td>
-                  <td className="py-3 px-4">
-                    <p className="font-semibold text-white">{o.customer}</p>
-                    <p className="text-[10px] text-[#A7A7A7]">{o.phone}</p>
-                  </td>
-                  <td className="py-3 px-4 text-[#A7A7A7] font-medium">{o.retailer}</td>
-                  <td className="py-3 px-4 text-[#A7A7A7]">{o.itemsCount} items</td>
-                  <td className="py-3 px-4 font-bold text-white font-mono">{o.amount}</td>
-                  <td className="py-3 px-4 text-[#A7A7A7]">{o.paymentMethod}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-1.5 text-white">
-                      <Bike className="w-3.5 h-3.5 text-[#1DB954]" />
-                      <span>{o.deliveryPartner}</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className="px-2.5 py-1 rounded-md text-[10px] font-extrabold"
-                      style={{
-                        backgroundColor: `${o.statusColor}22`,
-                        color: o.statusColor,
-                        border: `1px solid ${o.statusColor}44`
-                      }}
-                    >
-                      {o.statusLabel}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <button
-                      onClick={() => setSelectedOrder(o)}
-                      className="px-2.5 py-1 rounded-lg bg-[#202020] hover:bg-[#14532D] text-white hover:text-[#1DB954] border border-[#292929] text-[11px] font-semibold transition-colors cursor-pointer"
-                    >
-                      View Details
-                    </button>
-                  </td>
+          {filteredOrders.length === 0 ? (
+            <div className="py-12 text-center text-xs text-[#A7A7A7]">
+              <p className="font-bold text-white text-sm">No orders found in database</p>
+              <p className="text-[11px] text-[#6F6F6F] mt-1">Live customer orders will automatically show here.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#121212] text-[10px] font-bold text-[#A7A7A7] uppercase tracking-wider border-b border-[#292929]">
+                <tr>
+                  <th className="py-3 px-4">Order ID</th>
+                  <th className="py-3 px-4">Customer</th>
+                  <th className="py-3 px-4">Merchant Retailer</th>
+                  <th className="py-3 px-4">Items</th>
+                  <th className="py-3 px-4">Amount</th>
+                  <th className="py-3 px-4">Payment</th>
+                  <th className="py-3 px-4">Delivery Partner</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-[#292929] text-[11px]">
+                {filteredOrders.map((o) => (
+                  <tr key={o.id} className="hover:bg-[#202020] transition-colors">
+                    <td className="py-3 px-4 font-bold font-mono text-white">{o.orderNumber}</td>
+                    <td className="py-3 px-4">
+                      <p className="font-semibold text-white">{o.customer}</p>
+                      <p className="text-[10px] text-[#A7A7A7]">{o.phone}</p>
+                    </td>
+                    <td className="py-3 px-4 text-[#A7A7A7] font-medium">{o.retailer}</td>
+                    <td className="py-3 px-4 text-[#A7A7A7]">{o.itemsCount} items</td>
+                    <td className="py-3 px-4 font-bold text-white font-mono">{o.amount}</td>
+                    <td className="py-3 px-4 text-[#A7A7A7]">{o.paymentMethod}</td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-1.5 text-white">
+                        <Bike className="w-3.5 h-3.5 text-[#1DB954]" />
+                        <span>{o.deliveryPartner}</span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className="px-2.5 py-1 rounded-md text-[10px] font-extrabold"
+                        style={{
+                          backgroundColor: `${o.statusColor}22`,
+                          color: o.statusColor,
+                          border: `1px solid ${o.statusColor}44`
+                        }}
+                      >
+                        {o.statusLabel}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        onClick={() => setSelectedOrder(o)}
+                        className="px-2.5 py-1 bg-[#202020] hover:bg-[#282828] border border-[#292929] rounded-lg text-white font-semibold cursor-pointer"
+                      >
+                        Details
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
