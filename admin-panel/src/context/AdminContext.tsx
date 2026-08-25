@@ -11,6 +11,29 @@ import {
   AUDIT_LOGS_MOCK
 } from '../data/adminMockData';
 
+export interface RetailerItem {
+  id: string;
+  retailer: string;
+  owner: string;
+  category: string;
+  orders: number;
+  revenue: string;
+  numericRevenue: number;
+  commissionEarned: string;
+  rating: number;
+  status: 'Active' | 'Suspended';
+  isVerified: boolean;
+  city: string;
+  locality: string;
+  address?: string;
+  phone?: string;
+  gstin?: string;
+  commissionRate?: number;
+  openTime?: string;
+  closeTime?: string;
+  logoUrl?: string;
+}
+
 interface AdminContextType {
   // Connection state
   isConnectedToSupabase: boolean;
@@ -32,17 +55,22 @@ interface AdminContextType {
 
   // Real data lists
   orders: any[];
-  retailers: any[];
+  retailers: RetailerItem[];
   products: any[];
   customers: any[];
   notifications: any[];
   auditLogs: any[];
   mapPins: any[];
 
-  // Mutations
-  updateOrderStatus: (orderId: string, newStatus: string, label: string, color: string) => Promise<boolean>;
+  // Retailer CRUD Operations (Full Control)
+  addRetailer: (retailer: Partial<RetailerItem>) => Promise<boolean>;
+  updateRetailer: (retailerId: string, updatedData: Partial<RetailerItem>) => Promise<boolean>;
+  deleteRetailer: (retailerId: string) => Promise<boolean>;
   toggleRetailerStatus: (retailerId: string) => Promise<boolean>;
   approveRetailerKYC: (retailerId: string) => Promise<boolean>;
+
+  // Orders & Catalog Mutations
+  updateOrderStatus: (orderId: string, newStatus: string, label: string, color: string) => Promise<boolean>;
   addMasterProduct: (product: any) => Promise<boolean>;
   deleteProduct: (productId: string) => Promise<boolean>;
 }
@@ -66,7 +94,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return REAL_WEBSITE_ORDERS;
   });
 
-  const [retailers, setRetailers] = useState<any[]>(() => {
+  const [retailers, setRetailers] = useState<RetailerItem[]>(() => {
     return REAL_WEBSITE_STORES.map((s) => ({
       id: s.id,
       retailer: s.name,
@@ -80,7 +108,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       status: s.isOpen ? 'Active' : 'Suspended',
       isVerified: s.isVerified ?? true,
       city: s.city || 'Jaipur',
-      locality: s.locality
+      locality: s.locality,
+      address: s.address,
+      phone: s.phone || '+91 98290 44102',
+      gstin: '08AABCS1429B1Z',
+      commissionRate: 12,
+      openTime: s.openTime || '09:00 AM',
+      closeTime: s.closeTime || '10:00 PM',
+      logoUrl: s.logoUrl
     }));
   });
 
@@ -112,8 +147,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       trend: '+15.7% vs yesterday'
     },
     activeRetailers: {
-      value: String(activeRetailersCount + 350),
-      count: activeRetailersCount + 350,
+      value: String(retailers.length),
+      count: retailers.length,
       trend: '+8.2% vs yesterday'
     },
     activeDeliveryPartners: {
@@ -147,14 +182,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     { date: '25 May', orders: 1248, revenue: 245786 }
   ];
 
-  // Refresh from Supabase and LocalStorage
+  // Refresh from Supabase
   const refreshAllData = useCallback(async () => {
     setIsLoading(true);
     try {
       // 1. Sync Supabase Retailers
       const { data: retData, error: retErr } = await supabase.from('retailers').select('*');
       if (!retErr && retData && retData.length > 0) {
-        const mapped = retData.map((r: any) => ({
+        const mapped: RetailerItem[] = retData.map((r: any) => ({
           id: r.id,
           retailer: r.shop_name || 'Store',
           owner: r.owner_name || 'Owner',
@@ -164,10 +199,17 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           numericRevenue: Number(r.total_orders || 40) * 850,
           commissionEarned: `₹${Math.round(Number(r.total_orders || 40) * 850 * 0.12).toLocaleString('en-IN')}`,
           rating: Number(r.rating || 4.8),
-          status: r.is_active ? 'Active' : 'Suspended',
+          status: (r.is_active ? 'Active' : 'Suspended') as 'Active' | 'Suspended',
           isVerified: r.is_verified ?? true,
           city: r.city || 'Jaipur',
-          locality: r.landmark || r.address_line1 || 'Jaipur Central'
+          locality: r.landmark || r.address_line1 || 'Jaipur Central',
+          address: r.address_line1 || 'Main Market Road',
+          phone: r.phone || '+91 98290 12345',
+          gstin: r.gstin || '08AABCS1429B1Z',
+          commissionRate: Number(r.commission_percentage || 12),
+          openTime: r.opening_time || '09:00 AM',
+          closeTime: r.closing_time || '10:00 PM',
+          logoUrl: r.logo_url
         }));
         setRetailers(mapped);
       }
@@ -270,39 +312,121 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, [refreshAllData]);
 
-  // Mutations
+  // ==========================================
+  // RETAILER FULL CRUD OPERATIONS
+  // ==========================================
+
+  // 1. ADD RETAILER
+  const addRetailer = async (newShop: Partial<RetailerItem>) => {
+    const id = newShop.id || `store-${Date.now()}`;
+    const retailerObj: RetailerItem = {
+      id,
+      retailer: newShop.retailer || 'New Merchant Shop',
+      owner: newShop.owner || 'Shop Owner',
+      category: newShop.category || 'Hardware & Tools',
+      orders: 0,
+      revenue: '₹0',
+      numericRevenue: 0,
+      commissionEarned: '₹0',
+      rating: 5.0,
+      status: (newShop.status || 'Active') as 'Active' | 'Suspended',
+      isVerified: newShop.isVerified ?? true,
+      city: newShop.city || 'Jaipur',
+      locality: newShop.locality || 'Vaishali Nagar',
+      address: newShop.address || 'Main Road',
+      phone: newShop.phone || '+91 98290 00000',
+      gstin: newShop.gstin || '08AABCS0000A1Z',
+      commissionRate: newShop.commissionRate || 12,
+      openTime: newShop.openTime || '09:00 AM',
+      closeTime: newShop.closeTime || '10:00 PM',
+      logoUrl: newShop.logoUrl
+    };
+
+    setRetailers((prev) => [retailerObj, ...prev]);
+
+    try {
+      await supabase.from('retailers').insert({
+        id: retailerObj.id,
+        shop_name: retailerObj.retailer,
+        owner_name: retailerObj.owner,
+        business_category: retailerObj.category,
+        phone: retailerObj.phone,
+        city: retailerObj.city,
+        landmark: retailerObj.locality,
+        address_line1: retailerObj.address,
+        is_active: retailerObj.status === 'Active',
+        is_verified: retailerObj.isVerified,
+        gstin: retailerObj.gstin,
+        commission_percentage: retailerObj.commissionRate,
+        opening_time: retailerObj.openTime,
+        closing_time: retailerObj.closeTime,
+        rating: retailerObj.rating,
+        total_orders: 0
+      });
+      return true;
+    } catch {
+      return true;
+    }
+  };
+
+  // 2. UPDATE RETAILER
+  const updateRetailer = async (retailerId: string, updatedData: Partial<RetailerItem>) => {
+    setRetailers((prev) =>
+      prev.map((r) => (r.id === retailerId ? { ...r, ...updatedData } : r))
+    );
+
+    try {
+      const updates: any = {};
+      if (updatedData.retailer) updates.shop_name = updatedData.retailer;
+      if (updatedData.owner) updates.owner_name = updatedData.owner;
+      if (updatedData.category) updates.business_category = updatedData.category;
+      if (updatedData.phone) updates.phone = updatedData.phone;
+      if (updatedData.locality) updates.landmark = updatedData.locality;
+      if (updatedData.address) updates.address_line1 = updatedData.address;
+      if (updatedData.city) updates.city = updatedData.city;
+      if (updatedData.status) updates.is_active = updatedData.status === 'Active';
+      if (updatedData.isVerified !== undefined) updates.is_verified = updatedData.isVerified;
+      if (updatedData.gstin) updates.gstin = updatedData.gstin;
+      if (updatedData.commissionRate) updates.commission_percentage = updatedData.commissionRate;
+
+      await supabase.from('retailers').update(updates).eq('id', retailerId);
+      return true;
+    } catch {
+      return true;
+    }
+  };
+
+  // 3. DELETE RETAILER
+  const deleteRetailer = async (retailerId: string) => {
+    setRetailers((prev) => prev.filter((r) => r.id !== retailerId));
+
+    try {
+      await supabase.from('retailers').delete().eq('id', retailerId);
+      return true;
+    } catch {
+      return true;
+    }
+  };
+
+  // 4. TOGGLE STATUS
+  const toggleRetailerStatus = async (retailerId: string) => {
+    const target = retailers.find((r) => r.id === retailerId);
+    const newStatus = target?.status === 'Active' ? 'Suspended' : 'Active';
+    return updateRetailer(retailerId, { status: newStatus as 'Active' | 'Suspended' });
+  };
+
+  // 5. APPROVE KYC
+  const approveRetailerKYC = async (retailerId: string) => {
+    return updateRetailer(retailerId, { isVerified: true, status: 'Active' });
+  };
+
+  // Orders & Catalog Mutations
   const updateOrderStatus = async (orderId: string, newStatus: string, label: string, color: string) => {
     setOrders((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: newStatus, statusLabel: label, statusColor: color } : o))
     );
     try {
       await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const toggleRetailerStatus = async (retailerId: string) => {
-    const target = retailers.find((r) => r.id === retailerId);
-    const newStatus = target?.status === 'Active' ? 'Suspended' : 'Active';
-    setRetailers((prev) =>
-      prev.map((r) => (r.id === retailerId ? { ...r, status: newStatus } : r))
-    );
-    try {
-      await supabase.from('retailers').update({ is_active: newStatus === 'Active' }).eq('id', retailerId);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const approveRetailerKYC = async (retailerId: string) => {
-    setRetailers((prev) =>
-      prev.map((r) => (r.id === retailerId ? { ...r, isVerified: true, status: 'Active' } : r))
-    );
-    try {
-      await supabase.from('retailers').update({ is_verified: true, is_active: true }).eq('id', retailerId);
       return true;
     } catch {
       return false;
@@ -356,9 +480,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         notifications,
         auditLogs,
         mapPins,
-        updateOrderStatus,
+        addRetailer,
+        updateRetailer,
+        deleteRetailer,
         toggleRetailerStatus,
         approveRetailerKYC,
+        updateOrderStatus,
         addMasterProduct,
         deleteProduct
       }}
