@@ -27,7 +27,8 @@ export const AdminRetailersView: React.FC = () => {
     updateRetailer,
     deleteRetailer,
     toggleRetailerStatus,
-    approveRetailerKYC
+    approveRetailerKYC,
+    openAddShopModal
   } = useAdmin();
 
   const [search, setSearch] = useState('');
@@ -183,7 +184,7 @@ export const AdminRetailersView: React.FC = () => {
 
         {/* PROMINENT ADD SHOP BUTTON */}
         <button
-          onClick={handleOpenAdd}
+          onClick={openAddShopModal}
           className="px-5 py-2.5 bg-[#1DB954] hover:bg-[#39D353] active:bg-[#169C46] text-black font-black text-sm rounded-xl shadow-lg shadow-[#1DB954]/30 transition-all flex items-center justify-center gap-2 cursor-pointer flex-shrink-0"
         >
           <Plus className="w-5 h-5 stroke-[3]" />
@@ -248,7 +249,14 @@ export const AdminRetailersView: React.FC = () => {
               <div className="py-12 text-center text-xs text-[#A7A7A7]">
                 <Store className="w-8 h-8 mx-auto text-[#6F6F6F] mb-2 opacity-50" />
                 <p className="font-bold text-white text-sm">No merchant shops found in database</p>
-                <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Add New Shop" above to register your first store.</p>
+                <p className="text-[11px] text-[#6F6F6F] mt-1">Click "+ Add New Shop" below to register your first store.</p>
+                <button
+                  onClick={openAddShopModal}
+                  className="mt-3 px-4 py-2 bg-[#1DB954] hover:bg-[#39D353] text-black font-extrabold rounded-xl cursor-pointer shadow-md inline-flex items-center gap-1.5"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ Add First Shop</span>
+                </button>
               </div>
             ) : (
               <table className="w-full text-left text-xs">
@@ -436,30 +444,27 @@ export const AdminRetailersView: React.FC = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* ADD / EDIT RETAILER MODAL                                                 */}
+      {/* EDIT RETAILER MODAL                                                       */}
       {/* ========================================================================= */}
-      {(isAddModalOpen || editingRetailer) && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+      {editingRetailer && (
+        <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-xl bg-[#181818] border border-[#292929] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div className="flex items-center justify-between pb-3 border-b border-[#292929]">
               <div className="flex items-center gap-2">
                 <Store className="w-5 h-5 text-[#1DB954]" />
                 <h3 className="text-base font-bold text-white font-['Outfit',sans-serif]">
-                  {isAddModalOpen ? 'Add New Retailer Shop' : `Edit ${editingRetailer?.retailer}`}
+                  Edit {editingRetailer.retailer}
                 </h3>
               </div>
               <button
-                onClick={() => {
-                  setIsAddModalOpen(false);
-                  setEditingRetailer(null);
-                }}
+                onClick={() => setEditingRetailer(null)}
                 className="w-7 h-7 rounded-lg bg-[#202020] text-white flex items-center justify-center cursor-pointer"
               >
                 &times;
               </button>
             </div>
 
-            <form onSubmit={isAddModalOpen ? handleSaveAdd : handleSaveEdit} className="space-y-3.5 text-xs">
+            <form onSubmit={handleSaveEdit} className="space-y-3.5 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[#A7A7A7] mb-1 font-medium">Shop / Store Name *</label>
@@ -624,10 +629,7 @@ export const AdminRetailersView: React.FC = () => {
               <div className="pt-4 border-t border-[#292929] flex items-center justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsAddModalOpen(false);
-                    setEditingRetailer(null);
-                  }}
+                  onClick={() => setEditingRetailer(null)}
                   className="px-4 py-2 bg-[#202020] text-white rounded-xl font-bold cursor-pointer hover:bg-[#292929]"
                 >
                   Cancel
@@ -636,7 +638,7 @@ export const AdminRetailersView: React.FC = () => {
                   type="submit"
                   className="px-5 py-2 bg-[#1DB954] hover:bg-[#39D353] text-black font-extrabold rounded-xl shadow-xs cursor-pointer"
                 >
-                  {isAddModalOpen ? 'Create & Add Shop' : 'Save Changes'}
+                  Save Changes
                 </button>
               </div>
             </form>

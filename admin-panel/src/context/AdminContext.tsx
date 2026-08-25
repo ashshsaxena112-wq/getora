@@ -165,6 +165,11 @@ interface AdminContextType {
   auditLogs: any[];
   mapPins: any[];
 
+  // Global Add Shop Modal State
+  isAddShopModalOpen: boolean;
+  openAddShopModal: () => void;
+  closeAddShopModal: () => void;
+
   // Mutations for all modules
   addRetailer: (retailer: Partial<RetailerItem>) => Promise<boolean>;
   updateRetailer: (retailerId: string, updatedData: Partial<RetailerItem>) => Promise<boolean>;
@@ -198,6 +203,10 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isConnectedToSupabase, setIsConnectedToSupabase] = useState(isSupabaseConfigured());
   const [isLoading, setIsLoading] = useState(false);
   const [lastSyncedAt, setLastSyncedAt] = useState<string>(new Date().toLocaleTimeString());
+  const [isAddShopModalOpen, setIsAddShopModalOpen] = useState(false);
+
+  const openAddShopModal = () => setIsAddShopModalOpen(true);
+  const closeAddShopModal = () => setIsAddShopModalOpen(false);
 
   // Collections State (Clean 0 Baseline)
   const [orders, setOrders] = useState<any[]>([]);
@@ -1066,6 +1075,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         notifications,
         auditLogs,
         mapPins,
+        isAddShopModalOpen,
+        openAddShopModal,
+        closeAddShopModal,
         addRetailer,
         updateRetailer,
         deleteRetailer,

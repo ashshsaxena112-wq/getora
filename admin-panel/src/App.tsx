@@ -23,9 +23,11 @@ import {
   AdminSettingsView
 } from './components/AdminOtherViews';
 import { AdminAiDrawer } from './components/AdminAiDrawer';
+import { AdminAddShopModal } from './components/AdminAddShopModal';
 import { Sparkles } from 'lucide-react';
 
 const AdminPanelInner: React.FC = () => {
+  const { isAddShopModalOpen, closeAddShopModal } = useAdmin();
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
@@ -154,6 +156,13 @@ const AdminPanelInner: React.FC = () => {
       <AdminAiDrawer
         isOpen={isAiDrawerOpen}
         onClose={() => setIsAiDrawerOpen(false)}
+      />
+
+      {/* 4. Global Add Retailer Shop Modal */}
+      <AdminAddShopModal
+        isOpen={isAddShopModalOpen}
+        onClose={closeAddShopModal}
+        onSuccess={() => setActiveTab('retailers')}
       />
 
       {/* Floating Bottom-Right AI Assistant Trigger Button */}

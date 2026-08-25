@@ -42,7 +42,8 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
     retailers,
     notifications,
     mapPins,
-    overviewChart
+    overviewChart,
+    openAddShopModal
   } = useAdmin();
 
   const [selectedPin, setSelectedPin] = useState<any | null>(null);
@@ -552,8 +553,8 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             </h2>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setActiveTab('retailers')}
-                className="px-2.5 py-1 rounded bg-[#1DB954] hover:bg-[#39D353] text-black text-[10px] font-black cursor-pointer"
+                onClick={openAddShopModal}
+                className="px-2.5 py-1 rounded bg-[#1DB954] hover:bg-[#39D353] text-black text-[10px] font-black cursor-pointer shadow-sm transition-transform active:scale-95"
               >
                 + Add Shop
               </button>

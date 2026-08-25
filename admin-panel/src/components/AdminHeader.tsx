@@ -30,7 +30,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   searchQuery,
   setSearchQuery
 }) => {
-  const { isConnectedToSupabase, lastSyncedAt, refreshAllData, notifications } = useAdmin();
+  const { isConnectedToSupabase, lastSyncedAt, refreshAllData, notifications, openAddShopModal } = useAdmin();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -171,7 +171,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
 
         {/* Quick Add Button */}
         <button
-          onClick={() => setActiveTab('retailers')}
+          onClick={() => {
+            setActiveTab('retailers');
+            openAddShopModal();
+          }}
           className="px-3 py-1.5 rounded-xl bg-[#1DB954] hover:bg-[#39D353] text-black text-xs font-extrabold flex items-center gap-1.5 shadow-sm cursor-pointer transition-transform active:scale-95"
           title="Add New Retailer Shop"
         >
