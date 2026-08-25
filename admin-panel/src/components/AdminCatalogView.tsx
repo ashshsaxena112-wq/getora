@@ -1,54 +1,107 @@
 import React, { useState } from 'react';
 import {
-  Package,
   Plus,
   Search,
-  Edit,
-  Trash2,
-  Eye,
-  CheckCircle2,
-  Tag,
-  Boxes,
-  UploadCloud,
-  Layers,
-  Sparkles
+  Trash2
 } from 'lucide-react';
-import { MASTER_PRODUCT_CATALOG } from '../../data/masterCatalog';
-import { MasterProduct } from '../../types';
+
+interface CatalogItem {
+  id: string;
+  name: string;
+  brand: string;
+  categoryName: string;
+  suggestedPrice: number;
+  suggestedSellingPrice: number;
+  unit: string;
+  sku: string;
+  imageUrl: string;
+  description: string;
+  isActive: boolean;
+}
+
+const INITIAL_CATALOG: CatalogItem[] = [
+  {
+    id: 'mp-1',
+    name: 'Stanley 13mm Impact Hammer Drill (650W)',
+    brand: 'Stanley',
+    categoryName: 'Hardware & Tools',
+    suggestedPrice: 3499,
+    suggestedSellingPrice: 2899,
+    unit: 'pcs',
+    sku: 'GT-STN-001',
+    imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500&auto=format&fit=crop&q=80',
+    description: 'High performance 650W motor with variable speed switch.',
+    isActive: true
+  },
+  {
+    id: 'mp-2',
+    name: 'Havells 10W B22 LED Cool Day Light (Pack of 4)',
+    brand: 'Havells',
+    categoryName: 'Electrical & Lighting',
+    suggestedPrice: 800,
+    suggestedSellingPrice: 720,
+    unit: 'pack',
+    sku: 'GT-HVL-002',
+    imageUrl: 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?w=500&auto=format&fit=crop&q=80',
+    description: 'Energy saving LED bulbs with 2 years manufacturer warranty.',
+    isActive: true
+  },
+  {
+    id: 'mp-3',
+    name: 'boAt 65W GaN Fast Dual Charger (Type-C + USB)',
+    brand: 'boAt',
+    categoryName: 'Mobile Accessories',
+    suggestedPrice: 1999,
+    suggestedSellingPrice: 1499,
+    unit: 'pcs',
+    sku: 'GT-BOT-003',
+    imageUrl: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&auto=format&fit=crop&q=80',
+    description: 'Ultra-fast GaN charging for MacBooks, iPhones, and Android devices.',
+    isActive: true
+  },
+  {
+    id: 'mp-4',
+    name: 'Classmate Pulse 6-Subject Spiral Notebook',
+    brand: 'Classmate',
+    categoryName: 'Stationery & Office',
+    suggestedPrice: 250,
+    suggestedSellingPrice: 210,
+    unit: 'pcs',
+    sku: 'GT-CLS-004',
+    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=80',
+    description: '300 pages premium paper notebook with index tabs.',
+    isActive: true
+  }
+];
 
 export const AdminCatalogView: React.FC = () => {
-  const [products, setProducts] = useState<MasterProduct[]>(MASTER_PRODUCT_CATALOG);
+  const [products, setProducts] = useState<CatalogItem[]>(INITIAL_CATALOG);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  // Form State for dynamic category-specific fields
   const [formData, setFormData] = useState({
     name: '',
     brand: '',
     categoryName: 'Hardware & Tools',
-    subCategory: 'Tools & Fasteners',
     suggestedPrice: 499,
     suggestedSellingPrice: 399,
     unit: 'pcs',
     sku: `GT-SKU-${Math.floor(1000 + Math.random() * 9000)}`,
     imageUrl: 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80',
     description: '',
-    // Category specific
     material: 'Forged Steel',
     size: '13mm',
     wattage: '10W',
-    voltage: '220V',
-    compatibleModel: 'Universal Type-C'
+    voltage: '220V'
   });
 
   const handleAddProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    const newProd: MasterProduct = {
+    const newProd: CatalogItem = {
       id: `mp-${Date.now()}`,
       name: formData.name || 'New Master Product',
       brand: formData.brand || 'GETORA Direct',
-      categoryId: 'cat-1',
       categoryName: formData.categoryName,
       suggestedPrice: Number(formData.suggestedPrice),
       suggestedSellingPrice: Number(formData.suggestedSellingPrice),
@@ -78,7 +131,6 @@ export const AdminCatalogView: React.FC = () => {
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Central Master Catalog</h2>
@@ -94,10 +146,9 @@ export const AdminCatalogView: React.FC = () => {
         </button>
       </div>
 
-      {/* Filters & Search */}
       <div className="p-3 bg-[#181818] border border-[#292929] rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar">
-          {['all', 'Hardware', 'Electrical', 'Mobile', 'Stationery', 'Home'].map((cat) => (
+          {['all', 'Hardware', 'Electrical', 'Mobile', 'Stationery'].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
@@ -124,7 +175,6 @@ export const AdminCatalogView: React.FC = () => {
         </div>
       </div>
 
-      {/* Catalog Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredProducts.map((p) => (
           <div
@@ -166,7 +216,6 @@ export const AdminCatalogView: React.FC = () => {
         ))}
       </div>
 
-      {/* Add Master Product Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-xl bg-[#181818] border border-[#292929] rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
@@ -218,52 +267,8 @@ export const AdminCatalogView: React.FC = () => {
                     <option>Electrical & Lighting</option>
                     <option>Mobile Accessories</option>
                     <option>Stationery & Office</option>
-                    <option>Home & Cleaning</option>
                   </select>
                 </div>
-              </div>
-
-              {/* Dynamic Category-Specific Attributes */}
-              <div className="p-3 bg-[#121212] border border-[#292929] rounded-xl space-y-2">
-                <p className="text-[10px] font-bold text-[#1DB954] uppercase tracking-wider">
-                  Category Attributes ({formData.categoryName})
-                </p>
-                {formData.categoryName === 'Hardware & Tools' && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      value={formData.material}
-                      onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                      placeholder="Material (e.g. Alloy Steel)"
-                      className="px-2.5 py-1.5 bg-[#181818] border border-[#292929] rounded-lg text-white text-[11px]"
-                    />
-                    <input
-                      type="text"
-                      value={formData.size}
-                      onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-                      placeholder="Size / Dimensions (e.g. 13mm)"
-                      className="px-2.5 py-1.5 bg-[#181818] border border-[#292929] rounded-lg text-white text-[11px]"
-                    />
-                  </div>
-                )}
-                {formData.categoryName === 'Electrical & Lighting' && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      value={formData.wattage}
-                      onChange={(e) => setFormData({ ...formData, wattage: e.target.value })}
-                      placeholder="Wattage (e.g. 10W / 20W)"
-                      className="px-2.5 py-1.5 bg-[#181818] border border-[#292929] rounded-lg text-white text-[11px]"
-                    />
-                    <input
-                      type="text"
-                      value={formData.voltage}
-                      onChange={(e) => setFormData({ ...formData, voltage: e.target.value })}
-                      placeholder="Voltage (e.g. 220-240V)"
-                      className="px-2.5 py-1.5 bg-[#181818] border border-[#292929] rounded-lg text-white text-[11px]"
-                    />
-                  </div>
-                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">

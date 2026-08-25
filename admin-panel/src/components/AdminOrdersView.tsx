@@ -1,22 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import {
   Search,
-  Filter,
-  Eye,
-  CheckCircle2,
-  XCircle,
-  Truck,
-  Clock,
-  ArrowUpDown,
   Download,
-  Phone,
-  MapPin,
-  Store,
+  Bike,
   User,
-  RotateCcw,
-  Bike
+  MapPin,
+  Store
 } from 'lucide-react';
-import { RECENT_ORDERS_DATA } from '../../data/adminMockData';
+import { RECENT_ORDERS_DATA } from '../data/adminMockData';
 
 interface AdminOrdersViewProps {
   filterStatus?: string;
@@ -64,7 +55,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
-      {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Orders Management</h2>
@@ -79,9 +69,7 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
         </div>
       </div>
 
-      {/* Tabs & Search */}
       <div className="p-3 bg-[#181818] border border-[#292929] rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-        {/* Status Filter Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
           {[
             { id: 'all', label: 'All Orders' },
@@ -105,7 +93,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
           ))}
         </div>
 
-        {/* Search input */}
         <div className="relative w-full md:w-64">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6F6F6F]" />
           <input
@@ -118,7 +105,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
         </div>
       </div>
 
-      {/* Orders Data Table */}
       <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
@@ -180,12 +166,10 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
         </div>
       </div>
 
-      {/* Order Detail Drawer */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex justify-end animate-fadeIn">
           <div className="w-full max-w-lg bg-[#181818] border-l border-[#292929] h-full overflow-y-auto p-6 space-y-6 custom-scrollbar flex flex-col justify-between">
             <div className="space-y-6">
-              {/* Drawer Header */}
               <div className="flex items-center justify-between pb-4 border-b border-[#292929]">
                 <div>
                   <span className="text-[10px] uppercase font-bold text-[#1DB954] tracking-wider">
@@ -203,7 +187,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                 </button>
               </div>
 
-              {/* Status Timeline */}
               <div className="p-4 rounded-2xl bg-[#121212] border border-[#292929] space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white">Live Tracking Timeline</span>
@@ -233,7 +216,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                 </div>
               </div>
 
-              {/* Customer & Delivery Address */}
               <div className="p-4 rounded-2xl bg-[#121212] border border-[#292929] space-y-2 text-xs">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#A7A7A7]">Customer & Destination</p>
                 <div className="flex items-center gap-2 text-white font-bold">
@@ -246,7 +228,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                 </div>
               </div>
 
-              {/* Retailer Info */}
               <div className="p-4 rounded-2xl bg-[#121212] border border-[#292929] space-y-2 text-xs">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#A7A7A7]">Fulfilling Retailer</p>
                 <div className="flex items-center gap-2 text-white font-bold">
@@ -255,7 +236,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                 </div>
               </div>
 
-              {/* Items List */}
               <div className="space-y-2">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[#A7A7A7]">Ordered Items</p>
                 <div className="divide-y divide-[#292929] bg-[#121212] rounded-2xl border border-[#292929] p-3 text-xs">
@@ -276,7 +256,6 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
               </div>
             </div>
 
-            {/* Quick Action Buttons */}
             <div className="pt-4 border-t border-[#292929] grid grid-cols-2 gap-2">
               <button
                 onClick={() => updateOrderStatus(selectedOrder.id, 'delivered', 'Delivered', '#1DB954')}

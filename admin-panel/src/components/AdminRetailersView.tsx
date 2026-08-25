@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Store,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
   Search,
   Phone,
-  Mail,
   MapPin,
-  Clock,
   Eye,
-  Plus,
-  ShieldCheck,
-  Package,
-  Award
+  ShieldCheck
 } from 'lucide-react';
-import { TOP_RETAILERS_DATA } from '../../data/adminMockData';
+import { TOP_RETAILERS_DATA } from '../data/adminMockData';
 
 export const AdminRetailersView: React.FC = () => {
   const [retailers, setRetailers] = useState(TOP_RETAILERS_DATA);
@@ -30,7 +21,6 @@ export const AdminRetailersView: React.FC = () => {
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Retailer & Store Network</h2>
@@ -49,7 +39,6 @@ export const AdminRetailersView: React.FC = () => {
         </div>
       </div>
 
-      {/* Retailers Table */}
       <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
@@ -133,7 +122,6 @@ export const AdminRetailersView: React.FC = () => {
         </div>
       </div>
 
-      {/* Retailer Detail Drawer */}
       {selectedRetailer && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex justify-end animate-fadeIn">
           <div className="w-full max-w-md bg-[#181818] border-l border-[#292929] h-full overflow-y-auto p-6 space-y-6 custom-scrollbar">
@@ -155,7 +143,6 @@ export const AdminRetailersView: React.FC = () => {
               </button>
             </div>
 
-            {/* Metrics */}
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-xl bg-[#121212] border border-[#292929]">
                 <p className="text-[10px] text-[#A7A7A7]">Lifetime Orders</p>
@@ -167,7 +154,6 @@ export const AdminRetailersView: React.FC = () => {
               </div>
             </div>
 
-            {/* Owner & Address */}
             <div className="p-4 rounded-xl bg-[#121212] border border-[#292929] space-y-2 text-xs">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[#A7A7A7]">Owner & Contact</p>
               <p className="font-bold text-white">{selectedRetailer.owner}</p>
@@ -181,7 +167,6 @@ export const AdminRetailersView: React.FC = () => {
               </p>
             </div>
 
-            {/* KYC & GST Details */}
             <div className="p-4 rounded-xl bg-[#121212] border border-[#292929] space-y-2 text-xs">
               <p className="text-[10px] font-bold uppercase tracking-wider text-[#A7A7A7]">Tax & KYC Verification</p>
               <div className="flex items-center justify-between">

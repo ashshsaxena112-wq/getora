@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --bg-primary: #0B0B0B;
+  --bg-secondary: #101010;
+  --bg-card: #181818;
+  --bg-elevated: #202020;
+  --color-green: #1DB954;
+  --color-green-bright: #39D353;
+  --color-green-dark: #14532D;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A7A7A7;
+  --text-muted: #6F6F6F;
+  --border: #292929;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0B0B0B;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Sleek Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #121212;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #292929;
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #393939;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}

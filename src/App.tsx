@@ -23,20 +23,9 @@ import { AccountPage } from './pages/AccountPage';
 import { RetailerDashboardPage } from './pages/RetailerDashboardPage';
 import { SupportPage } from './pages/SupportPage';
 import { OffersPage } from './pages/OffersPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
 const MainRouter: React.FC = () => {
   const { currentView } = useGetora();
-
-  // Full-Screen Master Admin Panel View
-  if (currentView === 'admin' || currentView === 'admin-dashboard' || currentView === 'admin-login') {
-    return (
-      <div className="admin-app-wrapper min-h-screen bg-[#0B0B0B] text-white font-['Inter',sans-serif]">
-        <AdminDashboardPage />
-        <ToastContainer />
-      </div>
-    );
-  }
 
   const renderCurrentView = () => {
     switch (currentView) {

@@ -12,8 +12,8 @@ import {
   Settings,
   ExternalLink
 } from 'lucide-react';
-import { AdminTab, AdminNotification } from '../../types/admin';
-import { ALERTS_NOTIFICATIONS_DATA } from '../../data/adminMockData';
+import { AdminTab, AdminNotification } from '../types/admin';
+import { ALERTS_NOTIFICATIONS_DATA } from '../data/adminMockData';
 
 interface AdminHeaderProps {
   activeTab: AdminTab;
@@ -21,8 +21,6 @@ interface AdminHeaderProps {
   toggleSidebar: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
-  onLogout?: () => void;
-  onNavigateHome?: () => void;
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({
@@ -30,9 +28,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   setActiveTab,
   toggleSidebar,
   searchQuery,
-  setSearchQuery,
-  onLogout,
-  onNavigateHome
+  setSearchQuery
 }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -42,7 +38,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
@@ -108,7 +103,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
       case 'reports':
         return 'Exportable Reports & CSVs';
       case 'admin-users':
-        return 'Admin Roles & Access Control';
+        return 'Admin Users & Roles';
       case 'security':
         return 'Security & Audit Logs';
       case 'settings':
@@ -151,7 +146,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           </kbd>
         </div>
 
-        {/* Date Selector Pill (matching reference image) */}
+        {/* Date Selector Pill */}
         <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#181818] border border-[#292929] text-xs font-semibold text-[#FFFFFF] cursor-pointer hover:border-[#1DB954]/50 transition-colors">
           <Calendar className="w-3.5 h-3.5 text-[#1DB954]" />
           <span>{selectedDateRange}</span>
@@ -303,32 +298,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                 <Shield className="w-3.5 h-3.5" />
                 <span>Security & Audit</span>
               </button>
-
-              {onNavigateHome && (
-                <button
-                  onClick={() => {
-                    onNavigateHome();
-                    setIsProfileOpen(false);
-                  }}
-                  className="w-full px-3 py-2 rounded-xl text-left hover:bg-[#14532D]/30 text-[#1DB954] font-bold flex items-center gap-2 cursor-pointer border-t border-[#292929] mt-1 pt-2"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Marketplace Home</span>
-                </button>
-              )}
-
-              {onLogout && (
-                <button
-                  onClick={() => {
-                    onLogout();
-                    setIsProfileOpen(false);
-                  }}
-                  className="w-full px-3 py-2 rounded-xl text-left hover:bg-[#EF4444]/15 text-[#EF4444] font-semibold flex items-center gap-2 cursor-pointer border-t border-[#292929] mt-1 pt-2"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>Sign Out</span>
-                </button>
-              )}
             </div>
           )}
         </div>

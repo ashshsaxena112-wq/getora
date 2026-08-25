@@ -1,22 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Users,
-  Bike,
-  Boxes,
-  Ticket,
-  Headphones,
-  Star,
-  BarChart3,
-  ShieldCheck,
-  Settings,
-  Search,
-  CheckCircle2,
-  AlertTriangle,
-  FileText,
-  Plus,
-  Send
+  Bike
 } from 'lucide-react';
-import { AUDIT_LOGS_MOCK } from '../../data/adminMockData';
+import { AUDIT_LOGS_MOCK } from '../data/adminMockData';
 
 // 1. CUSTOMERS VIEW
 export const AdminCustomersView: React.FC = () => (

@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  IndianRupee,
-  TrendingUp,
-  CreditCard,
-  Building,
-  RotateCcw,
-  CheckCircle2,
-  Download,
-  Calendar,
-  Filter
+  Download
 } from 'lucide-react';
 
 export const AdminFinanceView: React.FC = () => {
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Financial Operations & Settlements</h2>
@@ -27,7 +18,6 @@ export const AdminFinanceView: React.FC = () => {
         </button>
       </div>
 
-      {/* Finance KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-[#181818] border border-[#292929]">
           <p className="text-xs text-[#A7A7A7]">Gross Platform Sales</p>
@@ -54,7 +44,6 @@ export const AdminFinanceView: React.FC = () => {
         </div>
       </div>
 
-      {/* Payout Batches Table */}
       <div className="bg-[#181818] border border-[#292929] rounded-2xl overflow-hidden shadow-lg p-4">
         <h3 className="text-sm font-bold text-white font-['Outfit',sans-serif] mb-3">Recent Merchant Payout Batches</h3>
         <div className="overflow-x-auto">

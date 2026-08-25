@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useGetora } from '../context/GetoraContext';
-import { AdminTab } from '../types/admin';
-import { AdminSidebar } from '../components/admin/AdminSidebar';
-import { AdminHeader } from '../components/admin/AdminHeader';
-import { AdminDashboardHome } from '../components/admin/AdminDashboardHome';
-import { AdminOrdersView } from '../components/admin/AdminOrdersView';
-import { AdminRetailersView } from '../components/admin/AdminRetailersView';
-import { AdminCatalogView } from '../components/admin/AdminCatalogView';
-import { AdminLiveMapView } from '../components/admin/AdminLiveMapView';
-import { AdminFinanceView } from '../components/admin/AdminFinanceView';
+import { AdminTab } from './types/admin';
+import { AdminSidebar } from './components/AdminSidebar';
+import { AdminHeader } from './components/AdminHeader';
+import { AdminDashboardHome } from './components/AdminDashboardHome';
+import { AdminOrdersView } from './components/AdminOrdersView';
+import { AdminRetailersView } from './components/AdminRetailersView';
+import { AdminCatalogView } from './components/AdminCatalogView';
+import { AdminLiveMapView } from './components/AdminLiveMapView';
+import { AdminFinanceView } from './components/AdminFinanceView';
 import {
   AdminCustomersView,
   AdminDeliveryView,
@@ -16,18 +15,16 @@ import {
   AdminCouponsView,
   AdminAuditLogsView,
   AdminSettingsView
-} from '../components/admin/AdminOtherViews';
-import { AdminAiDrawer } from '../components/admin/AdminAiDrawer';
+} from './components/AdminOtherViews';
+import { AdminAiDrawer } from './components/AdminAiDrawer';
 import { Sparkles } from 'lucide-react';
 
-export const AdminDashboardPage: React.FC = () => {
-  const { navigate, signOut } = useGetora();
+export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Keyboard shortcut: Ctrl + K or ⌘K for search focus
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -46,8 +43,8 @@ export const AdminDashboardPage: React.FC = () => {
         return (
           <AdminDashboardHome
             setActiveTab={setActiveTab}
-            onSelectOrder={(id) => setActiveTab('orders')}
-            onSelectRetailer={(id) => setActiveTab('retailers')}
+            onSelectOrder={() => setActiveTab('orders')}
+            onSelectRetailer={() => setActiveTab('retailers')}
           />
         );
       case 'orders':
@@ -102,8 +99,8 @@ export const AdminDashboardPage: React.FC = () => {
         return (
           <AdminDashboardHome
             setActiveTab={setActiveTab}
-            onSelectOrder={(id) => setActiveTab('orders')}
-            onSelectRetailer={(id) => setActiveTab('retailers')}
+            onSelectOrder={() => setActiveTab('orders')}
+            onSelectRetailer={() => setActiveTab('retailers')}
           />
         );
     }
@@ -128,23 +125,16 @@ export const AdminDashboardPage: React.FC = () => {
         />
       )}
 
-      {/* 2. Main Scrollable Viewport (Left margin = 240px for sidebar) */}
+      {/* 2. Main Scrollable Viewport */}
       <div className="flex-1 md:ml-60 flex flex-col min-h-screen min-w-0 bg-[#0B0B0B]">
-        {/* Top Sticky Header */}
         <AdminHeader
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           toggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onNavigateHome={() => navigate('home')}
-          onLogout={async () => {
-            await signOut();
-            navigate('home');
-          }}
         />
 
-        {/* Scrollable Dashboard Viewport */}
         <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto custom-scrollbar">
           {renderContent()}
         </main>
@@ -167,3 +157,5 @@ export const AdminDashboardPage: React.FC = () => {
     </div>
   );
 };
+
+export default App;

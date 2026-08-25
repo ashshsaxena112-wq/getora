@@ -6,7 +6,6 @@ import {
   Store,
   Bike,
   Users,
-  ArrowUpRight,
   ChevronRight,
   TrendingUp,
   Clock,
@@ -19,11 +18,9 @@ import {
   Check,
   Plus,
   Minus,
-  MapPin,
-  ExternalLink,
   RotateCcw
 } from 'lucide-react';
-import { AdminTab } from '../../types/admin';
+import { AdminTab } from '../types/admin';
 import {
   ADMIN_KPI_DATA,
   ORDER_STATUS_DISTRIBUTION,
@@ -33,7 +30,7 @@ import {
   TOP_RETAILERS_DATA,
   ALERTS_NOTIFICATIONS_DATA,
   MAP_PINS_DATA
-} from '../../data/adminMockData';
+} from '../data/adminMockData';
 
 interface AdminDashboardHomeProps {
   setActiveTab: (tab: AdminTab) => void;
@@ -229,83 +226,15 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             {/* SVG Donut Chart */}
             <div className="relative w-36 h-36 flex items-center justify-center flex-shrink-0">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                {/* Background Ring */}
                 <circle cx="50" cy="50" r="38" fill="none" stroke="#121212" strokeWidth="14" />
-                
-                {/* 1. Delivered (47.9% = stroke-dasharray: 114 239, dashoffset: 0) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#1DB954"
-                  strokeWidth="14"
-                  strokeDasharray="114 239"
-                  strokeDashoffset="0"
-                />
-                
-                {/* 2. Out for Delivery (28.5% = stroke-dasharray: 68 239, offset: -114) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#A855F7"
-                  strokeWidth="14"
-                  strokeDasharray="68 239"
-                  strokeDashoffset="-114"
-                />
-
-                {/* 3. Preparing (13.0% = stroke-dasharray: 31 239, offset: -182) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#F97316"
-                  strokeWidth="14"
-                  strokeDasharray="31 239"
-                  strokeDashoffset="-182"
-                />
-
-                {/* 4. Confirmed (5.9% = stroke-dasharray: 14 239, offset: -213) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#3B82F6"
-                  strokeWidth="14"
-                  strokeDasharray="14 239"
-                  strokeDashoffset="-213"
-                />
-
-                {/* 5. Pending (2.2% = stroke-dasharray: 6 239, offset: -227) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#F59E0B"
-                  strokeWidth="14"
-                  strokeDasharray="6 239"
-                  strokeDashoffset="-227"
-                />
-
-                {/* 6. Cancelled (2.5% = stroke-dasharray: 6 239, offset: -233) */}
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="38"
-                  fill="none"
-                  stroke="#EF4444"
-                  strokeWidth="14"
-                  strokeDasharray="6 239"
-                  strokeDashoffset="-233"
-                />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#1DB954" strokeWidth="14" strokeDasharray="114 239" strokeDashoffset="0" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#A855F7" strokeWidth="14" strokeDasharray="68 239" strokeDashoffset="-114" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#F97316" strokeWidth="14" strokeDasharray="31 239" strokeDashoffset="-182" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#3B82F6" strokeWidth="14" strokeDasharray="14 239" strokeDashoffset="-213" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#F59E0B" strokeWidth="14" strokeDasharray="6 239" strokeDashoffset="-227" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#EF4444" strokeWidth="14" strokeDasharray="6 239" strokeDashoffset="-233" />
               </svg>
 
-              {/* Center Donut Text */}
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="text-base font-black text-white font-['Outfit',sans-serif] leading-none">
                   1,248
@@ -363,7 +292,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
 
           {/* SVG Line / Area Graph */}
           <div className="relative w-full h-44 my-auto pt-2">
-            {/* Y-Axis Labels */}
             <div className="absolute left-0 top-0 bottom-6 flex flex-col justify-between text-[9px] font-mono text-[#6F6F6F] pointer-events-none">
               <span>1,500</span>
               <span>1,200</span>
@@ -373,30 +301,24 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
               <span>0</span>
             </div>
 
-            {/* Grid & Curves */}
             <div className="ml-7 h-36 relative">
               <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none">
                 <defs>
-                  <linearGradient id="orderGreenArea" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="adminGreenArea" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#1DB954" stopOpacity="0.25" />
                     <stop offset="100%" stopColor="#1DB954" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
 
-                {/* Subtle horizontal grid lines */}
                 <line x1="0" y1="0" x2={chartWidth} y2="0" stroke="#292929" strokeWidth="0.8" strokeDasharray="3 3" />
                 <line x1="0" y1={chartHeight * 0.25} x2={chartWidth} y2={chartHeight * 0.25} stroke="#292929" strokeWidth="0.8" strokeDasharray="3 3" />
                 <line x1="0" y1={chartHeight * 0.5} x2={chartWidth} y2={chartHeight * 0.5} stroke="#292929" strokeWidth="0.8" strokeDasharray="3 3" />
                 <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#292929" strokeWidth="0.8" strokeDasharray="3 3" />
                 <line x1="0" y1={chartHeight} x2={chartWidth} y2={chartHeight} stroke="#292929" strokeWidth="1" />
 
-                {/* Filled Area */}
-                <path d={areaPath} fill="url(#orderGreenArea)" />
-
-                {/* Main Stroke Curve */}
+                <path d={areaPath} fill="url(#adminGreenArea)" />
                 <path d={svgPath} fill="none" stroke="#1DB954" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Data Points */}
                 {points.map((p, i) => (
                   <circle
                     key={i}
@@ -414,7 +336,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
               </svg>
             </div>
 
-            {/* X-Axis Dates */}
             <div className="ml-7 flex items-center justify-between text-[9px] font-mono text-[#6F6F6F] pt-1">
               {ORDERS_OVERVIEW_CHART.map((d) => (
                 <span key={d.date}>{d.date}</span>
@@ -438,9 +359,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             </button>
           </div>
 
-          {/* Interactive Dark Map Canvas */}
           <div className="relative w-full h-44 rounded-xl bg-[#101317] border border-[#292929] overflow-hidden">
-            {/* Map Roads & Grid Background */}
             <svg className="w-full h-full opacity-40" viewBox="0 0 300 180">
               <path d="M 10 90 Q 80 40 160 90 T 290 80" fill="none" stroke="#2A3441" strokeWidth="2.5" />
               <path d="M 50 10 Q 120 80 180 170" fill="none" stroke="#2A3441" strokeWidth="2" />
@@ -449,7 +368,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
               <circle cx="150" cy="85" r="45" fill="none" stroke="#1DB954" strokeWidth="0.8" strokeDasharray="3 3" opacity="0.4" />
             </svg>
 
-            {/* City Area Labels (matching reference image: Mansarovar, Vaishali Nagar, Jaipur, Tonk Road, Malviya Nagar, Amer) */}
             <span className="absolute top-2 left-6 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Amer</span>
             <span className="absolute top-5 right-12 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Mansarovar</span>
             <span className="absolute top-8 right-4 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Malviya Nagar</span>
@@ -458,7 +376,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <span className="absolute bottom-6 left-1/2 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Tonk Road</span>
             <span className="absolute bottom-6 right-6 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Jagatpura</span>
 
-            {/* Map Markers (Green Scooters, Blue Orders, Orange Stores) */}
             {MAP_PINS_DATA.map((pin) => (
               <div
                 key={pin.id}
@@ -474,8 +391,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
                   {pin.type === 'order' && <ShoppingBag className="w-3 h-3 text-white stroke-[2.5]" />}
                   {pin.type === 'shop' && <Store className="w-3 h-3 text-white stroke-[2.5]" />}
                 </div>
-
-                {/* Ping animation for active pin */}
                 <span
                   className="absolute -inset-0.5 rounded-full animate-ping opacity-60 pointer-events-none"
                   style={{ backgroundColor: pin.color }}
@@ -483,7 +398,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
               </div>
             ))}
 
-            {/* Selected Pin Tooltip Popup */}
             {selectedPin && (
               <div className="absolute bottom-2 left-2 right-2 p-2 bg-[#181818]/95 border border-[#292929] rounded-lg text-[10px] backdrop-blur-xs flex items-center justify-between z-20 animate-fadeIn">
                 <div>
@@ -499,7 +413,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
               </div>
             )}
 
-            {/* Map Zoom Controls */}
             <div className="absolute bottom-2 right-2 flex flex-col gap-1 z-10">
               <button
                 onClick={() => setMapZoom((z) => Math.min(z + 0.2, 2))}
@@ -523,7 +436,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
       {/* ROW 3: 6 STATUS MINI ACTION CARDS (GRID OF 6)                             */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        {/* 1. Pending Orders */}
         <div
           onClick={() => setActiveTab('orders-pending')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#F59E0B]/40 transition-all cursor-pointer flex flex-col justify-between"
@@ -543,7 +455,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </span>
         </div>
 
-        {/* 2. Preparing Orders */}
         <div
           onClick={() => setActiveTab('orders-active')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#F97316]/40 transition-all cursor-pointer flex flex-col justify-between"
@@ -563,7 +474,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </span>
         </div>
 
-        {/* 3. Out for Delivery */}
         <div
           onClick={() => setActiveTab('orders-active')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#A855F7]/40 transition-all cursor-pointer flex flex-col justify-between"
@@ -583,7 +493,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </span>
         </div>
 
-        {/* 4. Delivered Orders */}
         <div
           onClick={() => setActiveTab('orders-completed')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#1DB954]/40 transition-all cursor-pointer flex flex-col justify-between"
@@ -603,7 +512,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </span>
         </div>
 
-        {/* 5. Cancelled Orders */}
         <div
           onClick={() => setActiveTab('orders-cancelled')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#EF4444]/40 transition-all cursor-pointer flex flex-col justify-between"
@@ -623,7 +531,6 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </span>
         </div>
 
-        {/* 6. Refunds Pending */}
         <div
           onClick={() => setActiveTab('orders-refunds')}
           className="p-3.5 rounded-2xl bg-[#181818] border border-[#292929] hover:border-[#3B82F6]/40 transition-all cursor-pointer flex flex-col justify-between"

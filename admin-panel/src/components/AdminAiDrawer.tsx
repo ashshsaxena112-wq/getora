@@ -3,12 +3,7 @@ import {
   Sparkles,
   Send,
   Bot,
-  User,
-  X,
-  TrendingUp,
-  AlertTriangle,
-  Package,
-  Store
+  X
 } from 'lucide-react';
 
 interface AdminAiDrawerProps {
@@ -69,7 +64,6 @@ export const AdminAiDrawer: React.FC<AdminAiDrawerProps> = ({ isOpen, onClose })
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex justify-end animate-fadeIn font-['Inter',sans-serif]">
       <div className="w-full max-w-md bg-[#181818] border-l border-[#292929] h-full flex flex-col justify-between p-4 shadow-2xl">
-        {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-[#292929]">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#169C46] to-[#1DB954] text-black flex items-center justify-center font-bold">
@@ -90,7 +84,6 @@ export const AdminAiDrawer: React.FC<AdminAiDrawerProps> = ({ isOpen, onClose })
           </button>
         </div>
 
-        {/* Message Thread */}
         <div className="flex-1 overflow-y-auto py-3 space-y-3 custom-scrollbar text-xs">
           {messages.map((m, idx) => (
             <div
@@ -115,7 +108,6 @@ export const AdminAiDrawer: React.FC<AdminAiDrawerProps> = ({ isOpen, onClose })
           ))}
         </div>
 
-        {/* Quick prompt suggestions */}
         <div className="py-2 border-t border-[#292929] flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
           {quickPrompts.map((qp, i) => (
             <button
@@ -128,7 +120,6 @@ export const AdminAiDrawer: React.FC<AdminAiDrawerProps> = ({ isOpen, onClose })
           ))}
         </div>
 
-        {/* Query Input */}
         <div className="pt-2 flex items-center gap-2">
           <input
             type="text"

@@ -22,7 +22,7 @@ import {
   ChevronRight,
   Headset
 } from 'lucide-react';
-import { AdminTab } from '../../types/admin';
+import { AdminTab } from '../types/admin';
 
 interface AdminSidebarProps {
   activeTab: AdminTab;
@@ -47,14 +47,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   setIsMobileOpen,
   openAiAssistant
 }) => {
-  // Expandable submenus state
   const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({
     orders: false,
     retailers: false,
     catalog: false,
-    finance: false,
-    marketing: false,
-    analytics: false
+    finance: false
   });
 
   const toggleMenu = (key: string, e: React.MouseEvent) => {
@@ -76,7 +73,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       subItems: [
         { id: 'orders', label: 'All Orders' },
         { id: 'orders-pending', label: 'Pending' },
-        { id: 'orders-active', label: 'Active (Preparing)' },
+        { id: 'orders-active', label: 'Active' },
         { id: 'orders-completed', label: 'Completed' },
         { id: 'orders-cancelled', label: 'Cancelled' },
         { id: 'orders-refunds', label: 'Refunds' }
@@ -215,12 +212,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         </div>
 
         <div>
-          <div className="flex items-center gap-1.5 leading-none">
-            <span className="text-base font-black tracking-tight text-[#FFFFFF] font-['Outfit',sans-serif]">
-              GETORA
-            </span>
-          </div>
-          <span className="text-[11px] text-[#A7A7A7] font-medium leading-none block mt-1">
+          <span className="text-base font-black tracking-tight text-[#FFFFFF] font-['Outfit',sans-serif]">
+            GETORA
+          </span>
+          <span className="text-[11px] text-[#A7A7A7] font-medium leading-none block mt-0.5">
             Admin Panel
           </span>
         </div>
