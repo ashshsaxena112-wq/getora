@@ -14,6 +14,11 @@ import {
   AdminDeliveryView,
   AdminInventoryView,
   AdminCouponsView,
+  AdminZonesView,
+  AdminMarketingView,
+  AdminSupportView,
+  AdminReviewsView,
+  AdminAnalyticsView,
   AdminAuditLogsView,
   AdminSettingsView
 } from './components/AdminOtherViews';
@@ -75,7 +80,7 @@ const AdminPanelInner: React.FC = () => {
       case 'delivery-partners':
         return <AdminDeliveryView />;
       case 'zones':
-        return <AdminLiveMapView />;
+        return <AdminZonesView />;
       case 'finance':
       case 'finance-transactions':
       case 'finance-revenue':
@@ -84,16 +89,20 @@ const AdminPanelInner: React.FC = () => {
       case 'finance-refunds':
         return <AdminFinanceView />;
       case 'coupons':
-      case 'marketing':
         return <AdminCouponsView />;
+      case 'marketing':
+        return <AdminMarketingView />;
+      case 'support':
+        return <AdminSupportView />;
+      case 'reviews':
+        return <AdminReviewsView />;
+      case 'analytics':
+        return <AdminAnalyticsView />;
       case 'security':
         return <AdminAuditLogsView />;
       case 'settings':
       case 'admin-users':
         return <AdminSettingsView />;
-      case 'support':
-      case 'reviews':
-      case 'analytics':
       case 'alerts':
       case 'reports':
       default:
