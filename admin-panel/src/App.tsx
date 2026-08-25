@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AdminTab } from './types/admin';
+import { AdminProvider, useAdmin } from './context/AdminContext';
 import { AdminSidebar } from './components/AdminSidebar';
 import { AdminHeader } from './components/AdminHeader';
 import { AdminDashboardHome } from './components/AdminDashboardHome';
@@ -19,7 +20,7 @@ import {
 import { AdminAiDrawer } from './components/AdminAiDrawer';
 import { Sparkles } from 'lucide-react';
 
-export const App: React.FC = () => {
+const AdminPanelInner: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
@@ -155,6 +156,14 @@ export const App: React.FC = () => {
         <Sparkles className="w-5 h-5 fill-current" />
       </button>
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <AdminProvider>
+      <AdminPanelInner />
+    </AdminProvider>
   );
 };
 

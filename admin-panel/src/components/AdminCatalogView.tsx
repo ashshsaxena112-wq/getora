@@ -4,78 +4,10 @@ import {
   Search,
   Trash2
 } from 'lucide-react';
-
-interface CatalogItem {
-  id: string;
-  name: string;
-  brand: string;
-  categoryName: string;
-  suggestedPrice: number;
-  suggestedSellingPrice: number;
-  unit: string;
-  sku: string;
-  imageUrl: string;
-  description: string;
-  isActive: boolean;
-}
-
-const INITIAL_CATALOG: CatalogItem[] = [
-  {
-    id: 'mp-1',
-    name: 'Stanley 13mm Impact Hammer Drill (650W)',
-    brand: 'Stanley',
-    categoryName: 'Hardware & Tools',
-    suggestedPrice: 3499,
-    suggestedSellingPrice: 2899,
-    unit: 'pcs',
-    sku: 'GT-STN-001',
-    imageUrl: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500&auto=format&fit=crop&q=80',
-    description: 'High performance 650W motor with variable speed switch.',
-    isActive: true
-  },
-  {
-    id: 'mp-2',
-    name: 'Havells 10W B22 LED Cool Day Light (Pack of 4)',
-    brand: 'Havells',
-    categoryName: 'Electrical & Lighting',
-    suggestedPrice: 800,
-    suggestedSellingPrice: 720,
-    unit: 'pack',
-    sku: 'GT-HVL-002',
-    imageUrl: 'https://images.unsplash.com/photo-1550985543-f47f38aeee65?w=500&auto=format&fit=crop&q=80',
-    description: 'Energy saving LED bulbs with 2 years manufacturer warranty.',
-    isActive: true
-  },
-  {
-    id: 'mp-3',
-    name: 'boAt 65W GaN Fast Dual Charger (Type-C + USB)',
-    brand: 'boAt',
-    categoryName: 'Mobile Accessories',
-    suggestedPrice: 1999,
-    suggestedSellingPrice: 1499,
-    unit: 'pcs',
-    sku: 'GT-BOT-003',
-    imageUrl: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&auto=format&fit=crop&q=80',
-    description: 'Ultra-fast GaN charging for MacBooks, iPhones, and Android devices.',
-    isActive: true
-  },
-  {
-    id: 'mp-4',
-    name: 'Classmate Pulse 6-Subject Spiral Notebook',
-    brand: 'Classmate',
-    categoryName: 'Stationery & Office',
-    suggestedPrice: 250,
-    suggestedSellingPrice: 210,
-    unit: 'pcs',
-    sku: 'GT-CLS-004',
-    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=80',
-    description: '300 pages premium paper notebook with index tabs.',
-    isActive: true
-  }
-];
+import { useAdmin } from '../context/AdminContext';
 
 export const AdminCatalogView: React.FC = () => {
-  const [products, setProducts] = useState<CatalogItem[]>(INITIAL_CATALOG);
+  const { products, addMasterProduct, deleteProduct } = useAdmin();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -89,16 +21,12 @@ export const AdminCatalogView: React.FC = () => {
     unit: 'pcs',
     sku: `GT-SKU-${Math.floor(1000 + Math.random() * 9000)}`,
     imageUrl: 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500&auto=format&fit=crop&q=80',
-    description: '',
-    material: 'Forged Steel',
-    size: '13mm',
-    wattage: '10W',
-    voltage: '220V'
+    description: ''
   });
 
-  const handleAddProduct = (e: React.FormEvent) => {
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newProd: CatalogItem = {
+    const newProd = {
       id: `mp-${Date.now()}`,
       name: formData.name || 'New Master Product',
       brand: formData.brand || 'GETORA Direct',
@@ -111,14 +39,14 @@ export const AdminCatalogView: React.FC = () => {
       description: formData.description,
       isActive: true
     };
-    setProducts([newProd, ...products]);
+    await addMasterProduct(newProd);
     setIsAddModalOpen(false);
   };
 
   const filteredProducts = products.filter((p) => {
     const matchSearch =
       search === '' ||
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      (p.name && p.name.toLowerCase().includes(search.toLowerCase())) ||
       (p.brand && p.brand.toLowerCase().includes(search.toLowerCase())) ||
       (p.sku && p.sku.toLowerCase().includes(search.toLowerCase()));
 
@@ -134,7 +62,7 @@ export const AdminCatalogView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Central Master Catalog</h2>
-          <p className="text-xs text-[#A7A7A7]">Global database of verified products that retailers can add with 1 click</p>
+          <p className="text-xs text-[#A7A7A7]">Global database of verified products that retailers can add with 1 click (Synced with Supabase)</p>
         </div>
 
         <button
@@ -183,7 +111,7 @@ export const AdminCatalogView: React.FC = () => {
           >
             <div>
               <div className="relative h-36 w-full rounded-xl bg-[#121212] overflow-hidden mb-3 border border-[#292929]">
-                <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
+                <img src={p.imageUrl || p.image_url || 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?w=500'} alt={p.name} className="w-full h-full object-cover" />
                 <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-xs text-[9px] font-mono text-white">
                   {p.sku || 'SKU-GEN'}
                 </span>
@@ -191,20 +119,18 @@ export const AdminCatalogView: React.FC = () => {
 
               <p className="text-[10px] text-[#1DB954] font-bold uppercase tracking-wider">{p.brand}</p>
               <h3 className="text-xs font-bold text-white line-clamp-2 mt-0.5">{p.name}</h3>
-              <p className="text-[10px] text-[#A7A7A7] mt-1">{p.categoryName}</p>
+              <p className="text-[10px] text-[#A7A7A7] mt-1">{p.categoryName || 'General'}</p>
             </div>
 
             <div className="mt-4 pt-3 border-t border-[#292929] flex items-center justify-between">
               <div>
-                <span className="text-sm font-extrabold text-[#1DB954] font-mono">₹{p.suggestedSellingPrice}</span>
-                <span className="text-[10px] text-[#6F6F6F] line-through ml-1.5 font-mono">₹{p.suggestedPrice}</span>
+                <span className="text-sm font-extrabold text-[#1DB954] font-mono">₹{p.suggestedSellingPrice || p.selling_price || 399}</span>
+                <span className="text-[10px] text-[#6F6F6F] line-through ml-1.5 font-mono">₹{p.suggestedPrice || p.price || 499}</span>
               </div>
 
               <div className="flex items-center gap-1">
                 <button
-                  onClick={() => {
-                    setProducts(products.filter((item) => item.id !== p.id));
-                  }}
+                  onClick={() => deleteProduct(p.id)}
                   className="p-1.5 rounded-lg bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] transition-colors cursor-pointer"
                   title="Delete"
                 >

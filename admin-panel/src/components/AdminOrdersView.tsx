@@ -7,14 +7,14 @@ import {
   MapPin,
   Store
 } from 'lucide-react';
-import { RECENT_ORDERS_DATA } from '../data/adminMockData';
+import { useAdmin } from '../context/AdminContext';
 
 interface AdminOrdersViewProps {
   filterStatus?: string;
 }
 
 export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }) => {
-  const [orders, setOrders] = useState(RECENT_ORDERS_DATA);
+  const { orders, updateOrderStatus } = useAdmin();
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState(filterStatus || 'all');
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
@@ -37,28 +37,12 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
     });
   }, [orders, search, activeTab]);
 
-  const updateOrderStatus = (orderId: string, newStatus: any, newLabel: string, newColor: string) => {
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId ? { ...o, status: newStatus, statusLabel: newLabel, statusColor: newColor } : o
-      )
-    );
-    if (selectedOrder && selectedOrder.id === orderId) {
-      setSelectedOrder((prev: any) => ({
-        ...prev,
-        status: newStatus,
-        statusLabel: newLabel,
-        statusColor: newColor
-      }));
-    }
-  };
-
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Orders Management</h2>
-          <p className="text-xs text-[#A7A7A7]">Live platform orders across all merchant shops in Jaipur</p>
+          <p className="text-xs text-[#A7A7A7]">Live platform orders across all merchant shops in Jaipur (Synced with Supabase)</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -72,7 +56,7 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
       <div className="p-3 bg-[#181818] border border-[#292929] rounded-2xl flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         <div className="flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
           {[
-            { id: 'all', label: 'All Orders' },
+            { id: 'all', label: `All Orders (${orders.length})` },
             { id: 'pending', label: 'Pending (27)' },
             { id: 'active', label: 'Active (518)' },
             { id: 'completed', label: 'Completed (598)' },
@@ -258,13 +242,19 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
 
             <div className="pt-4 border-t border-[#292929] grid grid-cols-2 gap-2">
               <button
-                onClick={() => updateOrderStatus(selectedOrder.id, 'delivered', 'Delivered', '#1DB954')}
+                onClick={async () => {
+                  await updateOrderStatus(selectedOrder.id, 'delivered', 'Delivered', '#1DB954');
+                  setSelectedOrder(null);
+                }}
                 className="py-2.5 bg-[#1DB954] hover:bg-[#39D353] text-black font-extrabold text-xs rounded-xl shadow-xs cursor-pointer"
               >
                 Mark Delivered
               </button>
               <button
-                onClick={() => updateOrderStatus(selectedOrder.id, 'cancelled', 'Cancelled', '#EF4444')}
+                onClick={async () => {
+                  await updateOrderStatus(selectedOrder.id, 'cancelled', 'Cancelled', '#EF4444');
+                  setSelectedOrder(null);
+                }}
                 className="py-2.5 bg-[#202020] hover:bg-[#EF4444]/20 text-[#EF4444] border border-[#292929] font-bold text-xs rounded-xl cursor-pointer"
               >
                 Cancel / Refund

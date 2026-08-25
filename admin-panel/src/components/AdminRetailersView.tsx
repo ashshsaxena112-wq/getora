@@ -4,27 +4,22 @@ import {
   Phone,
   MapPin,
   Eye,
-  ShieldCheck
+  ShieldCheck,
+  Check
 } from 'lucide-react';
-import { TOP_RETAILERS_DATA } from '../data/adminMockData';
+import { useAdmin } from '../context/AdminContext';
 
 export const AdminRetailersView: React.FC = () => {
-  const [retailers, setRetailers] = useState(TOP_RETAILERS_DATA);
+  const { retailers, toggleRetailerStatus, approveRetailerKYC } = useAdmin();
   const [search, setSearch] = useState('');
   const [selectedRetailer, setSelectedRetailer] = useState<any | null>(null);
-
-  const toggleRetailerStatus = (id: string) => {
-    setRetailers((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status: r.status === 'Active' ? 'Suspended' : 'Active' } : r))
-    );
-  };
 
   return (
     <div className="space-y-4 font-['Inter',sans-serif] text-white animate-fadeIn">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold font-['Outfit',sans-serif]">Retailer & Store Network</h2>
-          <p className="text-xs text-[#A7A7A7]">Manage verified local merchants, store catalogues, and KYC approvals</p>
+          <p className="text-xs text-[#A7A7A7]">Manage verified local merchants, store catalogues, and KYC approvals (Synced with Supabase)</p>
         </div>
 
         <div className="relative w-full sm:w-64">
@@ -52,7 +47,7 @@ export const AdminRetailersView: React.FC = () => {
                 <th className="py-3 px-4">Revenue</th>
                 <th className="py-3 px-4">Commission</th>
                 <th className="py-3 px-4">Rating</th>
-                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">KYC / Status</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -70,7 +65,14 @@ export const AdminRetailersView: React.FC = () => {
                       <div className="w-7 h-7 rounded-lg bg-[#14532D]/40 text-[#1DB954] flex items-center justify-center font-black text-xs">
                         {r.retailer.charAt(0)}
                       </div>
-                      <span>{r.retailer}</span>
+                      <div>
+                        <p className="font-bold text-white leading-none">{r.retailer}</p>
+                        {r.isVerified && (
+                          <span className="text-[9px] text-[#1DB954] font-semibold flex items-center gap-0.5 mt-0.5">
+                            <ShieldCheck className="w-2.5 h-2.5" /> Verified
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3 px-4 text-[#A7A7A7]">{r.category}</td>
                     <td className="py-3 px-4 text-white font-medium">{r.owner}</td>
@@ -103,6 +105,14 @@ export const AdminRetailersView: React.FC = () => {
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
+                        {!r.isVerified && (
+                          <button
+                            onClick={() => approveRetailerKYC(r.id)}
+                            className="px-2 py-1 rounded-lg bg-[#14532D] hover:bg-[#1DB954] text-white hover:text-black text-[10px] font-extrabold cursor-pointer transition-colors"
+                          >
+                            Approve KYC
+                          </button>
+                        )}
                         <button
                           onClick={() => toggleRetailerStatus(r.id)}
                           className={`px-2.5 py-1 rounded-lg text-[10px] font-bold cursor-pointer transition-colors ${

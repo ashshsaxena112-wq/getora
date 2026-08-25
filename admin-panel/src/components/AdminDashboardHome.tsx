@@ -21,16 +21,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { AdminTab } from '../types/admin';
-import {
-  ADMIN_KPI_DATA,
-  ORDER_STATUS_DISTRIBUTION,
-  STATUS_ACTION_CARDS,
-  ORDERS_OVERVIEW_CHART,
-  RECENT_ORDERS_DATA,
-  TOP_RETAILERS_DATA,
-  ALERTS_NOTIFICATIONS_DATA,
-  MAP_PINS_DATA
-} from '../data/adminMockData';
+import { useAdmin } from '../context/AdminContext';
 
 interface AdminDashboardHomeProps {
   setActiveTab: (tab: AdminTab) => void;
@@ -43,6 +34,16 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
   onSelectOrder,
   onSelectRetailer
 }) => {
+  const {
+    kpiData,
+    orderDistribution,
+    orders,
+    retailers,
+    notifications,
+    mapPins,
+    overviewChart
+  } = useAdmin();
+
   const [selectedPin, setSelectedPin] = useState<any | null>(null);
   const [chartPeriod, setChartPeriod] = useState('Last 7 Days');
   const [mapZoom, setMapZoom] = useState(1);
@@ -51,8 +52,8 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
   const chartHeight = 160;
   const chartWidth = 500;
   const maxVal = 1500;
-  const points = ORDERS_OVERVIEW_CHART.map((d, index) => {
-    const x = (index / (ORDERS_OVERVIEW_CHART.length - 1)) * chartWidth;
+  const points = overviewChart.map((d, index) => {
+    const x = (index / (overviewChart.length - 1)) * chartWidth;
     const y = chartHeight - (d.orders / maxVal) * chartHeight;
     return { x, y, ...d };
   });
@@ -85,7 +86,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">Total Orders</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.totalOrders.value}
+                {kpiData.totalOrders.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -94,7 +95,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.totalOrders.trend}</span>
+            <span>{kpiData.totalOrders.trend}</span>
           </p>
         </div>
 
@@ -107,7 +108,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">Today's Revenue</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.todayRevenue.value}
+                {kpiData.todayRevenue.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -116,7 +117,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.todayRevenue.trend}</span>
+            <span>{kpiData.todayRevenue.trend}</span>
           </p>
         </div>
 
@@ -129,7 +130,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">GETORA Commission</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.getoraCommission.value}
+                {kpiData.getoraCommission.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -138,7 +139,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.getoraCommission.trend}</span>
+            <span>{kpiData.getoraCommission.trend}</span>
           </p>
         </div>
 
@@ -151,7 +152,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">Active Retailers</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.activeRetailers.value}
+                {retailers.length > 0 ? retailers.length : kpiData.activeRetailers.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -160,7 +161,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.activeRetailers.trend}</span>
+            <span>{kpiData.activeRetailers.trend}</span>
           </p>
         </div>
 
@@ -173,7 +174,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">Active Delivery Partners</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.activeDeliveryPartners.value}
+                {kpiData.activeDeliveryPartners.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -182,7 +183,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.activeDeliveryPartners.trend}</span>
+            <span>{kpiData.activeDeliveryPartners.trend}</span>
           </p>
         </div>
 
@@ -195,7 +196,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div>
               <p className="text-[11px] font-medium text-[#A7A7A7]">Active Customers</p>
               <p className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif] mt-1">
-                {ADMIN_KPI_DATA.activeCustomers.value}
+                {kpiData.activeCustomers.value}
               </p>
             </div>
             <div className="w-8 h-8 rounded-full bg-[#14532D]/60 flex items-center justify-center text-[#1DB954] flex-shrink-0">
@@ -204,7 +205,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
           <p className="text-[10px] text-[#39D353] mt-2 flex items-center gap-1 font-semibold">
             <TrendingUp className="w-3 h-3" />
-            <span>{ADMIN_KPI_DATA.activeCustomers.trend}</span>
+            <span>{kpiData.activeCustomers.trend}</span>
           </p>
         </div>
       </div>
@@ -245,7 +246,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
 
             {/* Status Legend */}
             <div className="space-y-1.5 text-[11px] w-full max-w-[170px]">
-              {ORDER_STATUS_DISTRIBUTION.map((item) => (
+              {orderDistribution.map((item) => (
                 <div key={item.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <span
@@ -304,7 +305,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <div className="ml-7 h-36 relative">
               <svg className="w-full h-full overflow-visible" viewBox={`0 0 ${chartWidth} ${chartHeight}`} preserveAspectRatio="none">
                 <defs>
-                  <linearGradient id="adminGreenArea" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="adminGreenAreaLive" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#1DB954" stopOpacity="0.25" />
                     <stop offset="100%" stopColor="#1DB954" stopOpacity="0.0" />
                   </linearGradient>
@@ -316,7 +317,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
                 <line x1="0" y1={chartHeight * 0.75} x2={chartWidth} y2={chartHeight * 0.75} stroke="#292929" strokeWidth="0.8" strokeDasharray="3 3" />
                 <line x1="0" y1={chartHeight} x2={chartWidth} y2={chartHeight} stroke="#292929" strokeWidth="1" />
 
-                <path d={areaPath} fill="url(#adminGreenArea)" />
+                <path d={areaPath} fill="url(#adminGreenAreaLive)" />
                 <path d={svgPath} fill="none" stroke="#1DB954" strokeWidth="2.5" strokeLinecap="round" />
 
                 {points.map((p, i) => (
@@ -337,7 +338,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             </div>
 
             <div className="ml-7 flex items-center justify-between text-[9px] font-mono text-[#6F6F6F] pt-1">
-              {ORDERS_OVERVIEW_CHART.map((d) => (
+              {overviewChart.map((d) => (
                 <span key={d.date}>{d.date}</span>
               ))}
             </div>
@@ -376,7 +377,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
             <span className="absolute bottom-6 left-1/2 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Tonk Road</span>
             <span className="absolute bottom-6 right-6 text-[8px] font-bold text-[#6B7280] uppercase tracking-wider">Jagatpura</span>
 
-            {MAP_PINS_DATA.map((pin) => (
+            {mapPins.map((pin) => (
               <div
                 key={pin.id}
                 onClick={() => setSelectedPin(pin)}
@@ -583,7 +584,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#292929]/50 text-[11px]">
-                {RECENT_ORDERS_DATA.map((o) => (
+                {orders.slice(0, 5).map((o) => (
                   <tr
                     key={o.id}
                     onClick={() => {
@@ -640,7 +641,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#292929]/50 text-[11px]">
-                {TOP_RETAILERS_DATA.map((r) => (
+                {retailers.slice(0, 5).map((r) => (
                   <tr
                     key={r.id}
                     onClick={() => {
@@ -675,7 +676,7 @@ export const AdminDashboardHome: React.FC<AdminDashboardHomeProps> = ({
           </div>
 
           <div className="space-y-2.5">
-            {ALERTS_NOTIFICATIONS_DATA.map((alert) => (
+            {notifications.map((alert) => (
               <div
                 key={alert.id}
                 onClick={() => {

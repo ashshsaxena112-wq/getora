@@ -6,14 +6,14 @@ import {
   MessageSquare,
   Calendar,
   ChevronDown,
-  LogOut,
   User,
   Shield,
   Settings,
-  ExternalLink
+  RefreshCw,
+  Database
 } from 'lucide-react';
-import { AdminTab, AdminNotification } from '../types/admin';
-import { ALERTS_NOTIFICATIONS_DATA } from '../data/adminMockData';
+import { AdminTab } from '../types/admin';
+import { useAdmin } from '../context/AdminContext';
 
 interface AdminHeaderProps {
   activeTab: AdminTab;
@@ -30,9 +30,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
   searchQuery,
   setSearchQuery
 }) => {
+  const { isConnectedToSupabase, lastSyncedAt, refreshAllData, notifications } = useAdmin();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const [notifications, setNotifications] = useState<AdminNotification[]>(ALERTS_NOTIFICATIONS_DATA);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedDateRange, setSelectedDateRange] = useState('25 May 2026 - 25 May 2026');
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -50,6 +51,12 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    await refreshAllData();
+    setTimeout(() => setIsRefreshing(false), 600);
+  };
 
   const getPageTitle = (tab: AdminTab) => {
     switch (tab) {
@@ -127,21 +134,37 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
         <h1 className="text-base sm:text-lg font-bold text-[#FFFFFF] font-['Outfit',sans-serif] tracking-tight">
           {getPageTitle(activeTab)}
         </h1>
+
+        {/* Live Supabase Connection Badge */}
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#14532D]/40 border border-[#1DB954]/30 text-[10px] font-semibold text-[#1DB954]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#1DB954] animate-ping" />
+          <Database className="w-3 h-3 text-[#1DB954]" />
+          <span>Supabase Live</span>
+        </div>
       </div>
 
-      {/* Right Actions: Global Search, Date Picker, Notifications, Messages, Profile */}
-      <div className="flex items-center gap-3 sm:gap-4">
+      {/* Right Actions: Global Search, Date Picker, Refresh, Notifications, Messages, Profile */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Sync / Refresh Button */}
+        <button
+          onClick={handleManualRefresh}
+          className="p-2 rounded-xl bg-[#181818] hover:bg-[#202020] text-[#A7A7A7] hover:text-[#1DB954] border border-[#292929] transition-colors cursor-pointer"
+          title="Sync with Supabase"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[#1DB954]' : ''}`} />
+        </button>
+
         {/* Global Search */}
-        <div className="relative hidden md:flex items-center w-52 lg:w-72">
+        <div className="relative hidden md:flex items-center w-48 lg:w-64">
           <Search className="w-4 h-4 absolute left-3.5 text-[#6F6F6F]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search anything..."
-            className="w-full pl-9 pr-14 py-2 bg-[#121212] border border-[#292929] rounded-xl text-xs text-[#FFFFFF] placeholder-[#6F6F6F] focus:outline-none focus:border-[#1DB954] transition-all"
+            className="w-full pl-9 pr-12 py-2 bg-[#121212] border border-[#292929] rounded-xl text-xs text-[#FFFFFF] placeholder-[#6F6F6F] focus:outline-none focus:border-[#1DB954] transition-all"
           />
-          <kbd className="absolute right-3 px-1.5 py-0.5 text-[9px] font-mono text-[#6F6F6F] bg-[#181818] border border-[#292929] rounded pointer-events-none">
+          <kbd className="absolute right-2.5 px-1.5 py-0.5 text-[9px] font-mono text-[#6F6F6F] bg-[#181818] border border-[#292929] rounded pointer-events-none">
             ⌘K
           </kbd>
         </div>
@@ -153,7 +176,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           <ChevronDown className="w-3 h-3 text-[#6F6F6F]" />
         </div>
 
-        {/* Notification Bell (Red 12 Badge) */}
+        {/* Notification Bell */}
         <div ref={notifRef} className="relative">
           <button
             onClick={() => setIsNotifOpen(!isNotifOpen)}
@@ -161,11 +184,10 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           >
             <Bell className="w-4 h-4" />
             <span className="absolute -top-1 -right-1 px-1 min-w-4 h-4 bg-[#EF4444] text-[#FFFFFF] text-[9px] font-black rounded-full flex items-center justify-center shadow-xs">
-              12
+              {notifications.length}
             </span>
           </button>
 
-          {/* Notifications Dropdown Panel */}
           {isNotifOpen && (
             <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-[#181818] border border-[#292929] rounded-2xl shadow-2xl p-3 z-50 animate-fadeIn">
               <div className="flex items-center justify-between pb-2 border-b border-[#292929]">
@@ -174,7 +196,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
                     Alerts & Notifications
                   </h3>
                   <span className="px-1.5 py-0.5 text-[9px] font-extrabold bg-[#EF4444]/20 text-[#EF4444] rounded">
-                    4 Unread
+                    {notifications.length} Updates
                   </span>
                 </div>
                 <button
@@ -221,7 +243,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           )}
         </div>
 
-        {/* Message / Support Bubble (Green 5 Badge) */}
+        {/* Message / Support Bubble */}
         <button
           onClick={() => setActiveTab('support')}
           className="p-2 rounded-xl bg-[#181818] hover:bg-[#202020] text-[#A7A7A7] hover:text-[#FFFFFF] border border-[#292929] transition-colors relative cursor-pointer"
@@ -232,7 +254,7 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
           </span>
         </button>
 
-        {/* Profile / Admin Role Menu */}
+        {/* Profile */}
         <div ref={profileRef} className="relative">
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -255,7 +277,6 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             <ChevronDown className="w-3.5 h-3.5 text-[#6F6F6F] hidden sm:block" />
           </button>
 
-          {/* Profile Dropdown */}
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-52 bg-[#181818] border border-[#292929] rounded-2xl shadow-2xl p-2 z-50 animate-fadeIn text-xs">
               <div className="px-3 py-2 border-b border-[#292929] mb-1">
