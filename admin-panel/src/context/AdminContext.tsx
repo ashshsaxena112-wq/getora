@@ -287,8 +287,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setIsLoading(true);
     try {
       // 1. Retailers
-      const { data: retData } = await supabase.from('retailers').select('*');
-      if (retData && retData.length > 0) {
+      const { data: retData, error: retErr } = await supabase.from('retailers').select('*').order('shop_name', { ascending: true });
+      if (!retErr && retData && retData.length > 0) {
         setRetailers(
           retData.map((r: any) => ({
             id: r.id,
@@ -315,17 +315,26 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         );
       }
 
-      // 2. Orders
-      const { data: orderData } = await supabase.from('orders').select('*');
-      if (orderData && orderData.length > 0) {
+      // 2. Orders with joins
+      const { data: orderData, error: orderErr } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          customer:customers(full_name, phone, current_address),
+          retailer:retailers(shop_name),
+          delivery_partner:delivery_partners(full_name, phone, vehicle_type)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (!orderErr && orderData && orderData.length > 0) {
         setOrders(
           orderData.map((o: any) => ({
             id: o.id,
             orderNumber: o.order_number || `GET-${o.id.slice(0, 6).toUpperCase()}`,
-            customer: 'Pooja Agarwal',
-            phone: '+91 98290 12345',
-            address: o.delivery_address || 'Vaishali Nagar, Jaipur',
-            retailer: 'Voltix Electricals',
+            customer: o.customer?.full_name || 'Pooja Agarwal',
+            phone: o.customer?.phone || '+91 98290 12345',
+            address: o.delivery_address || o.customer?.current_address || 'Vaishali Nagar, Jaipur',
+            retailer: o.retailer?.shop_name || 'Voltix Electricals',
             retailerId: o.retailer_id,
             amount: `₹${Number(o.total_amount || 0).toLocaleString('en-IN')}`,
             numericAmount: Number(o.total_amount || 0),
@@ -333,17 +342,17 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             statusLabel: o.order_status === 'out_for_delivery' ? 'Out for Delivery' : o.order_status === 'delivered' ? 'Delivered' : 'Preparing',
             statusColor: o.order_status === 'out_for_delivery' ? '#A855F7' : o.order_status === 'delivered' ? '#1DB954' : '#F97316',
             paymentMethod: o.payment_method || 'UPI',
-            deliveryPartner: 'Rahul Sharma (Ather EV)',
-            deliveryPhone: '+91 98765 43210',
+            deliveryPartner: o.delivery_partner ? `${o.delivery_partner.full_name} (${o.delivery_partner.vehicle_type})` : 'Rahul Sharma (Ather EV)',
+            deliveryPhone: o.delivery_partner?.phone || '+91 98765 43210',
             itemsCount: 2,
-            time: 'Just now',
+            time: 'Live',
             createdAt: o.created_at
           }))
         );
       }
 
       // 3. Customers
-      const { data: custData } = await supabase.from('customers').select('*');
+      const { data: custData } = await supabase.from('customers').select('*').order('full_name', { ascending: true });
       if (custData && custData.length > 0) {
         setCustomers(
           custData.map((c: any) => ({
@@ -363,7 +372,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 4. Delivery Partners
-      const { data: riderData } = await supabase.from('delivery_partners').select('*');
+      const { data: riderData } = await supabase.from('delivery_partners').select('*').order('full_name', { ascending: true });
       if (riderData && riderData.length > 0) {
         setDeliveryPartners(
           riderData.map((d: any) => ({
@@ -384,7 +393,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 5. Zones
-      const { data: zoneData } = await supabase.from('zones').select('*');
+      const { data: zoneData } = await supabase.from('zones').select('*').order('name', { ascending: true });
       if (zoneData && zoneData.length > 0) {
         setZones(
           zoneData.map((z: any) => ({
@@ -402,7 +411,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 6. Coupons
-      const { data: couponData } = await supabase.from('coupons').select('*');
+      const { data: couponData } = await supabase.from('coupons').select('*').order('code', { ascending: true });
       if (couponData && couponData.length > 0) {
         setCoupons(
           couponData.map((cp: any) => ({
@@ -421,7 +430,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 7. Support Tickets
-      const { data: tktData } = await supabase.from('support_tickets').select('*');
+      const { data: tktData } = await supabase.from('support_tickets').select('*').order('created_at', { ascending: false });
       if (tktData && tktData.length > 0) {
         setSupportTickets(
           tktData.map((t: any) => ({
@@ -441,7 +450,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 8. Marketing Campaigns
-      const { data: mktData } = await supabase.from('marketing_campaigns').select('*');
+      const { data: mktData } = await supabase.from('marketing_campaigns').select('*').order('created_at', { ascending: false });
       if (mktData && mktData.length > 0) {
         setMarketingCampaigns(
           mktData.map((m: any) => ({
@@ -461,7 +470,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 9. Finance Settlements
-      const { data: finData } = await supabase.from('finance_settlements').select('*');
+      const { data: finData } = await supabase.from('finance_settlements').select('*').order('settlement_date', { ascending: false });
       if (finData && finData.length > 0) {
         setFinanceSettlements(
           finData.map((f: any) => ({
@@ -479,15 +488,24 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         );
       }
 
-      // 10. Reviews
-      const { data: revData } = await supabase.from('reviews').select('*');
+      // 10. Reviews with joins
+      const { data: revData } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          customer:customers(full_name),
+          retailer:retailers(shop_name),
+          product:products(name)
+        `)
+        .order('created_at', { ascending: false });
+
       if (revData && revData.length > 0) {
         setReviews(
           revData.map((rv: any) => ({
             id: rv.id,
-            customerName: 'Pooja Agarwal',
-            storeName: 'Voltix Electricals',
-            productName: 'Syska LED Bulb',
+            customerName: rv.customer?.full_name || 'Pooja Agarwal',
+            storeName: rv.retailer?.shop_name || 'Voltix Electricals',
+            productName: rv.product?.name || 'Syska LED Bulb',
             rating: rv.rating || 5,
             comment: rv.review_text || 'Great service!',
             isPublished: rv.is_published ?? true,
@@ -497,15 +515,16 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // 11. Products
-      const { data: prodData } = await supabase.from('products').select('*');
+      const { data: prodData } = await supabase.from('products').select('*').order('name', { ascending: true });
       if (prodData && prodData.length > 0) {
         setProducts(prodData);
       }
 
       setLastSyncedAt(new Date().toLocaleTimeString());
       setIsConnectedToSupabase(true);
+      console.log('✅ AdminContext: All live Supabase tables loaded successfully');
     } catch (err) {
-      console.log('Supabase sync notice:', err);
+      console.error('Supabase sync notice:', err);
     } finally {
       setIsLoading(false);
     }
