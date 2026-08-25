@@ -3,7 +3,7 @@ import {
   IconSearch,
   IconMapPin,
   IconShoppingBag,
-  IconClock,
+  IconBell,
   IconUser,
   IconX,
   IconChevronDown,
@@ -12,34 +12,13 @@ import {
   IconTag,
   IconSun,
   IconMoon,
-  IconDeviceDesktop,
-  IconLayoutGrid,
-  IconTool,
-  IconBolt,
-  IconDeviceMobile,
-  IconBook,
-  IconHome,
-  IconCar,
-  IconHeart,
-  IconApple,
-  IconHeadphones,
+  IconMicrophone,
   IconSparkles,
-  IconArrowRight
+  IconArrowRight,
+  IconCheck
 } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { GetoraLogo } from './GetoraLogo';
-
-const HEADER_CATEGORIES = [
-  { id: 'cat-hardware', name: 'Hardware', icon: IconTool, color: '#FF9500' },
-  { id: 'cat-electrical', name: 'Electrical', icon: IconBolt, color: '#FFCC00' },
-  { id: 'cat-mobile', name: 'Mobile Accessories', icon: IconDeviceMobile, color: '#0A84FF' },
-  { id: 'cat-stationery', name: 'Stationery', icon: IconBook, color: '#30D158' },
-  { id: 'cat-home', name: 'Home Essentials', icon: IconHome, color: '#FF375F' },
-  { id: 'cat-auto', name: 'Auto Accessories', icon: IconCar, color: '#BF5AF2' },
-  { id: 'cat-pet', name: 'Pet Products', icon: IconHeart, color: '#FF2D55' },
-  { id: 'cat-grocery', name: 'Grocery & Essentials', icon: IconApple, color: '#34C759' },
-  { id: 'cat-electronics', name: 'Electronics', icon: IconHeadphones, color: '#5E5CE6' }
-];
 
 export const Header: React.FC = () => {
   const {
@@ -61,15 +40,13 @@ export const Header: React.FC = () => {
   } = useGetora();
 
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
-  const mobileSearchContainerRef = useRef<HTMLDivElement>(null);
-  const categoriesMenuRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const themeMenuRef = useRef<HTMLDivElement>(null);
+  const notifMenuRef = useRef<HTMLDivElement>(null);
 
   const cartTotalItems = cart.reduce((acc, i) => acc + i.quantity, 0);
 
@@ -77,563 +54,629 @@ export const Header: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(target) &&
-        mobileSearchContainerRef.current &&
-        !mobileSearchContainerRef.current.contains(target)
-      ) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(target)) {
         setIsSearchFocused(false);
       }
-      if (
-        categoriesMenuRef.current &&
-        !categoriesMenuRef.current.contains(target)
-      ) {
-        setIsCategoriesOpen(false);
-      }
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(target)
-      ) {
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
         setIsUserMenuOpen(false);
       }
-      if (
-        themeMenuRef.current &&
-        !themeMenuRef.current.contains(target)
-      ) {
-        setIsThemeMenuOpen(false);
+      if (notifMenuRef.current && !notifMenuRef.current.contains(target)) {
+        setIsNotifOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      setIsSearchFocused(false);
-      navigate('search', { q: searchQuery.trim() });
+  // Voice Search Trigger
+  const handleVoiceSearch = () => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-IN';
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = () => setIsListening(false);
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setSearchQuery(transcript);
+        navigate('search', { q: transcript });
+        setIsSearchFocused(false);
+      };
+
+      recognition.start();
+    } else {
+      alert('Voice search is not supported on this browser.');
     }
   };
 
-  const matchingProducts = searchQuery.trim()
-    ? products
-        .filter((p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.brand?.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .slice(0, 5)
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate('search', { q: searchQuery.trim() });
+      setIsSearchFocused(false);
+    }
+  };
+
+  // Filter matching suggestions
+  const matchingStores = searchQuery.trim()
+    ? stores.filter(
+        (s) =>
+          s.shopName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          s.businessCategory?.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 3)
     : [];
 
-  const matchingStores = searchQuery.trim()
-    ? stores
-        .filter((s) =>
-          (s.shopName || s.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.businessCategory?.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .slice(0, 4)
+  const matchingProducts = searchQuery.trim()
+    ? products.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.brand?.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 4)
     : [];
 
   return (
-    <header className="header-wrapper">
-      <div className="header-container">
-        {/* Main Desktop & Tablet Top Navbar Row */}
-        <div className="header-main-row">
+    <header className="site-header" style={{ position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(16px)', borderBottom: '1px solid var(--border-subtle)' }}>
+      {/* 1. TOP LOCATION BAR */}
+      <div className="header-top-bar" style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', padding: '6px 16px', fontSize: '12px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
           
-          {/* Brand Logo & Tag */}
-          <div
-            className="header-brand"
-            onClick={() => navigate('home')}
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          {/* Delivering to location button */}
+          <button
+            onClick={openLocationModal}
+            className="location-pill-btn"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: 500,
+              padding: '2px 6px',
+              borderRadius: 'var(--radius-pill)',
+              transition: 'background 0.2s ease'
+            }}
           >
-            <GetoraLogo size="md" showBadge={true} />
-          </div>
+            <IconMapPin size={15} color="var(--color-green)" stroke={2.2} />
+            <span style={{ color: 'var(--text-muted)' }}>Delivering to:</span>
+            <strong style={{ color: 'var(--color-green)', fontWeight: 700 }}>
+              {selectedAddress?.streetArea || selectedAddress?.addressLine1 || selectedAddress?.city || 'Vaishali Nagar, Jaipur'}
+            </strong>
+            <IconChevronDown size={14} color="var(--text-muted)" />
+          </button>
 
-          {/* Categories Dropdown Trigger (Desktop / Tablet) */}
-          <div className="header-categories-container" ref={categoriesMenuRef}>
+          {/* Right micro-actions: Offers & Retailer Portal */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <button
-              className={`header-categories-btn ${isCategoriesOpen ? 'active' : ''}`}
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-              title="Browse Categories"
+              onClick={() => navigate('offers')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 600
+              }}
             >
-              <IconLayoutGrid size={18} stroke={1.8} color="#22C55E" />
-              <span className="categories-btn-text">Categories</span>
-              <IconChevronDown
-                size={15}
-                stroke={1.8}
-                style={{
-                  transform: isCategoriesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.2s ease'
-                }}
-              />
+              <IconTag size={13} color="var(--color-green)" />
+              <span>Flat ₹50 OFF</span>
             </button>
 
-            {/* Categories Dropdown Menu */}
-            {isCategoriesOpen && (
-              <div className="categories-dropdown-menu">
-                <div className="categories-dropdown-header">
-                  <span>Browse Categories</span>
-                  <button
-                    onClick={() => {
-                      setIsCategoriesOpen(false);
-                      navigate('categories', { categoryId: 'all' });
-                    }}
-                    style={{ fontSize: '12px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
-                  >
-                    View All <IconArrowRight size={14} stroke={1.8} />
-                  </button>
-                </div>
-
-                <div className="categories-dropdown-grid">
-                  {HEADER_CATEGORIES.map((cat) => {
-                    const IconComponent = cat.icon;
-                    return (
-                      <div
-                        key={cat.id}
-                        className="category-dropdown-item"
-                        onClick={() => {
-                          setIsCategoriesOpen(false);
-                          navigate('categories', { categoryId: cat.id });
-                        }}
-                      >
-                        <div
-                          className="category-dropdown-icon"
-                          style={{ color: cat.color, backgroundColor: `${cat.color}15` }}
-                        >
-                          <IconComponent size={18} stroke={1.8} />
-                        </div>
-                        <span className="category-dropdown-label">{cat.name}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Global Search Bar (Desktop View) */}
-          <div className="header-search desktop-search-bar" ref={searchContainerRef}>
-            <form onSubmit={handleSearchSubmit}>
-              <div className="search-bar-input-box">
-                <IconSearch size={18} stroke={1.8} color="#22C55E" />
-                <input
-                  type="text"
-                  placeholder="Search products, shops..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    style={{ display: 'flex', color: '#A7A7A7' }}
-                  >
-                    <IconX size={16} stroke={1.8} />
-                  </button>
-                )}
-              </div>
-            </form>
-
-            {/* Live Search Autocomplete Dropdown */}
-            {isSearchFocused && (searchQuery.trim().length > 0 || matchingStores.length > 0) && (
-              <div className="search-dropdown-menu">
-                {matchingStores.length > 0 && (
-                  <div className="search-section">
-                    <div className="search-section-title">Matching Shops</div>
-                    {matchingStores.map((st) => (
-                      <div
-                        key={st.id}
-                        className="search-result-item"
-                        onClick={() => {
-                          setIsSearchFocused(false);
-                          navigate('store', { storeId: st.id });
-                        }}
-                      >
-                        <div className="search-result-icon">
-                          <IconBuildingStore size={16} stroke={1.8} color="#22C55E" />
-                        </div>
-                        <div>
-                          <div className="search-result-name">{st.shopName || st.name}</div>
-                          <div className="search-result-meta">{st.businessCategory || 'Local Retailer'} • {st.city || 'Bengaluru'}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {matchingProducts.length > 0 && (
-                  <div className="search-section">
-                    <div className="search-section-title">Matching Products</div>
-                    {matchingProducts.map((pr) => (
-                      <div
-                        key={pr.id}
-                        className="search-result-item"
-                        onClick={() => {
-                          setIsSearchFocused(false);
-                          navigate('product', { productId: pr.id });
-                        }}
-                      >
-                        <div className="search-result-icon">
-                          <IconTag size={16} stroke={1.8} color="#22C55E" />
-                        </div>
-                        <div>
-                          <div className="search-result-name">{pr.name}</div>
-                          <div className="search-result-meta">₹{pr.sellingPrice} • {pr.brand || 'Verified Stock'}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {matchingProducts.length === 0 && matchingStores.length === 0 && searchQuery.trim() && (
-                  <div style={{ padding: '16px', textAlign: 'center', color: '#A7A7A7', fontSize: '13px' }}>
-                    Press <strong>Enter</strong> to search all items for "{searchQuery}"
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Header Right Actions */}
-          <div className="header-actions">
-            
-            {/* Location Picker */}
-            <button className="location-btn" onClick={openLocationModal} title="Select Delivery Address">
-              <IconMapPin size={17} stroke={1.8} color="#22C55E" />
-              <div className="location-btn-text">
-                <span className="location-label">Deliver To</span>
-                <span className="location-val">
-                  {selectedAddress ? `${selectedAddress.city}` : 'Select City'}
-                </span>
-              </div>
-              <IconChevronDown size={14} stroke={1.8} color="var(--text-muted)" />
-            </button>
-
-            {/* Retailer Portal Link (If retailer) */}
-            {role === 'retailer' && (
+            {role === 'retailer' ? (
               <button
-                className="action-icon-btn retailer-portal-btn"
                 onClick={() => navigate('retailer-dashboard')}
-                title="Retailer Dashboard"
-                style={{ color: '#22C55E', backgroundColor: 'rgba(34,197,94,0.1)' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  background: 'var(--color-green-dim)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--color-green)',
+                  borderRadius: 'var(--radius-pill)',
+                  padding: '2px 8px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  cursor: 'pointer'
+                }}
               >
-                <IconBuildingStore size={18} stroke={1.8} />
-                <span className="btn-label-desktop">Shop Portal</span>
+                <IconBuildingStore size={13} />
+                <span>Shop Dashboard</span>
               </button>
-            )}
-
-            {/* Orders Link (Desktop) */}
-            {user && (
-              <button
-                className="action-icon-btn desktop-only-btn"
-                onClick={() => navigate('orders')}
-                title="My Orders"
-              >
-                <IconClock size={18} stroke={1.8} />
-                <span className="btn-label-desktop">Orders</span>
-              </button>
-            )}
-
-            {/* 🛒 PROMINENT CART BUTTON (NEVER HIDDEN) */}
-            <button
-              className="action-icon-btn cart-btn-pill"
-              onClick={() => navigate('cart')}
-              title="Shopping Cart"
-            >
-              <div className="cart-badge-wrapper">
-                <IconShoppingBag size={18} stroke={1.8} />
-                {cartTotalItems > 0 && (
-                  <span className="cart-count-badge">
-                    {cartTotalItems}
-                  </span>
-                )}
-              </div>
-              <span className="cart-label-text">
-                Cart {cartTotalItems > 0 ? `(${cartTotalItems})` : ''}
-              </span>
-            </button>
-
-            {/* Theme Switcher Button */}
-            <div style={{ position: 'relative' }} ref={themeMenuRef}>
-              <button
-                className="action-icon-btn theme-toggle-btn"
-                onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-                title={`Theme: ${themeMode === 'auto' ? 'Auto (System)' : themeMode === 'dark' ? 'Dark' : 'Light'}`}
-              >
-                {themeMode === 'auto' ? (
-                  <IconDeviceDesktop size={18} stroke={1.8} />
-                ) : themeMode === 'dark' ? (
-                  <IconMoon size={18} stroke={1.8} />
-                ) : (
-                  <IconSun size={18} stroke={1.8} />
-                )}
-              </button>
-
-              {/* Theme Dropdown */}
-              {isThemeMenuOpen && (
-                <div className="theme-dropdown-menu">
-                  <div className="theme-dropdown-header">
-                    Theme Mode
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setThemeMode('auto');
-                      setIsThemeMenuOpen(false);
-                    }}
-                    className={`theme-option-btn ${themeMode === 'auto' ? 'active' : ''}`}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <IconDeviceDesktop size={16} stroke={1.8} /> Auto (System)
-                    </div>
-                    {themeMode === 'auto' && <span style={{ fontSize: '12px' }}>✓</span>}
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setThemeMode('dark');
-                      setIsThemeMenuOpen(false);
-                    }}
-                    className={`theme-option-btn ${themeMode === 'dark' ? 'active' : ''}`}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <IconMoon size={16} stroke={1.8} /> Dark Mode
-                    </div>
-                    {themeMode === 'dark' && <span style={{ fontSize: '12px' }}>✓</span>}
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setThemeMode('light');
-                      setIsThemeMenuOpen(false);
-                    }}
-                    className={`theme-option-btn ${themeMode === 'light' ? 'active' : ''}`}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <IconSun size={16} stroke={1.8} /> Light Mode
-                    </div>
-                    {themeMode === 'light' && <span style={{ fontSize: '12px' }}>✓</span>}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* User Account / Login Button */}
-            {user ? (
-              <div style={{ position: 'relative' }} ref={userMenuRef}>
-                <button
-                  className="action-icon-btn user-profile-btn"
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                >
-                  <div className="user-avatar-circle">
-                    {profile?.fullName ? profile.fullName.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                  <span className="user-name-desktop">
-                    {profile?.fullName || 'Account'}
-                  </span>
-                  <IconChevronDown size={14} stroke={1.8} color="var(--text-muted)" />
-                </button>
-
-                {/* User Dropdown */}
-                {isUserMenuOpen && (
-                  <div className="user-dropdown-menu">
-                    <div className="user-dropdown-header">
-                      <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>
-                        {profile?.fullName || 'GETORA User'}
-                      </div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
-                        Role: {role}
-                      </div>
-                    </div>
-
-                    <div
-                      className="user-dropdown-item"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        navigate('account');
-                      }}
-                    >
-                      <IconUser size={16} stroke={1.8} /> Profile & Settings
-                    </div>
-
-                    <div
-                      className="user-dropdown-item"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        navigate('orders');
-                      }}
-                    >
-                      <IconClock size={16} stroke={1.8} /> My Orders
-                    </div>
-
-                    {role === 'retailer' && (
-                      <div
-                        className="user-dropdown-item"
-                        style={{ color: '#22C55E' }}
-                        onClick={() => {
-                          setIsUserMenuOpen(false);
-                          navigate('retailer-dashboard');
-                        }}
-                      >
-                        <IconBuildingStore size={16} stroke={1.8} /> Shop Dashboard
-                      </div>
-                    )}
-
-                    <div
-                      className="user-dropdown-item signout-item"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        signOut();
-                      }}
-                    >
-                      <IconLogout size={16} stroke={1.8} /> Sign Out
-                    </div>
-                  </div>
-                )}
-              </div>
             ) : (
               <button
-                className="btn-primary signin-header-btn"
-                onClick={openAuthModal}
+                onClick={() => navigate('retailer-dashboard')}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: 500
+                }}
               >
-                <IconUser size={16} stroke={1.8} /> <span>Sign In</span>
+                Partner with GETORA
               </button>
             )}
           </div>
         </div>
+      </div>
 
-        {/* Mobile Search & Categories Row (Full Width on Phones) */}
-        <div className="header-mobile-search-row" ref={mobileSearchContainerRef}>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
-            {/* Mobile Categories Button */}
-            <button
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-              className="mobile-category-pill-btn"
-              title="Categories"
+      {/* 2. MAIN HEADER (Logo, Unified Search, Notifications, Cart, User) */}
+      <div className="header-main-nav" style={{ maxWidth: '1280px', margin: '0 auto', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+        
+        {/* Brand Logo */}
+        <div onClick={() => navigate('home')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          <GetoraLogo />
+        </div>
+
+        {/* UNIFIED SINGLE SEARCH BAR */}
+        <div ref={searchContainerRef} style={{ flex: '1', maxWidth: '640px', position: 'relative' }}>
+          <form onSubmit={handleSearchSubmit} style={{ position: 'relative', width: '100%' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                background: 'var(--bg-input)',
+                border: isSearchFocused ? '1.5px solid var(--color-green)' : '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-pill)',
+                padding: '0 14px',
+                height: '44px',
+                boxShadow: isSearchFocused ? '0 0 16px var(--color-green-dim)' : 'none',
+                transition: 'all 0.2s ease'
+              }}
             >
-              <IconLayoutGrid size={16} stroke={1.8} color="#22C55E" />
-              <span>Categories</span>
-            </button>
+              <IconSearch size={18} color={isSearchFocused ? 'var(--color-green)' : 'var(--text-muted)'} style={{ flexShrink: 0, marginRight: '10px' }} />
+              
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                placeholder="Search shop, product or category"
+                style={{
+                  width: '100%',
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  color: 'var(--text-primary)',
+                  fontSize: '13px',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 500
+                }}
+              />
 
-            {/* Mobile Search Box */}
-            <form onSubmit={handleSearchSubmit} style={{ flex: 1 }}>
-              <div className="search-bar-input-box">
-                <IconSearch size={16} stroke={1.8} color="#22C55E" />
-                <input
-                  type="text"
-                  placeholder="Search products, shops..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery('')}
-                    style={{ display: 'flex', color: '#A7A7A7' }}
-                  >
-                    <IconX size={15} stroke={1.8} />
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* Mobile Categories Dropdown */}
-          {isCategoriesOpen && (
-            <div className="categories-dropdown-menu mobile-categories-dropdown">
-              <div className="categories-dropdown-header">
-                <span>Browse Categories</span>
+              {/* Clear button if text */}
+              {searchQuery && (
                 <button
-                  onClick={() => {
-                    setIsCategoriesOpen(false);
-                    navigate('categories', { categoryId: 'all' });
-                  }}
-                  style={{ fontSize: '12px', color: '#22C55E', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px', display: 'flex' }}
                 >
-                  View All <IconArrowRight size={13} stroke={1.8} />
+                  <IconX size={15} />
                 </button>
-              </div>
+              )}
 
-              <div className="categories-dropdown-grid">
-                {HEADER_CATEGORIES.map((cat) => {
-                  const IconComponent = cat.icon;
-                  return (
-                    <div
-                      key={cat.id}
-                      className="category-dropdown-item"
-                      onClick={() => {
-                        setIsCategoriesOpen(false);
-                        navigate('categories', { categoryId: cat.id });
-                      }}
-                    >
-                      <div
-                        className="category-dropdown-icon"
-                        style={{ color: cat.color, backgroundColor: `${cat.color}15` }}
-                      >
-                        <IconComponent size={17} stroke={1.8} />
-                      </div>
-                      <span className="category-dropdown-label">{cat.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Voice Search Mic Button */}
+              <button
+                type="button"
+                onClick={handleVoiceSearch}
+                title="Voice Search"
+                style={{
+                  background: isListening ? 'var(--color-green)' : 'transparent',
+                  border: 'none',
+                  color: isListening ? '#000' : 'var(--text-muted)',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  padding: '6px',
+                  marginLeft: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <IconMicrophone size={17} />
+              </button>
             </div>
-          )}
+          </form>
 
-          {/* Mobile Live Search Dropdown */}
-          {isSearchFocused && (searchQuery.trim().length > 0 || matchingStores.length > 0) && (
-            <div className="search-dropdown-menu mobile-search-dropdown">
+          {/* Instant Search Dropdown Suggestions */}
+          {isSearchFocused && searchQuery.trim().length > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                left: 0,
+                right: 0,
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-card)',
+                padding: '12px',
+                zIndex: 200,
+                maxHeight: '380px',
+                overflowY: 'auto'
+              }}
+            >
               {matchingStores.length > 0 && (
-                <div className="search-section">
-                  <div className="search-section-title">Matching Shops</div>
+                <div style={{ marginBottom: '10px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                    Matching Shops
+                  </p>
                   {matchingStores.map((st) => (
                     <div
                       key={st.id}
-                      className="search-result-item"
                       onClick={() => {
-                        setIsSearchFocused(false);
                         navigate('store', { storeId: st.id });
+                        setIsSearchFocused(false);
                       }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 10px',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease'
+                      }}
+                      className="search-suggest-item"
                     >
-                      <div className="search-result-icon">
-                        <IconBuildingStore size={16} stroke={1.8} color="#22C55E" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <IconBuildingStore size={16} color="var(--color-green)" />
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{st.shopName}</span>
                       </div>
-                      <div>
-                        <div className="search-result-name">{st.shopName || st.name}</div>
-                        <div className="search-result-meta">{st.businessCategory || 'Local Retailer'}</div>
-                      </div>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{st.businessCategory}</span>
                     </div>
                   ))}
                 </div>
               )}
 
               {matchingProducts.length > 0 && (
-                <div className="search-section">
-                  <div className="search-section-title">Matching Products</div>
-                  {matchingProducts.map((pr) => (
+                <div>
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                    Matching Products
+                  </p>
+                  {matchingProducts.map((prod) => (
                     <div
-                      key={pr.id}
-                      className="search-result-item"
+                      key={prod.id}
                       onClick={() => {
+                        navigate('product', { productId: prod.id });
                         setIsSearchFocused(false);
-                        navigate('product', { productId: pr.id });
                       }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 10px',
+                        borderRadius: 'var(--radius-md)',
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease'
+                      }}
+                      className="search-suggest-item"
                     >
-                      <div className="search-result-icon">
-                        <IconTag size={16} stroke={1.8} color="#22C55E" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img src={prod.imageUrl} alt={prod.name} style={{ width: '28px', height: '28px', borderRadius: '4px', objectFit: 'cover' }} />
+                        <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-primary)' }}>{prod.name}</span>
                       </div>
-                      <div>
-                        <div className="search-result-name">{pr.name}</div>
-                        <div className="search-result-meta">₹{pr.sellingPrice} • {pr.brand || 'Verified'}</div>
-                      </div>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-green)' }}>₹{prod.sellingPrice}</span>
                     </div>
                   ))}
                 </div>
               )}
+
+              <button
+                onClick={handleSearchSubmit}
+                style={{
+                  width: '100%',
+                  marginTop: '8px',
+                  padding: '8px',
+                  background: 'var(--color-green-dim)',
+                  border: 'none',
+                  borderRadius: 'var(--radius-md)',
+                  color: 'var(--color-green)',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span>View all search results for "{searchQuery}"</span>
+                <IconArrowRight size={14} />
+              </button>
             </div>
           )}
+        </div>
+
+        {/* RIGHT ACTIONS: Notifications, Cart, Theme, Account */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+          
+          {/* Notifications Bell */}
+          <div ref={notifMenuRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setIsNotifOpen(!isNotifOpen)}
+              title="Notifications"
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: 'var(--radius-pill)',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                position: 'relative'
+              }}
+            >
+              <IconBell size={19} stroke={1.8} />
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '2px',
+                  right: '2px',
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: 'var(--color-green)'
+                }}
+              />
+            </button>
+
+            {isNotifOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 8px)',
+                  right: 0,
+                  width: '280px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-card)',
+                  padding: '12px',
+                  zIndex: 200
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>Notifications</span>
+                  <span style={{ fontSize: '10px', color: 'var(--color-green)', fontWeight: 600 }}>1 New</span>
+                </div>
+                <div style={{ padding: '8px', borderRadius: 'var(--radius-md)', background: 'var(--bg-secondary)', fontSize: '12px' }}>
+                  <p style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0 }}>⚡ 15-Min Delivery Active</p>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '11px', margin: '2px 0 0' }}>Local stores in your area are now open and ready for orders.</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Cart Icon with Live Item Count Badge */}
+          <button
+            onClick={() => navigate('cart')}
+            title="View Cart"
+            style={{
+              height: '40px',
+              padding: '0 14px',
+              borderRadius: 'var(--radius-pill)',
+              background: 'var(--bg-secondary)',
+              border: cartTotalItems > 0 ? '1.5px solid var(--color-green)' : '1px solid var(--border-subtle)',
+              color: 'var(--text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              position: 'relative'
+            }}
+          >
+            <IconShoppingBag size={19} color={cartTotalItems > 0 ? 'var(--color-green)' : 'inherit'} stroke={1.8} />
+            <span style={{ fontSize: '13px', fontWeight: 700 }}>Cart</span>
+            {cartTotalItems > 0 && (
+              <span
+                style={{
+                  background: 'var(--color-green)',
+                  color: '#000',
+                  fontSize: '11px',
+                  fontWeight: 900,
+                  padding: '1px 6px',
+                  borderRadius: 'var(--radius-pill)',
+                  lineHeight: '1.2'
+                }}
+              >
+                {cartTotalItems}
+              </span>
+            )}
+          </button>
+
+          {/* Theme Mode Toggle (Sun / Moon) */}
+          <button
+            onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+            title={`Switch to ${themeMode === 'dark' ? 'Light' : 'Dark'} Mode`}
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: 'var(--radius-pill)',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            {themeMode === 'dark' ? <IconSun size={18} color="#FFCC00" /> : <IconMoon size={18} />}
+          </button>
+
+          {/* Account / User Profile */}
+          <div ref={userMenuRef} style={{ position: 'relative' }}>
+            {user ? (
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                style={{
+                  height: '40px',
+                  padding: '0 12px',
+                  borderRadius: 'var(--radius-pill)',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-subtle)',
+                  color: 'var(--text-primary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  cursor: 'pointer'
+                }}
+              >
+                <div
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: 'var(--color-green)',
+                    color: '#000',
+                    fontWeight: 800,
+                    fontSize: '11px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  {(profile?.fullName || user.email || 'U').charAt(0).toUpperCase()}
+                </div>
+                <span style={{ fontSize: '13px', fontWeight: 600 }} className="hidden sm:inline">
+                  {profile?.fullName?.split(' ')[0] || 'Account'}
+                </span>
+                <IconChevronDown size={14} color="var(--text-muted)" />
+              </button>
+            ) : (
+              <button
+                onClick={openAuthModal}
+                style={{
+                  height: '40px',
+                  padding: '0 16px',
+                  borderRadius: 'var(--radius-pill)',
+                  background: 'var(--color-green)',
+                  border: 'none',
+                  color: '#000',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <IconUser size={17} />
+                <span>Login</span>
+              </button>
+            )}
+
+            {/* User Dropdown */}
+            {isUserMenuOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 8px)',
+                  right: 0,
+                  width: '200px',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-card)',
+                  padding: '8px',
+                  zIndex: 200
+                }}
+              >
+                <div style={{ padding: '8px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '4px' }}>
+                  <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                    {profile?.fullName || 'GETORA Customer'}
+                  </p>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '2px 0 0' }}>{user?.email || user?.phone}</p>
+                </div>
+
+                <button
+                  onClick={() => {
+                    navigate('orders');
+                    setIsUserMenuOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '8px 10px',
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--text-primary)',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                  className="dropdown-item"
+                >
+                  My Orders
+                </button>
+
+                <button
+                  onClick={() => {
+                    navigate('account');
+                    setIsUserMenuOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '8px 10px',
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--text-primary)',
+                    fontSize: '12px',
+                    cursor: 'pointer'
+                  }}
+                  className="dropdown-item"
+                >
+                  Saved Addresses
+                </button>
+
+                <button
+                  onClick={async () => {
+                    await signOut();
+                    setIsUserMenuOpen(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '8px 10px',
+                    background: 'transparent',
+                    border: 'none',
+                    borderRadius: 'var(--radius-md)',
+                    color: '#EF4444',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                  className="dropdown-item"
+                >
+                  <IconLogout size={14} />
+                  <span>Logout</span>
+                </button>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </header>
