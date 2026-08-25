@@ -76,7 +76,7 @@ export const Footer: React.FC = () => {
             </li>
             <li>
               <a href="#support" onClick={(e) => { e.preventDefault(); navigate('support'); }}>
-                Store Partner Inquiries
+                Customer FAQ & Help
               </a>
             </li>
           </ul>

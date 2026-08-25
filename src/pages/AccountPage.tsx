@@ -198,34 +198,7 @@ export const AccountPage: React.FC = () => {
         )}
       </div>
 
-      {/* Retailer Dashboard Shortcut */}
-      {role === 'retailer' && (
-        <div
-          onClick={() => navigate('retailer-dashboard')}
-          style={{
-            backgroundColor: 'rgba(34, 197, 94, 0.08)',
-            border: '1px solid #22C55E',
-            borderRadius: '20px',
-            padding: '20px 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: '32px',
-            cursor: 'pointer'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ backgroundColor: '#22C55E', color: '#000', padding: '10px', borderRadius: '12px' }}>
-              <IconBuildingStore size={22} stroke={1.8} />
-            </div>
-            <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Retailer Management Portal</h3>
-              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Manage shop inventory, add new products & fulfill orders</p>
-            </div>
-          </div>
-          <IconChevronRight size={20} stroke={1.8} color="#22C55E" />
-        </div>
-      )}
+
 
       {/* Appearance & Theme Settings */}
       <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '24px', marginBottom: '32px' }}>

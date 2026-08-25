@@ -2,23 +2,14 @@ import React, { useState } from 'react';
 import {
   IconX,
   IconMail,
-  IconPhone,
   IconLock,
-  IconArrowRight,
-  IconSparkles,
-  IconShieldCheck,
-  IconBuildingStore,
-  IconMotorbike,
-  IconUser,
   IconAlertCircle,
   IconLoader2,
-  IconKey,
   IconCalendar,
   IconHeart,
   IconCheck
 } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
-import { UserRole } from '../types';
 import { GetoraLogo } from './GetoraLogo';
 
 export const AuthModal: React.FC = () => {
@@ -26,7 +17,6 @@ export const AuthModal: React.FC = () => {
     isAuthModalOpen,
     closeAuthModal,
     signInWithEmail,
-    signInWithPhone,
     verifyOtp,
     signInWithPassword,
     signUpWithPassword,
@@ -36,15 +26,12 @@ export const AuthModal: React.FC = () => {
   } = useGetora();
 
   const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [authMethod, setAuthMethod] = useState<'otp_email' | 'otp_phone' | 'password'>('otp_email');
-  const [role, setRole] = useState<UserRole>('customer');
+  const [authMethod, setAuthMethod] = useState<'otp_email' | 'password'>('otp_email');
 
   // Input states
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [shopName, setShopName] = useState('');
   const [otp, setOtp] = useState('');
 
   // Onboarding profile states (Phone, DOB, Gender)
@@ -72,49 +59,28 @@ export const AuthModal: React.FC = () => {
     closeAuthModal();
   };
 
-  // 1. Send Email / Phone OTP
+  // 1. Send Email OTP
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setLoading(true);
 
     try {
-      if (authMethod === 'otp_email') {
-        if (!email.trim() || !email.includes('@')) {
-          setErrorMessage('Please enter a valid email address.');
-          setLoading(false);
-          return;
-        }
+      if (!email.trim() || !email.includes('@')) {
+        setErrorMessage('Please enter a valid email address.');
+        setLoading(false);
+        return;
+      }
 
-        const res = await signInWithEmail(email.trim());
-        if (!res.success) {
-          setErrorMessage(res.message || 'Unable to send OTP. Please check email address.');
-        } else {
-          setStep('otp');
-          showToast('OTP Sent', `Verification code sent to ${email}`, 'info');
-        }
-      } else if (authMethod === 'otp_phone') {
-        let cleanPhone = phone.trim().replace(/[\s-]/g, '');
-        if (!cleanPhone.startsWith('+')) {
-          cleanPhone = `+91${cleanPhone}`;
-        }
-
-        if (cleanPhone.length < 12) {
-          setErrorMessage('Please enter a valid 10-digit mobile number.');
-          setLoading(false);
-          return;
-        }
-
-        const res = await signInWithPhone(cleanPhone);
-        if (!res.success) {
-          setErrorMessage(res.message || 'Unable to send SMS OTP. Please check phone number or try email.');
-        } else {
-          setStep('otp');
-          showToast('OTP Sent', `SMS verification code sent to ${cleanPhone}`, 'info');
-        }
+      const res = await signInWithEmail(email.trim());
+      if (!res.success) {
+        setErrorMessage(res.message || 'Unable to send OTP. Please check email address.');
+      } else {
+        setStep('otp');
+        showToast('OTP Sent', `Verification code sent to ${email}`, 'info');
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Authentication error occurred.');
+      setErrorMessage(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -123,51 +89,35 @@ export const AuthModal: React.FC = () => {
   // 2. Verify OTP
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!otp.trim() || otp.length < 4) {
-      setErrorMessage('Please enter the 6-digit verification code.');
-      return;
-    }
-
     setErrorMessage(null);
     setLoading(true);
 
     try {
-      let cleanPhone = phone.trim().replace(/[\s-]/g, '');
-      if (cleanPhone && !cleanPhone.startsWith('+')) cleanPhone = `+91${cleanPhone}`;
-
       const res = await verifyOtp({
-        email: authMethod === 'otp_email' ? email.trim() : undefined,
-        phone: authMethod === 'otp_phone' ? cleanPhone : undefined,
+        email: email.trim(),
         token: otp.trim(),
-        type: authMethod === 'otp_email' ? 'email' : 'sms',
-        fullName: authMode === 'signup' ? fullName : undefined,
-        role: authMode === 'signup' ? role : undefined,
-        shopName: authMode === 'signup' && role === 'retailer' ? shopName : undefined
+        type: 'email',
+        fullName: fullName.trim() || undefined,
+        role: 'customer'
       });
 
       if (!res.success) {
-        setErrorMessage(res.message || 'Invalid or expired OTP. Please try again.');
+        setErrorMessage(res.message || 'Invalid or expired OTP code.');
       } else {
-        // Prepare onboarding prefill
-        setOnboardingFullName(fullName || (profile?.fullName !== 'GETORA User' ? profile?.fullName || '' : ''));
-        setOnboardingPhone(phone || profile?.phone || '');
+        showToast('Welcome to GETORA!', 'You have successfully signed in', 'success');
+        setOnboardingFullName(fullName.trim() || profile?.fullName || '');
         setStep('onboarding');
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Verification failed. Please try again.');
+      setErrorMessage(err.message || 'Verification failed. Try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // 3. Password Auth
-  const handlePasswordAuth = async (e: React.FormEvent) => {
+  // 3. Password Login / Signup
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      setErrorMessage('Please enter both email and password.');
-      return;
-    }
-
     setErrorMessage(null);
     setLoading(true);
 
@@ -177,31 +127,31 @@ export const AuthModal: React.FC = () => {
         if (!res.success) {
           setErrorMessage(res.message || 'Invalid email or password.');
         } else {
-          showToast('Welcome Back!', 'Successfully signed in', 'success');
+          showToast('Welcome Back!', 'Signed in successfully', 'success');
           handleClose();
         }
       } else {
         const res = await signUpWithPassword(email.trim(), password, {
-          fullName,
-          role,
-          shopName: role === 'retailer' ? shopName : undefined
+          fullName: fullName.trim(),
+          role: 'customer'
         });
+
         if (!res.success) {
-          setErrorMessage(res.message || 'Signup failed.');
+          setErrorMessage(res.message || 'Unable to create customer account.');
         } else {
-          setOnboardingFullName(fullName);
-          setOnboardingPhone(phone);
+          showToast('Account Created!', 'Welcome to GETORA marketplace', 'success');
+          setOnboardingFullName(fullName.trim());
           setStep('onboarding');
         }
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'An error occurred during authentication.');
+      setErrorMessage(err.message || 'Authentication error.');
     } finally {
       setLoading(false);
     }
   };
 
-  // 4. Save Customer Onboarding Details (Phone, Date of Birth, Gender)
+  // 4. Save Customer Onboarding Details
   const handleSaveOnboarding = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -211,13 +161,13 @@ export const AuthModal: React.FC = () => {
         fullName: onboardingFullName.trim() || undefined,
         phone: onboardingPhone.trim() || undefined,
         dateOfBirth: dateOfBirth || undefined,
-        gender
+        gender: gender
       });
 
-      showToast('Profile Complete!', 'Welcome to GETORA Quick Commerce', 'success');
+      showToast('Profile Saved', 'Your account details have been updated', 'success');
       handleClose();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to save profile details.');
+      setErrorMessage(err.message || 'Could not update profile info');
     } finally {
       setLoading(false);
     }
@@ -227,9 +177,12 @@ export const AuthModal: React.FC = () => {
     <div
       style={{
         position: 'fixed',
-        inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.82)',
-        backdropFilter: 'blur(10px)',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)',
         zIndex: 9999,
         display: 'flex',
         alignItems: 'center',
@@ -241,11 +194,11 @@ export const AuthModal: React.FC = () => {
       <div
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '440px',
           backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
           borderRadius: '24px',
-          boxShadow: 'var(--shadow-card)',
+          border: '1px solid var(--border-color)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
           overflow: 'hidden',
           position: 'relative'
         }}
@@ -265,7 +218,7 @@ export const AuthModal: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <GetoraLogo size="sm" />
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', backgroundColor: 'var(--bg-elevated)', padding: '2px 8px', borderRadius: '6px' }}>
-                Supabase Auth
+                Customer Portal
               </span>
             </div>
             <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '6px', fontFamily: 'Outfit' }}>
@@ -275,7 +228,7 @@ export const AuthModal: React.FC = () => {
                 ? 'Enter Verification Code'
                 : authMode === 'login'
                 ? 'Sign In to GETORA'
-                : 'Create an Account'}
+                : 'Create Customer Account'}
             </h2>
           </div>
 
@@ -318,124 +271,98 @@ export const AuthModal: React.FC = () => {
             </div>
           )}
 
-          {/* ================================================================= */}
-          {/* STEP 3: CUSTOMER ONBOARDING (Phone, Date of Birth, Gender)        */}
-          {/* ================================================================= */}
+          {/* STEP 3: CUSTOMER ONBOARDING */}
           {step === 'onboarding' ? (
             <form onSubmit={handleSaveOnboarding} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                Add your details to enable 15-minute doorstep deliveries, birthday specials, and tailored local offers.
+                Add your details to enable 15-minute doorstep deliveries and personalized offers.
               </p>
 
-              {/* Full Name */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                   Full Name
                 </label>
-                <div
+                <input
+                  type="text"
+                  placeholder="e.g. Rahul Sharma"
+                  value={onboardingFullName}
+                  onChange={(e) => setOnboardingFullName(e.target.value)}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: '100%',
                     backgroundColor: 'var(--bg-input)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '12px',
-                    padding: '10px 14px',
-                    gap: '10px'
+                    borderRadius: '10px',
+                    padding: '10px 12px',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px'
                   }}
-                >
-                  <IconUser size={16} stroke={1.8} color="#22C55E" />
-                  <input
-                    type="text"
-                    placeholder="Your Full Name"
-                    value={onboardingFullName}
-                    onChange={(e) => setOnboardingFullName(e.target.value)}
-                    style={{ width: '100%', fontSize: '14px', color: 'var(--text-primary)' }}
-                  />
-                </div>
+                />
               </div>
 
-              {/* Phone Number */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
-                  Mobile Phone Number (For Order Delivery & Live Tracking)
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
+                  Delivery Phone Number
                 </label>
-                <div
+                <input
+                  type="tel"
+                  placeholder="e.g. +91 98290 12345"
+                  value={onboardingPhone}
+                  onChange={(e) => setOnboardingPhone(e.target.value)}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: '100%',
                     backgroundColor: 'var(--bg-input)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '12px',
-                    padding: '10px 14px',
-                    gap: '10px'
+                    borderRadius: '10px',
+                    padding: '10px 12px',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px'
                   }}
-                >
-                  <IconPhone size={16} stroke={1.8} color="#22C55E" />
-                  <input
-                    type="tel"
-                    placeholder="10-digit mobile number"
-                    value={onboardingPhone}
-                    onChange={(e) => setOnboardingPhone(e.target.value)}
-                    style={{ width: '100%', fontSize: '14px', color: 'var(--text-primary)' }}
-                  />
-                </div>
+                />
               </div>
 
-              {/* Date of Birth */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
-                  Date of Birth (DOB)
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
+                  Date of Birth
                 </label>
-                <div
+                <input
+                  type="date"
+                  value={dateOfBirth}
+                  onChange={(e) => setDateOfBirth(e.target.value)}
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: '100%',
                     backgroundColor: 'var(--bg-input)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '12px',
-                    padding: '10px 14px',
-                    gap: '10px'
+                    borderRadius: '10px',
+                    padding: '10px 12px',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px'
                   }}
-                >
-                  <IconCalendar size={16} stroke={1.8} color="#22C55E" />
-                  <input
-                    type="date"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    style={{ width: '100%', fontSize: '14px', color: 'var(--text-primary)' }}
-                  />
-                </div>
+                />
               </div>
 
-              {/* Gender Selector Chips */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
+                <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                   Gender
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  {[
-                    { id: 'male', label: '👨 Male' },
-                    { id: 'female', label: '👩 Female' },
-                    { id: 'other', label: '🌈 Other' },
-                    { id: 'prefer_not_to_say', label: '🔒 Prefer not to say' }
-                  ].map((g) => (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  {(['male', 'female', 'other'] as const).map((g) => (
                     <button
-                      key={g.id}
+                      key={g}
                       type="button"
-                      onClick={() => setGender(g.id as any)}
+                      onClick={() => setGender(g)}
                       style={{
-                        padding: '10px 12px',
-                        borderRadius: '10px',
-                        fontSize: '13px',
+                        padding: '8px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
                         fontWeight: 600,
-                        backgroundColor: gender === g.id ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
-                        border: gender === g.id ? '1px solid #22C55E' : '1px solid var(--border-color)',
-                        color: gender === g.id ? '#22C55E' : 'var(--text-secondary)',
-                        textAlign: 'center',
+                        backgroundColor: gender === g ? 'rgba(34, 197, 94, 0.15)' : 'var(--bg-input)',
+                        border: gender === g ? '1px solid #22C55E' : '1px solid var(--border-color)',
+                        color: gender === g ? '#22C55E' : 'var(--text-secondary)',
+                        textTransform: 'capitalize',
                         cursor: 'pointer'
                       }}
                     >
-                      {g.label}
+                      {g}
                     </button>
                   ))}
                 </div>
@@ -446,67 +373,35 @@ export const AuthModal: React.FC = () => {
                   type="button"
                   onClick={handleClose}
                   style={{
+                    flex: 1,
                     padding: '12px',
                     borderRadius: '12px',
                     fontSize: '13px',
-                    color: 'var(--text-muted)',
-                    backgroundColor: 'transparent',
-                    border: '1px solid var(--border-color)',
-                    cursor: 'pointer',
-                    flex: 1
+                    fontWeight: 600,
+                    backgroundColor: 'var(--bg-elevated)',
+                    border: 'none',
+                    color: 'var(--text-secondary)',
+                    cursor: 'pointer'
                   }}
                 >
                   Skip for Now
                 </button>
-
                 <button
                   type="submit"
                   disabled={loading}
                   className="btn-primary"
-                  style={{
-                    flex: 2,
-                    padding: '12px',
-                    borderRadius: '12px',
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px'
-                  }}
+                  style={{ flex: 2, padding: '12px', borderRadius: '12px', fontSize: '13px', fontWeight: 700 }}
                 >
-                  {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : 'Save & Start Shopping →'}
+                  {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : 'Save Profile & Start'}
                 </button>
               </div>
             </form>
           ) : step === 'otp' ? (
-            /* ================================================================= */
-            /* STEP 2: OTP VERIFICATION                                          */
-            /* ================================================================= */
+            /* STEP 2: OTP VERIFICATION */
             <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              <div style={{ textAlign: 'center', margin: '4px 0 10px' }}>
-                <div
-                  style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(34, 197, 94, 0.15)',
-                    color: '#22C55E',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 12px'
-                  }}
-                >
-                  <IconKey size={26} stroke={1.8} />
-                </div>
-                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  Enter the 6-digit verification code sent to:
-                </p>
-                <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
-                  {authMethod === 'otp_email' ? email : phone}
-                </div>
-              </div>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.4 }}>
+                Enter the 6-digit verification code sent to <strong style={{ color: 'var(--text-primary)' }}>{email}</strong>
+              </p>
 
               <div>
                 <input
@@ -556,7 +451,7 @@ export const AuthModal: React.FC = () => {
                   onClick={() => setStep('input')}
                   style={{ background: 'none', border: 'none', color: '#22C55E', cursor: 'pointer' }}
                 >
-                  ← Change {authMethod === 'otp_email' ? 'Email' : 'Phone'}
+                  ← Change Email
                 </button>
                 <button
                   type="button"
@@ -568,9 +463,7 @@ export const AuthModal: React.FC = () => {
               </div>
             </form>
           ) : (
-            /* ================================================================= */
-            /* STEP 1: INITIAL SIGN IN / SIGN UP FORM                            */
-            /* ================================================================= */
+            /* STEP 1: INITIAL SIGN IN / SIGN UP FORM */
             <div>
               {/* Mode Toggle (Login vs Sign Up) */}
               <div
@@ -616,11 +509,9 @@ export const AuthModal: React.FC = () => {
                     boxShadow: authMode === 'signup' ? '0 2px 8px rgba(0,0,0,0.2)' : 'none'
                   }}
                 >
-                  Create Account
+                  Create Customer Account
                 </button>
               </div>
-
-
 
               {/* Auth Method Selector */}
               <div style={{ display: 'flex', gap: '8px', marginBottom: '18px' }}>
@@ -669,9 +560,9 @@ export const AuthModal: React.FC = () => {
                 </button>
               </div>
 
-              {/* Form by Method */}
+              {/* Forms */}
               {authMethod === 'password' ? (
-                <form onSubmit={handlePasswordAuth} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <form onSubmit={handlePasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   {authMode === 'signup' && (
                     <div>
                       <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Full Name</label>
@@ -680,20 +571,6 @@ export const AuthModal: React.FC = () => {
                         placeholder="e.g. Rahul Sharma"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        required
-                        style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
-                      />
-                    </div>
-                  )}
-
-                  {authMode === 'signup' && role === 'retailer' && (
-                    <div>
-                      <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Store / Shop Name</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Sharma Electricals & Hardware"
-                        value={shopName}
-                        onChange={(e) => setShopName(e.target.value)}
                         required
                         style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
                       />
@@ -730,7 +607,7 @@ export const AuthModal: React.FC = () => {
                     className="btn-primary"
                     style={{ width: '100%', padding: '12px', borderRadius: '12px', fontSize: '14px', fontWeight: 700, marginTop: '8px' }}
                   >
-                    {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : authMode === 'login' ? 'Sign In →' : 'Create Account →'}
+                    {loading ? <IconLoader2 size={16} stroke={1.8} className="spin" /> : authMode === 'login' ? 'Sign In →' : 'Create Customer Account →'}
                   </button>
                 </form>
               ) : (
@@ -749,22 +626,8 @@ export const AuthModal: React.FC = () => {
                     </div>
                   )}
 
-                  {authMode === 'signup' && role === 'retailer' && (
-                    <div>
-                      <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Store / Shop Name</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Sharma Electricals & Hardware"
-                        value={shopName}
-                        onChange={(e) => setShopName(e.target.value)}
-                        required
-                        style={{ width: '100%', backgroundColor: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 12px', color: 'var(--text-primary)', fontSize: '13px' }}
-                      />
-                    </div>
-                  )}
-
                   <div>
-                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email Address for 6-Digit OTP</label>
+                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email Address for 6-Digit Code</label>
                     <input
                       type="email"
                       placeholder="name@example.com"
