@@ -22,7 +22,10 @@ import {
   IconHome,
   IconCar,
   IconHeart,
-  IconPill
+  IconPill,
+  IconCamera,
+  IconMicrophone,
+  IconPhoto
 } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { StoreCard } from '../components/StoreCard';
@@ -37,7 +40,8 @@ export const HomePage: React.FC = () => {
     navigate,
     applyCoupon,
     selectedAddress,
-    openLocationModal
+    openLocationModal,
+    openAiFinder
   } = useGetora();
 
   const [storeFilter, setStoreFilter] = useState<'all' | 'fastest' | 'rating' | 'offers'>('all');
@@ -183,7 +187,175 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. QUICK CATEGORIES (PRIMARY 4-PER-ROW GRID WITH "SEE ALL" LINK)          */}
+      {/* 2. GETORA AI PRODUCT FINDER INTERACTIVE LAUNCHER BANNER                   */}
+      {/* ========================================================================= */}
+      <section
+        className="ai-product-finder-home-banner"
+        style={{
+          borderRadius: 'var(--radius-xl)',
+          background: 'linear-gradient(135deg, #141414 0%, #162419 60%, #143521 100%)',
+          border: '1px solid rgba(29, 185, 84, 0.4)',
+          padding: '20px 24px',
+          marginBottom: '28px',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.4)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          
+          {/* Header Row */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '38px', height: '38px', borderRadius: '12px', background: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 16px rgba(29, 185, 84, 0.5)' }}>
+                <IconSparkles size={22} stroke={2.5} />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h2 style={{ fontSize: '16px', fontWeight: 900, color: '#FFFFFF', margin: 0, fontFamily: 'var(--font-display)' }}>
+                    GETORA AI Product Finder
+                  </h2>
+                  <span style={{ padding: '2px 8px', borderRadius: '999px', background: 'rgba(29, 185, 84, 0.2)', border: '1px solid rgba(29, 185, 84, 0.4)', color: '#1DB954', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase' }}>
+                    Photo / Voice / Compare
+                  </span>
+                </div>
+                <p style={{ fontSize: '12px', color: '#A7A7A7', margin: '2px 0 0' }}>
+                  Upload a photo or speak in Hindi/English. We'll find nearby shops, compare lowest prices, and deliver in 15 mins.
+                </p>
+              </div>
+            </div>
+
+            {/* Main Action Trigger */}
+            <button
+              onClick={() => openAiFinder()}
+              style={{
+                padding: '9px 18px',
+                background: '#1DB954',
+                border: 'none',
+                borderRadius: 'var(--radius-pill)',
+                color: '#000',
+                fontSize: '12px',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 4px 14px rgba(29, 185, 84, 0.35)',
+                transition: 'all 0.15s ease'
+              }}
+              className="hover:scale-105 active:scale-95"
+            >
+              <span>Ask GETORA AI</span>
+              <IconArrowRight size={15} stroke={2.5} />
+            </button>
+          </div>
+
+          {/* Quick Triggers Grid (Photo Search, Voice Search, Preset Samples) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', paddingTop: '8px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            
+            {/* 1. Photo Search */}
+            <div
+              onClick={() => openAiFinder({ photoMode: true })}
+              style={{
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(29, 185, 84, 0.25)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                transition: 'border 0.2s ease'
+              }}
+              className="hover:border-[#1DB954]"
+            >
+              <div style={{ padding: '6px', borderRadius: '8px', background: 'rgba(29, 185, 84, 0.15)', color: '#1DB954' }}>
+                <IconCamera size={18} />
+              </div>
+              <div>
+                <strong style={{ fontSize: '12px', color: '#FFF', display: 'block' }}>Search by Photo</strong>
+                <span style={{ fontSize: '10px', color: '#A7A7A7' }}>Upload or click product photo</span>
+              </div>
+            </div>
+
+            {/* 2. Voice Search */}
+            <div
+              onClick={() => openAiFinder()}
+              style={{
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(29, 185, 84, 0.25)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                transition: 'border 0.2s ease'
+              }}
+              className="hover:border-[#1DB954]"
+            >
+              <div style={{ padding: '6px', borderRadius: '8px', background: 'rgba(29, 185, 84, 0.15)', color: '#1DB954' }}>
+                <IconMicrophone size={18} />
+              </div>
+              <div>
+                <strong style={{ fontSize: '12px', color: '#FFF', display: 'block' }}>Voice Assistant</strong>
+                <span style={{ fontSize: '10px', color: '#A7A7A7' }}>Hindi, Hinglish, or English</span>
+              </div>
+            </div>
+
+            {/* 3. Fast Sample: USB-C Charger */}
+            <div
+              onClick={() => openAiFinder({ query: 'USB-C Fast Charger 25W' })}
+              style={{
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'border 0.2s ease'
+              }}
+              className="hover:border-[#1DB954]"
+            >
+              <span style={{ fontSize: '14px' }}>⚡</span>
+              <div>
+                <strong style={{ fontSize: '11px', color: '#FFF', display: 'block' }}>Fast Charger</strong>
+                <span style={{ fontSize: '10px', color: 'var(--color-green)' }}>Compare ₹220 - ₹269</span>
+              </div>
+            </div>
+
+            {/* 4. Fast Sample: Havells Wire */}
+            <div
+              onClick={() => openAiFinder({ query: 'Havells 1.5 sq mm copper wire' })}
+              style={{
+                padding: '10px 14px',
+                borderRadius: 'var(--radius-lg)',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'border 0.2s ease'
+              }}
+              className="hover:border-[#1DB954]"
+            >
+              <span style={{ fontSize: '14px' }}>🔌</span>
+              <div>
+                <strong style={{ fontSize: '11px', color: '#FFF', display: 'block' }}>Havells Wire 1.5mm</strong>
+                <span style={{ fontSize: '10px', color: 'var(--color-green)' }}>Compare 3 Nearby Shops</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 3. QUICK CATEGORIES (PRIMARY 4-PER-ROW GRID WITH "SEE ALL" LINK)          */}
       {/* ========================================================================= */}
       <section className="quick-categories-section" style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>

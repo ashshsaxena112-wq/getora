@@ -174,6 +174,12 @@ interface GetoraContextType {
   openReviewModal: (modalInfo: { orderId: string; storeId: string; storeName: string }) => void;
   closeReviewModal: () => void;
 
+  // GETORA AI Product Finder
+  isAiFinderOpen: boolean;
+  openAiFinder: (params?: { query?: string; photoMode?: boolean }) => void;
+  closeAiFinder: () => void;
+  aiFinderInitialData: { query?: string; photoMode?: boolean } | null;
+
   // Notifications & Reviews
   notifications: Notification[];
   reviews: Review[];
@@ -353,6 +359,23 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const closeReviewModal = () => {
     setActiveReviewModal(null);
+  };
+
+  // GETORA AI Product Finder Modal State
+  const [isAiFinderOpen, setIsAiFinderOpen] = useState<boolean>(false);
+  const [aiFinderInitialData, setAiFinderInitialData] = useState<{
+    query?: string;
+    photoMode?: boolean;
+  } | null>(null);
+
+  const openAiFinder = (params?: { query?: string; photoMode?: boolean }) => {
+    setAiFinderInitialData(params || null);
+    setIsAiFinderOpen(true);
+  };
+
+  const closeAiFinder = () => {
+    setIsAiFinderOpen(false);
+    setAiFinderInitialData(null);
   };
 
   // Toast manager
@@ -1837,6 +1860,11 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         activeReviewModal,
         openReviewModal,
         closeReviewModal,
+
+        isAiFinderOpen,
+        openAiFinder,
+        closeAiFinder,
+        aiFinderInitialData,
 
         retailerProfile,
         retailerProducts,

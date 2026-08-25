@@ -15,7 +15,9 @@ import {
   IconMicrophone,
   IconSparkles,
   IconArrowRight,
-  IconCheck
+  IconCheck,
+  IconCamera,
+  IconPhoto
 } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { GetoraLogo } from './GetoraLogo';
@@ -26,6 +28,7 @@ export const Header: React.FC = () => {
     selectedAddress,
     openLocationModal,
     openAuthModal,
+    openAiFinder,
     user,
     profile,
     role,
@@ -237,11 +240,33 @@ export const Header: React.FC = () => {
                 </button>
               )}
 
+              {/* Photo Search Camera Button */}
+              <button
+                type="button"
+                onClick={() => openAiFinder({ photoMode: true })}
+                title="Search by Product Photo with GETORA AI"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--color-green)',
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  padding: '6px',
+                  marginLeft: '2px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <IconCamera size={18} stroke={2} />
+              </button>
+
               {/* Voice Search Mic Button */}
               <button
                 type="button"
-                onClick={handleVoiceSearch}
-                title="Voice Search"
+                onClick={() => openAiFinder()}
+                title="Voice / AI Search with GETORA AI"
                 style={{
                   background: isListening ? 'var(--color-green)' : 'transparent',
                   border: 'none',
@@ -249,7 +274,7 @@ export const Header: React.FC = () => {
                   borderRadius: '50%',
                   cursor: 'pointer',
                   padding: '6px',
-                  marginLeft: '4px',
+                  marginLeft: '2px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -279,6 +304,41 @@ export const Header: React.FC = () => {
                 overflowY: 'auto'
               }}
             >
+              {/* Top Smart AI Comparison Banner */}
+              <div
+                onClick={() => {
+                  openAiFinder({ query: searchQuery.trim() });
+                  setIsSearchFocused(false);
+                }}
+                style={{
+                  marginBottom: '10px',
+                  padding: '10px 12px',
+                  background: 'linear-gradient(135deg, rgba(29, 185, 84, 0.15), rgba(20, 83, 45, 0.35))',
+                  border: '1px solid rgba(29, 185, 84, 0.4)',
+                  borderRadius: 'var(--radius-md)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '8px'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <IconSparkles size={16} stroke={2.5} />
+                  </div>
+                  <div>
+                    <strong style={{ fontSize: '12px', color: '#FFFFFF', display: 'block' }}>
+                      Ask GETORA AI to find "{searchQuery}"
+                    </strong>
+                    <p style={{ fontSize: '11px', color: 'var(--color-green)', margin: 0, fontWeight: 500 }}>
+                      Compare nearby shop prices, exact distance & 15-min delivery
+                    </p>
+                  </div>
+                </div>
+                <IconArrowRight size={14} color="var(--color-green)" />
+              </div>
+
               {matchingStores.length > 0 && (
                 <div style={{ marginBottom: '10px' }}>
                   <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
@@ -371,9 +431,37 @@ export const Header: React.FC = () => {
           )}
         </div>
 
-        {/* RIGHT ACTIONS: Notifications, Cart, Theme, Account */}
+        {/* RIGHT ACTIONS: Ask GETORA AI, Notifications, Cart, Theme, Account */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
           
+          {/* Ask GETORA AI Header Action Button */}
+          <button
+            onClick={() => openAiFinder()}
+            title="Open GETORA AI Product Finder"
+            className="header-ai-btn"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-pill)',
+              background: 'linear-gradient(135deg, rgba(29, 185, 84, 0.15) 0%, rgba(20, 83, 45, 0.3) 100%)',
+              border: '1px solid rgba(29, 185, 84, 0.5)',
+              color: '#FFFFFF',
+              fontSize: '12px',
+              fontWeight: 800,
+              fontFamily: 'var(--font-sans)',
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(29, 185, 84, 0.2)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#1DB954', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <IconSparkles size={12} stroke={2.8} />
+            </div>
+            <span style={{ color: '#FFFFFF' }}>Ask GETORA AI</span>
+          </button>
+
           {/* Notifications Bell */}
           <div ref={notifMenuRef} style={{ position: 'relative' }}>
             <button

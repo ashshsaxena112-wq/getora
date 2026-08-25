@@ -6,6 +6,8 @@ import { LocationModal } from './components/LocationModal';
 import { AuthModal } from './components/AuthModal';
 import { ToastContainer } from './components/ToastContainer';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { GetoraAiProductFinderModal } from './components/GetoraAiProductFinderModal';
+import { AiAssistantFloatingButton } from './components/AiAssistantFloatingButton';
 
 // Pages
 import { HomePage } from './pages/HomePage';
@@ -25,7 +27,13 @@ import { SupportPage } from './pages/SupportPage';
 import { OffersPage } from './pages/OffersPage';
 
 const MainRouter: React.FC = () => {
-  const { currentView } = useGetora();
+  const {
+    currentView,
+    isAiFinderOpen,
+    openAiFinder,
+    closeAiFinder,
+    aiFinderInitialData
+  } = useGetora();
 
   const renderCurrentView = () => {
     switch (currentView) {
@@ -79,6 +87,15 @@ const MainRouter: React.FC = () => {
       <LocationModal />
       <ToastContainer />
       <MobileBottomNav />
+
+      {/* GETORA AI Product Finder Modal & Floating Assistant */}
+      <GetoraAiProductFinderModal
+        isOpen={isAiFinderOpen}
+        onClose={closeAiFinder}
+        initialQuery={aiFinderInitialData?.query}
+        initialPhotoMode={aiFinderInitialData?.photoMode}
+      />
+      <AiAssistantFloatingButton onOpen={() => openAiFinder()} />
     </div>
   );
 };
