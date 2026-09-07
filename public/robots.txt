@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://getora-online.netlify.app/sitemap.xml
+Sitemap: https://getora.co.in/sitemap.xml
