@@ -2,14 +2,69 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { createClient } = require('@supabase/supabase-js');
+const { rateLimit } = require('express-rate-limit');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProd = process.env.NODE_ENV === 'production';
 
-app.use(cors());
-app.use(express.json());
+// ==============================================================================
+// 1. STRICT CORS & SECURITY HEADERS
+// ==============================================================================
+const PRODUCTION_ORIGINS = [
+  'https://getora.co.in',
+  'https://www.getora.co.in'
+];
+
+if (process.env.ALLOWED_ORIGINS) {
+  process.env.ALLOWED_ORIGINS.split(',')
+    .map((o) => o.trim())
+    .filter(Boolean)
+    .forEach((o) => {
+      if (!PRODUCTION_ORIGINS.includes(o)) PRODUCTION_ORIGINS.push(o);
+    });
+}
+
+const DEVELOPMENT_ORIGINS = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000'
+];
+
+const allowedOrigins = isProd
+  ? PRODUCTION_ORIGINS
+  : [...PRODUCTION_ORIGINS, ...DEVELOPMENT_ORIGINS];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g. mobile apps, server-side fetch, cURL)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Allow localhost with any port in non-production environments
+    if (!isProd && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('CORS policy: This origin is not authorized to access GETORA API'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept', 'X-Request-Id'],
+  credentials: true,
+  maxAge: 86400
+};
+
+app.use(cors(corsOptions));
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // Initialize Supabase Client
 const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
@@ -132,138 +187,346 @@ app.get('/api/orders/:id/track', async (req, res) => {
   }
 });
 
-// 6. OLA MAPS / KRUTRIM MAPS PROXY ENDPOINTS (Backend Protected Server Key)
+// ==============================================================================
+// 6. OLA MAPS / KRUTRIM MAPS HARDENED PROXY (Server-Side Key Protection)
+// ==============================================================================
 const OLA_API_KEY = process.env.OLA_MAPS_API_KEY || '';
 const OLA_BASE_URL = 'https://api.olamaps.io';
 const OLA_ALLOWED_ORIGIN = process.env.OLA_ALLOWED_ORIGIN || 'https://getora.co.in';
 
-const getOlaHeaders = () => ({
+// Upstream Authentication Headers (Preserved working Ola domain verification)
+const getOlaHeaders = (clientReqId) => ({
   'Origin': OLA_ALLOWED_ORIGIN,
   'Referer': `${OLA_ALLOWED_ORIGIN}/`,
-  'X-Request-Id': `getora-${Date.now()}`
+  'X-Request-Id': clientReqId || `getora-${Date.now()}`
 });
 
+// --- Security Helper Functions ---
+
+/**
+ * Mask sensitive credentials from log messages or error output
+ */
+function maskSecret(str) {
+  if (!str || typeof str !== 'string') return str;
+  if (OLA_API_KEY && OLA_API_KEY.length > 6) {
+    return str.replaceAll(OLA_API_KEY, '***REDACTED_API_KEY***');
+  }
+  return str;
+}
+
+/**
+ * Validates a numeric coordinate within valid global ranges
+ */
+function isValidCoord(val, min, max) {
+  if (val === undefined || val === null || val === '') return false;
+  const num = Number(val);
+  return !isNaN(num) && isFinite(num) && num >= min && num <= max;
+}
+
+/**
+ * Validates a "latitude,longitude" coordinate string pair
+ */
+function isValidLatLngPair(str) {
+  if (typeof str !== 'string') return false;
+  const parts = str.trim().split(',');
+  if (parts.length !== 2) return false;
+  const lat = Number(parts[0]);
+  const lng = Number(parts[1]);
+  return isValidCoord(lat, -90, 90) && isValidCoord(lng, -180, 180);
+}
+
+/**
+ * Sanitizes text input: strips ASCII control characters and enforces length
+ */
+function sanitizeText(str, minLen = 1, maxLen = 150) {
+  if (typeof str !== 'string') return null;
+  const clean = str.replace(/[\x00-\x1F\x7F]/g, '').trim();
+  if (clean.length < minLen || clean.length > maxLen) return null;
+  return clean;
+}
+
+/**
+ * Executes an upstream request to api.olamaps.io with a strict timeout
+ */
+async function fetchFromOla(targetUrl, options = {}, timeoutMs = 6000) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(targetUrl, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        ...getOlaHeaders(options.headers?.['X-Request-Id']),
+        ...(options.headers || {})
+      }
+    });
+    clearTimeout(timeoutId);
+
+    const data = await response.json().catch(() => ({
+      message: 'Non-JSON response received from upstream map service'
+    }));
+
+    return { status: response.status, data };
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      return { status: 504, data: { error: 'Upstream map service request timed out' } };
+    }
+    throw err;
+  }
+}
+
+// --- Rate Limiting Middlewares (Per-IP) ---
+
+const rateLimitHandler = (message) => (req, res) => {
+  res.status(429).json({
+    error: 'Too Many Requests',
+    message: message || 'You have exceeded the allowed request limit. Please try again shortly.'
+  });
+};
+
+// General maps limiter: 120 req / min
+const generalMapsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Too many map requests from this IP. Please try again shortly.')
+});
+
+// Autocomplete limiter: 60 req / min (prevents automated scraping of address indices)
+const autocompleteLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Too many search requests. Please slow down your typing.')
+});
+
+// Directions limiter: 30 req / min (protects computationally expensive route queries)
+const directionsLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Directions rate limit exceeded. Please wait a moment before requesting another route.')
+});
+
+// Geocode limiter: 60 req / min
+const geocodeLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler('Geocoding rate limit exceeded. Please try again shortly.')
+});
+
+// Apply general limiter to all /api/maps endpoints
+app.use('/api/maps', generalMapsLimiter);
+
+// --- Whitelisted Map Endpoints ---
+
+// 1. Health & Configuration Status
 app.get('/api/maps/health', (req, res) => {
   res.json({
     status: 'ok',
     hasApiKey: Boolean(OLA_API_KEY && OLA_API_KEY !== 'YOUR_OLA_MAPS_API_KEY' && OLA_API_KEY.trim() !== ''),
     allowedOrigin: OLA_ALLOWED_ORIGIN,
-    provider: 'Ola Maps / Krutrim Maps (Backend Proxy)'
+    provider: 'Ola Maps / Krutrim Maps (Backend Proxy)',
+    rateLimiting: {
+      status: 'active',
+      general: '120 req/min',
+      autocomplete: '60 req/min',
+      directions: '30 req/min',
+      geocoding: '60 req/min'
+    }
   });
 });
 
-app.get('/api/maps/autocomplete', async (req, res) => {
+// 2. Places Autocomplete with Input Validation
+app.get('/api/maps/autocomplete', autocompleteLimiter, async (req, res) => {
+  const start = Date.now();
+  const reqId = `ac-${Date.now()}`;
   try {
-    const { input } = req.query;
-    if (!input) return res.status(400).json({ error: 'Missing input parameter' });
+    const rawInput = req.query.input;
+    const sanitizedInput = sanitizeText(rawInput, 2, 120);
 
-    if (!OLA_API_KEY) {
-      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    if (!sanitizedInput) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "input" must be a non-empty string between 2 and 120 characters.'
+      });
     }
 
-    const targetUrl = `${OLA_BASE_URL}/places/v1/autocomplete?input=${encodeURIComponent(input)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
-    const response = await fetch(targetUrl, {
-      headers: getOlaHeaders()
-    });
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'Map service authentication is not configured' });
+    }
 
-    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
-    console.log(`[OLA PROXY] Autocomplete for "${input}" -> HTTP ${response.status}`);
-    return res.status(response.status).json(data);
+    const targetUrl = `${OLA_BASE_URL}/places/v1/autocomplete?input=${encodeURIComponent(sanitizedInput)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const { status, data } = await fetchFromOla(targetUrl, { headers: { 'X-Request-Id': reqId } });
+
+    console.log(`[OLA PROXY] [${reqId}] Autocomplete "${sanitizedInput}" -> HTTP ${status} (${Date.now() - start}ms)`);
+    return res.status(status).json(data);
   } catch (err) {
-    console.error('[OLA PROXY ERROR] Autocomplete failed:', err.message);
-    return res.status(500).json({ error: err.message });
+    console.error(`[OLA PROXY ERROR] [${reqId}] Autocomplete failed: ${maskSecret(err.message)}`);
+    return res.status(500).json({ error: 'Failed to process autocomplete request' });
   }
 });
 
-app.get('/api/maps/reverse-geocode', async (req, res) => {
+// 3. Reverse Geocode with Coordinate Validation
+app.get('/api/maps/reverse-geocode', geocodeLimiter, async (req, res) => {
+  const start = Date.now();
+  const reqId = `rev-${Date.now()}`;
   try {
     const { lat, lng } = req.query;
-    if (!lat || !lng) return res.status(400).json({ error: 'Missing lat/lng parameters' });
 
-    if (!OLA_API_KEY) {
-      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    if (!isValidCoord(lat, -90, 90)) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "lat" must be a valid number between -90 and 90.'
+      });
+    }
+    if (!isValidCoord(lng, -180, 180)) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "lng" must be a valid number between -180 and 180.'
+      });
     }
 
-    const targetUrl = `${OLA_BASE_URL}/places/v1/reverse-geocode?latlng=${lat},${lng}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
-    const response = await fetch(targetUrl, {
-      headers: getOlaHeaders()
-    });
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'Map service authentication is not configured' });
+    }
 
-    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
-    console.log(`[OLA PROXY] Reverse Geocode (${lat}, ${lng}) -> HTTP ${response.status}`);
-    return res.status(response.status).json(data);
+    const numLat = Number(lat);
+    const numLng = Number(lng);
+    const targetUrl = `${OLA_BASE_URL}/places/v1/reverse-geocode?latlng=${numLat},${numLng}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const { status, data } = await fetchFromOla(targetUrl, { headers: { 'X-Request-Id': reqId } });
+
+    console.log(`[OLA PROXY] [${reqId}] Reverse Geocode (${numLat}, ${numLng}) -> HTTP ${status} (${Date.now() - start}ms)`);
+    return res.status(status).json(data);
   } catch (err) {
-    console.error('[OLA PROXY ERROR] Reverse Geocode failed:', err.message);
-    return res.status(500).json({ error: err.message });
+    console.error(`[OLA PROXY ERROR] [${reqId}] Reverse Geocode failed: ${maskSecret(err.message)}`);
+    return res.status(500).json({ error: 'Failed to process reverse geocode request' });
   }
 });
 
-app.get('/api/maps/geocode', async (req, res) => {
+// 4. Forward Geocode with Address Validation
+app.get('/api/maps/geocode', geocodeLimiter, async (req, res) => {
+  const start = Date.now();
+  const reqId = `geo-${Date.now()}`;
   try {
-    const { address } = req.query;
-    if (!address) return res.status(400).json({ error: 'Missing address parameter' });
+    const rawAddress = req.query.address;
+    const sanitizedAddress = sanitizeText(rawAddress, 3, 200);
 
-    if (!OLA_API_KEY) {
-      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    if (!sanitizedAddress) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "address" must be a non-empty string between 3 and 200 characters.'
+      });
     }
 
-    const targetUrl = `${OLA_BASE_URL}/places/v1/geocode?address=${encodeURIComponent(address)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
-    const response = await fetch(targetUrl, {
-      headers: getOlaHeaders()
-    });
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'Map service authentication is not configured' });
+    }
 
-    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
-    console.log(`[OLA PROXY] Geocode "${address}" -> HTTP ${response.status}`);
-    return res.status(response.status).json(data);
+    const targetUrl = `${OLA_BASE_URL}/places/v1/geocode?address=${encodeURIComponent(sanitizedAddress)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const { status, data } = await fetchFromOla(targetUrl, { headers: { 'X-Request-Id': reqId } });
+
+    console.log(`[OLA PROXY] [${reqId}] Geocode "${sanitizedAddress}" -> HTTP ${status} (${Date.now() - start}ms)`);
+    return res.status(status).json(data);
   } catch (err) {
-    console.error('[OLA PROXY ERROR] Geocode failed:', err.message);
-    return res.status(500).json({ error: err.message });
+    console.error(`[OLA PROXY ERROR] [${reqId}] Geocode failed: ${maskSecret(err.message)}`);
+    return res.status(500).json({ error: 'Failed to process geocode request' });
   }
 });
 
-app.get('/api/maps/directions', async (req, res) => {
+// 5. Routing & Directions with Coordinate Pair & Mode Validation
+app.get('/api/maps/directions', directionsLimiter, async (req, res) => {
+  const start = Date.now();
+  const reqId = `dir-${Date.now()}`;
   try {
     const { origin, destination, mode = 'driving' } = req.query;
-    if (!origin || !destination) return res.status(400).json({ error: 'Missing origin/destination parameters' });
 
-    if (!OLA_API_KEY) {
-      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    if (!isValidLatLngPair(origin)) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "origin" must be in format "latitude,longitude" with valid coordinates.'
+      });
     }
 
-    const targetUrl = `${OLA_BASE_URL}/routing/v1/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=${mode}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
-    const response = await fetch(targetUrl, {
+    if (!isValidLatLngPair(destination)) {
+      return res.status(400).json({
+        error: 'Invalid parameter: "destination" must be in format "latitude,longitude" with valid coordinates.'
+      });
+    }
+
+    const ALLOWED_MODES = ['driving', 'walking', 'bicycling', 'two_wheeler'];
+    const sanitizedMode = String(mode).toLowerCase().trim();
+    if (!ALLOWED_MODES.includes(sanitizedMode)) {
+      return res.status(400).json({
+        error: `Invalid parameter: "mode" must be one of [${ALLOWED_MODES.join(', ')}].`
+      });
+    }
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'Map service authentication is not configured' });
+    }
+
+    const cleanOrigin = origin.trim();
+    const cleanDest = destination.trim();
+    const targetUrl = `${OLA_BASE_URL}/routing/v1/directions?origin=${encodeURIComponent(cleanOrigin)}&destination=${encodeURIComponent(cleanDest)}&mode=${sanitizedMode}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const { status, data } = await fetchFromOla(targetUrl, {
       method: 'POST',
-      headers: getOlaHeaders()
+      headers: { 'X-Request-Id': reqId }
     });
 
-    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
-    console.log(`[OLA PROXY] Directions (${origin} -> ${destination}) -> HTTP ${response.status}`);
-    return res.status(response.status).json(data);
+    console.log(`[OLA PROXY] [${reqId}] Directions (${cleanOrigin} -> ${cleanDest}) [${sanitizedMode}] -> HTTP ${status} (${Date.now() - start}ms)`);
+    return res.status(status).json(data);
   } catch (err) {
-    console.error('[OLA PROXY ERROR] Directions failed:', err.message);
-    return res.status(500).json({ error: err.message });
+    console.error(`[OLA PROXY ERROR] [${reqId}] Directions failed: ${maskSecret(err.message)}`);
+    return res.status(500).json({ error: 'Failed to process directions request' });
   }
 });
 
-app.get('/api/maps/tile-style', async (req, res) => {
+// 6. Vector Tile Style with Theme Validation
+app.get('/api/maps/tile-style', generalMapsLimiter, async (req, res) => {
+  const start = Date.now();
+  const reqId = `tile-${Date.now()}`;
   try {
-    const { theme = 'dark' } = req.query;
+    const theme = String(req.query.theme || 'dark').toLowerCase().trim();
+    if (theme !== 'dark' && theme !== 'light') {
+      return res.status(400).json({ error: 'Invalid parameter: "theme" must be either "dark" or "light".' });
+    }
+
     const styleName = theme === 'light' ? 'default-light-standard' : 'default-dark-standard';
 
     if (!OLA_API_KEY) {
-      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+      return res.status(500).json({ error: 'Map service authentication is not configured' });
     }
 
     const targetUrl = `${OLA_BASE_URL}/tiles/vector/v1/styles/${styleName}/style.json?api_key=${encodeURIComponent(OLA_API_KEY)}`;
-    const response = await fetch(targetUrl, {
-      headers: getOlaHeaders()
-    });
-    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
-    console.log(`[OLA PROXY] Tile Style (${styleName}) -> HTTP ${response.status}`);
-    return res.status(response.status).json(data);
+    const { status, data } = await fetchFromOla(targetUrl, { headers: { 'X-Request-Id': reqId } });
+
+    console.log(`[OLA PROXY] [${reqId}] Tile Style (${styleName}) -> HTTP ${status} (${Date.now() - start}ms)`);
+    return res.status(status).json(data);
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.error(`[OLA PROXY ERROR] [${reqId}] Tile Style failed: ${maskSecret(err.message)}`);
+    return res.status(500).json({ error: 'Failed to process tile style request' });
   }
+});
+
+// ==============================================================================
+// 7. PREVENT OPEN PROXY ABUSE (Block unsupported or arbitrary proxy paths)
+// ==============================================================================
+app.all('/api/maps/*', (req, res) => {
+  res.status(404).json({
+    error: 'Not Found',
+    message: 'This endpoint is not supported by the GETORA Map Proxy.'
+  });
+});
+
+// CORS Error Handler
+app.use((err, req, res, next) => {
+  if (err.message && err.message.includes('CORS policy')) {
+    return res.status(403).json({ error: 'Forbidden', message: err.message });
+  }
+  next(err);
 });
 
 app.listen(PORT, () => {
