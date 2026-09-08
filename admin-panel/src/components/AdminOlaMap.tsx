@@ -1,14 +1,13 @@
 // ==============================================================================
-// GETORA ADMIN OLA MAP / KRUTRIM MAPS OPERATIONAL COMPONENT
-// Powered by MapLibre GL & Ola Maps Vector Tile Service
-// Dark Operations Theme (#121212, #181818, #1DB954)
+// GETORA ADMIN OPERATIONAL MAP COMPONENT
+// Powered by MapLibre GL & Ola Maps Proxy Architecture
+// Features: Multi-layer (Dark Operations, Streets & Houses, Real Satellite View)
 // ==============================================================================
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { OlaMaps } from 'olamaps-web-sdk';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Navigation, Loader2 } from 'lucide-react';
+import { Navigation, Loader2, Layers } from 'lucide-react';
 
 export interface AdminMapPin {
   id: string;
@@ -32,6 +31,101 @@ export interface AdminOlaMapProps {
   zoom?: number;
   height?: string;
 }
+
+export type AdminMapLayer = 'dark' | 'streets' | 'satellite';
+
+const ADMIN_MAP_STYLES: Record<AdminMapLayer, any> = {
+  dark: {
+    version: 8,
+    name: 'Carto Dark Matter (GETORA Operations)',
+    sources: {
+      'dark-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://d.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CartoDB, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'dark-raster',
+        type: 'raster',
+        source: 'dark-tiles',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
+  streets: {
+    version: 8,
+    name: 'Carto Voyager (Ghar, Sadak aur Dukaan)',
+    sources: {
+      'streets-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CartoDB, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'streets-raster',
+        type: 'raster',
+        source: 'streets-tiles',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
+  satellite: {
+    version: 8,
+    name: 'Satellite Aerial (Asli Chhat & Makaan)',
+    sources: {
+      'satellite-imagery': {
+        type: 'raster',
+        tiles: [
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: '© Esri, Maxar',
+      },
+      'satellite-labels': {
+        type: 'raster',
+        tiles: [
+          'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: '© Esri',
+      },
+    },
+    layers: [
+      {
+        id: 'satellite-raster',
+        type: 'raster',
+        source: 'satellite-imagery',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+      {
+        id: 'satellite-labels-raster',
+        type: 'raster',
+        source: 'satellite-labels',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  },
+};
 
 const JAIPUR_ZONES = [
   {
@@ -81,138 +175,102 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
   height = '620px',
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<Map<string, any>>(new Map());
+  const mapInstanceRef = useRef<maplibregl.Map | null>(null);
+  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [currentLayer, setCurrentLayer] = useState<AdminMapLayer>('dark');
   const [containerId] = useState(() => `admin-ola-map-${Math.random().toString(36).substring(2, 9)}`);
 
-  // Initialize Map using Ola Maps Web SDK v2
+  const setupZones = useCallback((map: maplibregl.Map) => {
+    JAIPUR_ZONES.forEach((z) => {
+      const sourceId = `admin-zone-${z.id}`;
+      const polygonCoords = z.polygon.map((c) => [c[1], c[0]]);
+
+      const zoneGeoJson: any = {
+        type: 'Feature',
+        properties: { name: z.name },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [polygonCoords],
+        },
+      };
+
+      if (!map.getSource(sourceId)) {
+        map.addSource(sourceId, {
+          type: 'geojson',
+          data: zoneGeoJson,
+        });
+
+        map.addLayer({
+          id: `${sourceId}-fill`,
+          type: 'fill',
+          source: sourceId,
+          paint: {
+            'fill-color': z.color,
+            'fill-opacity': 0.1,
+          },
+        });
+
+        map.addLayer({
+          id: `${sourceId}-line`,
+          type: 'line',
+          source: sourceId,
+          paint: {
+            'line-color': z.color,
+            'line-width': 1.5,
+            'line-dasharray': [3, 3],
+          },
+        });
+      }
+    });
+  }, []);
+
+  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     let isCancelled = false;
-    let mapInstance: any = null;
+    const initialStyle = ADMIN_MAP_STYLES[currentLayer];
 
-    const setupZones = (map: any) => {
-      JAIPUR_ZONES.forEach((z) => {
-        const sourceId = `admin-zone-${z.id}`;
-        const polygonCoords = z.polygon.map((c) => [c[1], c[0]]);
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style: initialStyle,
+      center: [center[1], center[0]],
+      zoom: zoom,
+      attributionControl: false,
+    });
 
-        const zoneGeoJson: any = {
-          type: 'Feature',
-          properties: { name: z.name },
-          geometry: {
-            type: 'Polygon',
-            coordinates: [polygonCoords],
-          },
-        };
+    mapInstanceRef.current = map;
+    map.addControl(new maplibregl.NavigationControl({ showCompass: true, showZoom: true }), 'bottom-right');
 
-        if (!map.getSource(sourceId)) {
-          map.addSource(sourceId, {
-            type: 'geojson',
-            data: zoneGeoJson,
-          });
-
-          map.addLayer({
-            id: `${sourceId}-fill`,
-            type: 'fill',
-            source: sourceId,
-            paint: {
-              'fill-color': z.color,
-              'fill-opacity': 0.08,
-            },
-          });
-
-          map.addLayer({
-            id: `${sourceId}-line`,
-            type: 'line',
-            source: sourceId,
-            paint: {
-              'line-color': z.color,
-              'line-width': 1.5,
-              'line-dasharray': [3, 3],
-            },
-          });
-        }
-      });
-    };
-
-    (async () => {
-      try {
-        const apiKey = ((import.meta as any).env.VITE_OLA_MAPS_API_KEY as string) || 'getora-admin-client';
-        const styleUrl = 'https://api.olamaps.io/tiles/vector/v1/styles/default-dark-standard/style.json';
-
-        // Official Ola Maps Web SDK v2 Initialization
-        const olaMaps = new OlaMaps({ apiKey });
-
-        const map = await olaMaps.init({
-          style: styleUrl,
-          container: containerId,
-          center: [center[1], center[0]],
-          zoom: zoom,
-        });
-
-        if (isCancelled) {
-          map.remove();
-          return;
-        }
-
-        mapInstance = map;
-        mapInstanceRef.current = map;
-
-        map.addControl(olaMaps.addNavigationControls({ showCompass: true, showZoom: true }), 'bottom-right');
-
-        map.on('load', () => {
-          if (!isCancelled) {
-            setMapLoaded(true);
-            setupZones(map);
-          }
-        });
-      } catch (sdkErr: any) {
-        console.warn('Admin Ola Maps Web SDK fallback init:', sdkErr?.message);
-        if (isCancelled || !mapContainerRef.current) return;
-
-        try {
-          const fallbackMap = new maplibregl.Map({
-            container: mapContainerRef.current,
-            style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-            center: [center[1], center[0]],
-            zoom: zoom,
-            attributionControl: false,
-          });
-
-          if (isCancelled) {
-            fallbackMap.remove();
-            return;
-          }
-
-          mapInstance = fallbackMap;
-          mapInstanceRef.current = fallbackMap;
-
-          fallbackMap.addControl(new maplibregl.NavigationControl({ showCompass: true, showZoom: true }), 'bottom-right');
-
-          fallbackMap.on('load', () => {
-            if (!isCancelled) {
-              setMapLoaded(true);
-              setupZones(fallbackMap);
-            }
-          });
-        } catch (err) {
-          console.error('Failed to initialize admin map:', err);
-        }
+    map.on('load', () => {
+      if (!isCancelled) {
+        setMapLoaded(true);
+        setupZones(map);
       }
-    })();
+    });
 
     return () => {
       isCancelled = true;
       markersRef.current.forEach((m) => m.remove());
       markersRef.current.clear();
-      if (mapInstance) {
-        mapInstance.remove();
-      }
+      map.remove();
       mapInstanceRef.current = null;
     };
   }, []);
+
+  // Switch Map Layer
+  const handleLayerChange = (newLayer: AdminMapLayer) => {
+    if (newLayer === currentLayer || !mapInstanceRef.current) return;
+    setCurrentLayer(newLayer);
+
+    const map = mapInstanceRef.current;
+    map.setStyle(ADMIN_MAP_STYLES[newLayer]);
+
+    map.once('styledata', () => {
+      setupZones(map);
+    });
+  };
 
   // Update Markers
   useEffect(() => {
@@ -232,7 +290,7 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
       let iconSvg = '';
       if (pin.type === 'rider') {
         iconSvg = `
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="18.5" cy="17.5" r="3.5"></circle>
             <circle cx="5.5" cy="17.5" r="3.5"></circle>
             <circle cx="15" cy="5" r="1"></circle>
@@ -241,7 +299,7 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
         `;
       } else if (pin.type === 'order') {
         iconSvg = `
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
             <path d="M3 6h18"></path>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -250,7 +308,7 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
       } else {
         // Shop
         iconSvg = `
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"></path>
             <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
             <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"></path>
@@ -263,7 +321,7 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
 
       el.innerHTML = `
         <div style="position:relative; display:flex; align-items:center; justify-content:center;">
-          <div style="width:${isSelected ? '36px' : '30px'}; height:${isSelected ? '36px' : '30px'}; border-radius:50%; background-color:${pin.color}; color:${pin.type === 'rider' ? '#000000' : '#FFFFFF'}; display:flex; align-items:center; justify-content:center; box-shadow:0 0 18px ${glowColor}99, 0 4px 10px rgba(0,0,0,0.8); border:2.5px solid ${isSelected ? '#FFFFFF' : 'rgba(255,255,255,0.4)'}; transition:all 0.2s ease;">
+          <div style="width:${isSelected ? '38px' : '32px'}; height:${isSelected ? '38px' : '32px'}; border-radius:50%; background-color:${pin.color}; color:${pin.type === 'rider' ? '#000000' : '#FFFFFF'}; display:flex; align-items:center; justify-content:center; box-shadow:0 0 20px ${glowColor}AA, 0 4px 12px rgba(0,0,0,0.8); border:2.5px solid ${isSelected ? '#FFFFFF' : 'rgba(255,255,255,0.4)'}; transition:all 0.2s ease;">
             ${iconSvg}
           </div>
           ${isSelected ? `<span style="position:absolute; inset:-4px; border-radius:50%; border:2px solid #FFFFFF; animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite; opacity:0.6; pointer-events:none;"></span>` : ''}
@@ -290,7 +348,7 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
 
     map.flyTo({
       center: [selectedPin.lng, selectedPin.lat],
-      zoom: 13.5,
+      zoom: 14,
       essential: true,
       duration: 1000,
     });
@@ -310,12 +368,56 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
       {/* Map Container */}
       <div id={containerId} ref={mapContainerRef} className="h-full w-full" />
 
+      {/* Layer Switcher Pill (Top Right, next to Recenter button) */}
+      {mapLoaded && (
+        <div className="absolute top-4 right-16 z-10 flex items-center gap-1 rounded-xl border border-[#333333] bg-[#121212]/90 p-1 backdrop-blur-md shadow-xl">
+          <button
+            type="button"
+            onClick={() => handleLayerChange('dark')}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+              currentLayer === 'dark'
+                ? 'bg-[#1DB954] text-black shadow-md'
+                : 'text-gray-300 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <span>🌙</span>
+            <span>Dark</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleLayerChange('streets')}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+              currentLayer === 'streets'
+                ? 'bg-[#1DB954] text-black shadow-md'
+                : 'text-gray-300 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <span>🏠</span>
+            <span>Sadak & Ghar</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleLayerChange('satellite')}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition-all ${
+              currentLayer === 'satellite'
+                ? 'bg-[#1DB954] text-black shadow-md'
+                : 'text-gray-300 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <span>🛰️</span>
+            <span>Satellite</span>
+          </button>
+        </div>
+      )}
+
       {/* Loading Skeleton */}
       {!mapLoaded && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#0F1318]/90 backdrop-blur-sm text-white">
           <Loader2 className="h-8 w-8 animate-spin text-[#1DB954]" />
           <p className="mt-3 text-xs font-bold uppercase tracking-wider text-[#A7A7A7]">
-            Initializing Ola Maps Operational Engine...
+            Initializing Live Operational Map & Jaipur Zones...
           </p>
         </div>
       )}
@@ -332,10 +434,10 @@ export const AdminOlaMap: React.FC<AdminOlaMapProps> = ({
         </button>
       )}
 
-      {/* Ola Maps Telemetry Badge */}
+      {/* Live Telemetry Badge */}
       <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2 rounded-lg border border-[#292929] bg-[#121212]/90 px-3 py-1.5 backdrop-blur-md text-[11px] font-semibold text-white">
         <span className="h-2 w-2 rounded-full bg-[#1DB954] animate-ping" />
-        <span>Ola Maps Vector Telemetry (Jaipur Operating Hub)</span>
+        <span>GETORA Live Fleet & Dispatch Telemetry (Jaipur Hub)</span>
       </div>
     </div>
   );

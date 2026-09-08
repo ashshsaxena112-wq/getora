@@ -37,6 +37,101 @@ export interface RouteResult {
 const BACKEND_API_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_BACKEND_API_URL) ? import.meta.env.VITE_BACKEND_API_URL.replace(/\/$/, '') : '';
 const BACKEND_MAPS_BASE = `${BACKEND_API_URL}/api/maps`;
 
+export type MapLayerStyle = 'streets' | 'satellite' | 'dark';
+
+export const GETORA_MAP_STYLES: Record<MapLayerStyle, any> = {
+  streets: {
+    version: 8,
+    name: 'Carto Voyager (Ghar, Sadak aur Dukaan)',
+    sources: {
+      'streets-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+          'https://d.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CartoDB, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'streets-raster',
+        type: 'raster',
+        source: 'streets-tiles',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
+  satellite: {
+    version: 8,
+    name: 'Satellite Aerial (Asli Chhat, Makaan & Raste)',
+    sources: {
+      'satellite-imagery': {
+        type: 'raster',
+        tiles: [
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: '© Esri, Maxar, Earthstar Geographics',
+      },
+      'satellite-labels': {
+        type: 'raster',
+        tiles: [
+          'https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: '© Esri',
+      },
+    },
+    layers: [
+      {
+        id: 'satellite-raster',
+        type: 'raster',
+        source: 'satellite-imagery',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+      {
+        id: 'satellite-labels-raster',
+        type: 'raster',
+        source: 'satellite-labels',
+        minzoom: 0,
+        maxzoom: 19,
+      },
+    ],
+  },
+  dark: {
+    version: 8,
+    name: 'Carto Dark (GETORA Dark Emerald Operations)',
+    sources: {
+      'dark-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://a.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://b.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://c.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+          'https://d.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png',
+        ],
+        tileSize: 256,
+        attribution: '© CartoDB, © OpenStreetMap contributors',
+      },
+    },
+    layers: [
+      {
+        id: 'dark-raster',
+        type: 'raster',
+        source: 'dark-tiles',
+        minzoom: 0,
+        maxzoom: 20,
+      },
+    ],
+  },
+};
+
 export class OlaMapsService {
   /**
    * Checks whether the backend proxy has an active server-side API key.
@@ -51,6 +146,13 @@ export class OlaMapsService {
     } catch {
       return { hasApiKey: false, provider: 'Backend Offline' };
     }
+  }
+
+  /**
+   * Returns a ready-to-use MapLibre GL style object for the requested layer.
+   */
+  public static getLayerStyle(layer: MapLayerStyle = 'streets'): any {
+    return GETORA_MAP_STYLES[layer] || GETORA_MAP_STYLES.streets;
   }
 
   /**
