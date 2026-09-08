@@ -84,9 +84,10 @@ class GetoraStorageManager(
 
                 bucketApi.upload(
                     path = storagePath,
-                    data = fileBytes,
+                    data = fileBytes
+                ) {
                     upsert = true
-                )
+                }
 
                 // 4. Resolve Public URL for public buckets
                 val publicUrl = if (bucket.isPublic) {

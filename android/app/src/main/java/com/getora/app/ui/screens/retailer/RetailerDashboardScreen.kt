@@ -1,5 +1,8 @@
 package com.getora.app.ui.screens.retailer
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,10 +11,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,12 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.getora.app.data.model.MasterProduct
 import com.getora.app.data.repository.GetoraRepository
+import com.getora.app.di.SupabaseModule
 import com.getora.app.ui.components.CategoryChip
 import com.getora.app.ui.components.PillSearchBar
 import com.getora.app.ui.theme.GetoraPrimaryGreen
+import com.getora.storage.GetoraStorageBucket
+import com.getora.storage.PhotoUploadUiState
+import com.getora.storage.StoragePhotoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +47,13 @@ fun RetailerDashboardScreen(
     repository: GetoraRepository,
     onNavigateBack: () -> Unit
 ) {
+    val storageViewModel: StoragePhotoViewModel = viewModel(
+        factory = StoragePhotoViewModel.provideFactory(
+            SupabaseModule.client,
+            SupabaseModule.storageManager
+        )
+    )
+
     val masterCatalog by repository.masterCatalog.collectAsState()
     val shopProducts by repository.products.collectAsState()
     val categories by repository.categories.collectAsState()
@@ -53,6 +73,18 @@ fun RetailerDashboardScreen(
     var showRequestDialog by remember { mutableStateOf(false) }
     var reqName by remember { mutableStateOf("") }
     var reqBrand by remember { mutableStateOf("") }
+
+    // Custom Product Modal State (With Image Upload)
+    var showAddCustomDialog by remember { mutableStateOf(false) }
+    var customName by remember { mutableStateOf("") }
+    var customPrice by remember { mutableStateOf("") }
+    var customImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val photoPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        customImageUri = uri
+    }
 
     Scaffold(
         topBar = {
@@ -109,13 +141,13 @@ fun RetailerDashboardScreen(
                 )
             }
 
-            // TAB 1: MASTER PRODUCT CATALOG (1-CLICK ADD)
+            // TAB 1: MASTER PRODUCT CATALOG
             if (activeTab == "catalog") {
                 Column(modifier = Modifier.fillMaxSize()) {
                     PillSearchBar(
                         query = catalogSearch,
                         onQueryChange = { catalogSearch = it },
-                        placeholder = "Search master catalog (Philips, Havells, boAt…)",
+                        placeholder = "Search master catalog...",
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
                     )
 
@@ -212,35 +244,50 @@ fun RetailerDashboardScreen(
 
             // TAB 2: MY SHOP PRODUCTS
             if (activeTab == "inventory") {
-                LazyColumn(
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(shopProducts) { prod ->
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(12.dp))
-                                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp)),
-                            color = MaterialTheme.colorScheme.surface
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Button(
+                        onClick = { showAddCustomDialog = true },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = GetoraPrimaryGreen),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(Icons.Default.AddPhotoAlternate, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Add Custom/Unbranded Product", fontWeight = FontWeight.Bold)
+                    }
+
+                    LazyColumn(
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(shopProducts) { prod ->
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp)),
+                                color = MaterialTheme.colorScheme.surface
                             ) {
-                                AsyncImage(
-                                    model = prod.imageUrl,
-                                    contentDescription = prod.name,
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .size(54.dp)
-                                        .clip(RoundedCornerShape(8.dp))
-                                )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(prod.name, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1)
-                                    Text("Selling Price: ₹${prod.sellingPrice.toInt()}", fontSize = 12.sp, color = GetoraPrimaryGreen, fontWeight = FontWeight.Bold)
-                                    Text("Available Stock: ${prod.stockQuantity} ${prod.unit}", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Row(
+                                    modifier = Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    AsyncImage(
+                                        model = prod.imageUrl,
+                                        contentDescription = prod.name,
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(54.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                    )
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(prod.name, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1)
+                                        Text("Selling Price: ₹${prod.sellingPrice.toInt()}", fontSize = 12.sp, color = GetoraPrimaryGreen, fontWeight = FontWeight.Bold)
+                                        Text("Available Stock: ${prod.stockQuantity} ${prod.unit}", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    }
                                 }
                             }
                         }
@@ -401,6 +448,67 @@ fun RetailerDashboardScreen(
                 },
                 dismissButton = {
                     TextButton(onClick = { showRequestDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+
+        // Custom Product Dialog (Placeholder for now)
+        if (showAddCustomDialog) {
+            AlertDialog(
+                onDismissRequest = { showAddCustomDialog = false },
+                title = { Text("Add Custom Product", fontWeight = FontWeight.Bold) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedTextField(
+                            value = customName,
+                            onValueChange = { customName = it },
+                            label = { Text("Product Name *") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        OutlinedTextField(
+                            value = customPrice,
+                            onValueChange = { customPrice = it },
+                            label = { Text("Price (₹) *") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Button(
+                            onClick = { photoPicker.launch("image/*") },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Icon(Icons.Default.PhotoCamera, contentDescription = null)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(if (customImageUri != null) "Change Photo" else "Select Photo")
+                        }
+                        if (customImageUri != null) {
+                            AsyncImage(
+                                model = customImageUri,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .align(Alignment.CenterHorizontally),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            // Logic to upload image via storageViewModel and then add to repository
+                            showAddCustomDialog = false
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = GetoraPrimaryGreen)
+                    ) {
+                        Text("Save Product")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAddCustomDialog = false }) {
                         Text("Cancel")
                     }
                 }

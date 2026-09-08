@@ -47,6 +47,8 @@ Thumbs.db
 # Android & Gradle
 .gradle/
 android/.gradle/
+android/.gradle_user_home/
+android/gradle/wrapper/dists/
 android/app/build/
 android/build/
 android/local.properties

@@ -12,6 +12,8 @@
     "@supabase/supabase-js": "^2.112.3",
     "@tabler/icons-react": "^3.46.0",
     "lucide-react": "^1.31.0",
+    "maplibre-gl": "^6.8.0",
+    "olamaps-web-sdk": "^1.4.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -280,14 +280,14 @@ export const ALERTS_NOTIFICATIONS_DATA: AdminNotification[] = [
 ];
 
 export const MAP_PINS_DATA = [
-  { id: 'pin-1', type: 'rider', name: 'Rider #14 (Vikram)', status: 'On Delivery', eta: '6 mins', x: '42%', y: '48%', color: '#1DB954' },
-  { id: 'pin-2', type: 'rider', name: 'Rider #28 (Sunil)', status: 'Going to Pickup', eta: '4 mins', x: '72%', y: '36%', color: '#1DB954' },
-  { id: 'pin-3', type: 'rider', name: 'Rider #09 (Manish)', status: 'Online (Available)', eta: 'Idle', x: '58%', y: '64%', color: '#1DB954' },
-  { id: 'pin-4', type: 'order', name: 'Order #GT10247', status: 'En-route', customer: 'Priya Verma', x: '75%', y: '40%', color: '#3B82F6' },
-  { id: 'pin-5', type: 'order', name: 'Order #GT10248', status: 'Preparing', customer: 'Rahul Sharma', x: '40%', y: '52%', color: '#3B82F6' },
-  { id: 'pin-6', type: 'shop', name: 'Sharma Hardware', status: 'Open', activeOrders: 4, x: '38%', y: '50%', color: '#F97316' },
-  { id: 'pin-7', type: 'shop', name: 'Gupta Electricals', status: 'Open', activeOrders: 3, x: '70%', y: '35%', color: '#F97316' },
-  { id: 'pin-8', type: 'shop', name: 'Mobile Hub', status: 'Open', activeOrders: 2, x: '55%', y: '60%', color: '#F97316' }
+  { id: 'pin-1', type: 'rider', name: 'Rider #14 (Vikram)', status: 'On Delivery', eta: '6 mins', x: '42%', y: '48%', color: '#1DB954', lat: 26.8920, lng: 75.7450, zone: 'Vaishali Nagar' },
+  { id: 'pin-2', type: 'rider', name: 'Rider #28 (Sunil)', status: 'Going to Pickup', eta: '4 mins', x: '72%', y: '36%', color: '#1DB954', lat: 26.8524, lng: 75.8234, zone: 'Malviya Nagar' },
+  { id: 'pin-3', type: 'rider', name: 'Rider #09 (Manish)', status: 'Online (Available)', eta: 'Idle', x: '58%', y: '64%', color: '#1DB954', lat: 26.8650, lng: 75.7600, zone: 'Mansarovar' },
+  { id: 'pin-4', type: 'order', name: 'Order #GT10247', status: 'En-route', customer: 'Priya Verma', x: '75%', y: '40%', color: '#3B82F6', lat: 26.8580, lng: 75.8150, zone: 'Malviya Nagar' },
+  { id: 'pin-5', type: 'order', name: 'Order #GT10248', status: 'Preparing', customer: 'Rahul Sharma', x: '40%', y: '52%', color: '#3B82F6', lat: 26.8980, lng: 75.7510, zone: 'Vaishali Nagar' },
+  { id: 'pin-6', type: 'shop', name: 'Sharma Hardware', status: 'Open', activeOrders: 4, x: '38%', y: '50%', color: '#F97316', lat: 26.9020, lng: 75.7420, zone: 'Vaishali Nagar' },
+  { id: 'pin-7', type: 'shop', name: 'Gupta Electricals', status: 'Open', activeOrders: 3, x: '70%', y: '35%', color: '#F97316', lat: 26.8530, lng: 75.8210, zone: 'Malviya Nagar' },
+  { id: 'pin-8', type: 'shop', name: 'Mobile Hub', status: 'Open', activeOrders: 2, x: '55%', y: '60%', color: '#F97316', lat: 26.8670, lng: 75.7650, zone: 'Mansarovar' }
 ];
 
 export const AUDIT_LOGS_MOCK: AdminAuditLog[] = [

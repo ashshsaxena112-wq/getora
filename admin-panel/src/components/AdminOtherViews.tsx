@@ -18,6 +18,7 @@ import {
   PackageCheck
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
+import { AdminLiveMapView } from './AdminLiveMapView';
 
 // ============================================================================
 // 1. CUSTOMERS VIEW (LIVE SUPABASE)
@@ -590,6 +591,9 @@ export const AdminZonesView: React.FC = () => {
           <span>+ Add Zone</span>
         </button>
       </div>
+
+      {/* Interactive Ola Maps Operational Telemetry Map */}
+      <AdminLiveMapView />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {zones.length === 0 ? (

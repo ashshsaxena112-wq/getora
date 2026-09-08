@@ -132,6 +132,141 @@ app.get('/api/orders/:id/track', async (req, res) => {
   }
 });
 
+// 6. OLA MAPS / KRUTRIM MAPS PROXY ENDPOINTS (Backend Protected Server Key)
+const OLA_API_KEY = process.env.OLA_MAPS_API_KEY || '';
+const OLA_BASE_URL = 'https://api.olamaps.io';
+const OLA_ALLOWED_ORIGIN = process.env.OLA_ALLOWED_ORIGIN || 'https://getora.co.in';
+
+const getOlaHeaders = () => ({
+  'Origin': OLA_ALLOWED_ORIGIN,
+  'Referer': `${OLA_ALLOWED_ORIGIN}/`,
+  'X-Request-Id': `getora-${Date.now()}`
+});
+
+app.get('/api/maps/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    hasApiKey: Boolean(OLA_API_KEY && OLA_API_KEY !== 'YOUR_OLA_MAPS_API_KEY' && OLA_API_KEY.trim() !== ''),
+    allowedOrigin: OLA_ALLOWED_ORIGIN,
+    provider: 'Ola Maps / Krutrim Maps (Backend Proxy)'
+  });
+});
+
+app.get('/api/maps/autocomplete', async (req, res) => {
+  try {
+    const { input } = req.query;
+    if (!input) return res.status(400).json({ error: 'Missing input parameter' });
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    }
+
+    const targetUrl = `${OLA_BASE_URL}/places/v1/autocomplete?input=${encodeURIComponent(input)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const response = await fetch(targetUrl, {
+      headers: getOlaHeaders()
+    });
+
+    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
+    console.log(`[OLA PROXY] Autocomplete for "${input}" -> HTTP ${response.status}`);
+    return res.status(response.status).json(data);
+  } catch (err) {
+    console.error('[OLA PROXY ERROR] Autocomplete failed:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/maps/reverse-geocode', async (req, res) => {
+  try {
+    const { lat, lng } = req.query;
+    if (!lat || !lng) return res.status(400).json({ error: 'Missing lat/lng parameters' });
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    }
+
+    const targetUrl = `${OLA_BASE_URL}/places/v1/reverse-geocode?latlng=${lat},${lng}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const response = await fetch(targetUrl, {
+      headers: getOlaHeaders()
+    });
+
+    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
+    console.log(`[OLA PROXY] Reverse Geocode (${lat}, ${lng}) -> HTTP ${response.status}`);
+    return res.status(response.status).json(data);
+  } catch (err) {
+    console.error('[OLA PROXY ERROR] Reverse Geocode failed:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/maps/geocode', async (req, res) => {
+  try {
+    const { address } = req.query;
+    if (!address) return res.status(400).json({ error: 'Missing address parameter' });
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    }
+
+    const targetUrl = `${OLA_BASE_URL}/places/v1/geocode?address=${encodeURIComponent(address)}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const response = await fetch(targetUrl, {
+      headers: getOlaHeaders()
+    });
+
+    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
+    console.log(`[OLA PROXY] Geocode "${address}" -> HTTP ${response.status}`);
+    return res.status(response.status).json(data);
+  } catch (err) {
+    console.error('[OLA PROXY ERROR] Geocode failed:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/maps/directions', async (req, res) => {
+  try {
+    const { origin, destination, mode = 'driving' } = req.query;
+    if (!origin || !destination) return res.status(400).json({ error: 'Missing origin/destination parameters' });
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    }
+
+    const targetUrl = `${OLA_BASE_URL}/routing/v1/directions?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&mode=${mode}&api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const response = await fetch(targetUrl, {
+      method: 'POST',
+      headers: getOlaHeaders()
+    });
+
+    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
+    console.log(`[OLA PROXY] Directions (${origin} -> ${destination}) -> HTTP ${response.status}`);
+    return res.status(response.status).json(data);
+  } catch (err) {
+    console.error('[OLA PROXY ERROR] Directions failed:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/maps/tile-style', async (req, res) => {
+  try {
+    const { theme = 'dark' } = req.query;
+    const styleName = theme === 'light' ? 'default-light-standard' : 'default-dark-standard';
+
+    if (!OLA_API_KEY) {
+      return res.status(500).json({ error: 'OLA_MAPS_API_KEY is not configured on backend server' });
+    }
+
+    const targetUrl = `${OLA_BASE_URL}/tiles/vector/v1/styles/${styleName}/style.json?api_key=${encodeURIComponent(OLA_API_KEY)}`;
+    const response = await fetch(targetUrl, {
+      headers: getOlaHeaders()
+    });
+    const data = await response.json().catch(() => ({ message: 'Non-JSON response from Ola Maps' }));
+    console.log(`[OLA PROXY] Tile Style (${styleName}) -> HTTP ${response.status}`);
+    return res.status(response.status).json(data);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`GETORA Backend API server running on port ${PORT}`);
 });
+

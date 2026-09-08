@@ -23,6 +23,7 @@ import {
 } from '../types';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { MASTER_PRODUCT_CATALOG } from '../data/masterCatalog';
+import { OlaMapsService } from '../services/olaMapsService';
 
 interface GetoraContextType {
   // Navigation & View Routing
@@ -81,13 +82,15 @@ interface GetoraContextType {
   getProductsByStore: (retailerId: string) => Product[];
   getProductsByCategory: (categoryId: string) => Product[];
 
-  // Customer Addresses
+  // Customer Addresses & Location
   savedAddresses: CustomerAddress[];
   selectedAddress: CustomerAddress | null;
   isLocationModalOpen: boolean;
+  isDetectingLocation: boolean;
   openLocationModal: () => void;
   closeLocationModal: () => void;
   selectLocation: (address: CustomerAddress) => void;
+  detectCurrentLocation: (silent?: boolean) => Promise<boolean>;
   addAddress: (address: Omit<CustomerAddress, 'id' | 'customerId' | 'createdAt' | 'updatedAt'>) => Promise<boolean>;
   deleteAddress: (id: string) => Promise<boolean>;
   setDefaultAddress: (id: string) => Promise<boolean>;
@@ -278,7 +281,28 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Addresses & Cart
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
-  const [selectedAddress, setSelectedAddress] = useState<CustomerAddress | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<CustomerAddress | null>(() => {
+    try {
+      const cached = localStorage.getItem('getora_current_location');
+      if (cached) return JSON.parse(cached);
+    } catch {}
+    return {
+      id: 'default-jaipur',
+      customerId: 'guest',
+      addressType: 'Current Location',
+      fullName: 'Guest Customer',
+      streetArea: 'Vaishali Nagar',
+      addressLine1: 'Vaishali Nagar, Jaipur, Rajasthan',
+      addressLine2: 'Vaishali Nagar',
+      city: 'Jaipur',
+      state: 'Rajasthan',
+      pincode: '302021',
+      latitude: 26.9124,
+      longitude: 75.7433,
+      isDefault: true
+    };
+  });
+  const [isDetectingLocation, setIsDetectingLocation] = useState<boolean>(false);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
 
@@ -1011,8 +1035,114 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const selectLocation = (address: CustomerAddress) => {
     setSelectedAddress(address);
+    try {
+      localStorage.setItem('getora_current_location', JSON.stringify(address));
+    } catch {}
     setIsLocationModalOpen(false);
   };
+
+  const detectCurrentLocation = useCallback(async (silent = false): Promise<boolean> => {
+    if (typeof window === 'undefined' || !navigator.geolocation) {
+      if (!silent) {
+        showToast('GPS Unavailable', 'Geolocation is not supported by your browser', 'warning');
+      }
+      return false;
+    }
+
+    setIsDetectingLocation(true);
+
+    return new Promise((resolve) => {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+          try {
+            const geo = await OlaMapsService.reverseGeocode(latitude, longitude);
+            if (geo) {
+              const detectedAddr: CustomerAddress = {
+                id: 'detected-gps',
+                customerId: profile?.id || 'guest',
+                addressType: 'Current Location',
+                fullName: profile?.fullName || 'Guest Customer',
+                phone: profile?.phone || '',
+                addressLine1: geo.formattedAddress,
+                streetArea: geo.streetArea || geo.city || 'Current Location',
+                addressLine2: geo.streetArea || '',
+                landmark: geo.landmark || '',
+                city: geo.city || 'Jaipur',
+                state: geo.state || 'Rajasthan',
+                pincode: geo.pincode || '',
+                latitude: latitude,
+                longitude: longitude,
+                isDefault: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+              };
+
+              setSelectedAddress(detectedAddr);
+              try {
+                localStorage.setItem('getora_current_location', JSON.stringify(detectedAddr));
+              } catch {}
+
+              if (!silent) {
+                showToast(
+                  'Location Detected',
+                  `Delivering to: ${geo.streetArea || geo.city || 'Your current location'}`,
+                  'success'
+                );
+              }
+              setIsDetectingLocation(false);
+              resolve(true);
+              return;
+            }
+          } catch (err) {
+            console.warn('Ola Maps reverse geocode error:', err);
+          }
+
+          // Fallback with GPS coordinates
+          const fallbackAddr: CustomerAddress = {
+            id: 'detected-gps',
+            customerId: profile?.id || 'guest',
+            addressType: 'Current Location',
+            fullName: profile?.fullName || 'Guest Customer',
+            phone: profile?.phone || '',
+            streetArea: 'Current Location',
+            addressLine1: `GPS: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
+            addressLine2: 'Current Location',
+            city: 'Jaipur',
+            state: 'Rajasthan',
+            pincode: '302001',
+            latitude,
+            longitude,
+            isDefault: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          };
+          setSelectedAddress(fallbackAddr);
+          try {
+            localStorage.setItem('getora_current_location', JSON.stringify(fallbackAddr));
+          } catch {}
+          setIsDetectingLocation(false);
+          resolve(true);
+        },
+        (err) => {
+          setIsDetectingLocation(false);
+          console.warn('GPS location request declined or timed out:', err.message);
+          if (!silent) {
+            showToast('GPS Permission Needed', 'Please allow location access in your browser to detect your address', 'info');
+          }
+          resolve(false);
+        },
+        { timeout: 10000, enableHighAccuracy: true, maximumAge: 60000 }
+      );
+    });
+  }, [profile, showToast]);
+
+  // Automatically detect location on initial visit if on default placeholder
+  useEffect(() => {
+    if (!selectedAddress || selectedAddress.id === 'default-jaipur') {
+      detectCurrentLocation(true);
+    }
+  }, [detectCurrentLocation, selectedAddress]);
 
   // ============================================================================
   // 4. DATABASE SHOPPING CART
@@ -1828,9 +1958,11 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         savedAddresses,
         selectedAddress,
         isLocationModalOpen,
+        isDetectingLocation,
         openLocationModal: () => setIsLocationModalOpen(true),
         closeLocationModal: () => setIsLocationModalOpen(false),
         selectLocation,
+        detectCurrentLocation,
         addAddress,
         deleteAddress,
         setDefaultAddress,

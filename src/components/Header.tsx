@@ -17,7 +17,9 @@ import {
   IconArrowRight,
   IconCheck,
   IconCamera,
-  IconPhoto
+  IconPhoto,
+  IconNavigation,
+  IconLoader2
 } from '@tabler/icons-react';
 import { useGetora } from '../context/GetoraContext';
 import { GetoraLogo } from './GetoraLogo';
@@ -26,6 +28,8 @@ export const Header: React.FC = () => {
   const {
     navigate,
     selectedAddress,
+    isDetectingLocation,
+    detectCurrentLocation,
     openLocationModal,
     openAuthModal,
     openAiFinder,
@@ -128,32 +132,70 @@ export const Header: React.FC = () => {
       <div className="header-top-bar" style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', padding: '6px 16px', fontSize: '12px' }}>
         <div style={{ maxWidth: '1280px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
           
-          {/* Delivering to location button */}
-          <button
-            onClick={openLocationModal}
-            className="location-pill-btn"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-primary)',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 500,
-              padding: '2px 6px',
-              borderRadius: 'var(--radius-pill)',
-              transition: 'background 0.2s ease'
-            }}
-          >
-            <IconMapPin size={15} color="var(--color-green)" stroke={2.2} />
-            <span style={{ color: 'var(--text-muted)' }}>Delivering to:</span>
-            <strong style={{ color: 'var(--color-green)', fontWeight: 700 }}>
-              {selectedAddress?.streetArea || selectedAddress?.addressLine1 || selectedAddress?.city || 'Vaishali Nagar, Jaipur'}
-            </strong>
-            <IconChevronDown size={14} color="var(--text-muted)" />
-          </button>
+          {/* Delivering to location button with live GPS detection */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button
+              onClick={openLocationModal}
+              className="location-pill-btn"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-primary)',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: 500,
+                padding: '2px 6px',
+                borderRadius: 'var(--radius-pill)',
+                transition: 'background 0.2s ease'
+              }}
+            >
+              <IconMapPin size={15} color="var(--color-green)" stroke={2.2} />
+              <span style={{ color: 'var(--text-muted)' }}>Delivering to:</span>
+              <strong style={{ color: 'var(--color-green)', fontWeight: 700 }}>
+                {isDetectingLocation ? (
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <IconLoader2 size={13} className="spin" /> Detecting GPS...
+                  </span>
+                ) : (
+                  selectedAddress?.streetArea || selectedAddress?.addressLine2 || selectedAddress?.city || 'Select Location'
+                )}
+              </strong>
+              <IconChevronDown size={14} color="var(--text-muted)" />
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                detectCurrentLocation(false);
+              }}
+              disabled={isDetectingLocation}
+              title="Detect my current location via GPS"
+              style={{
+                background: 'rgba(34,197,94,0.12)',
+                border: '1px solid rgba(34,197,94,0.3)',
+                color: '#4ADE80',
+                borderRadius: '6px',
+                padding: '2px 6px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              {isDetectingLocation ? (
+                <IconLoader2 size={12} className="spin" />
+              ) : (
+                <IconNavigation size={12} />
+              )}
+              <span>Auto-Detect</span>
+            </button>
+          </div>
 
           {/* Right micro-actions: Customer Guarantee & Offers */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
