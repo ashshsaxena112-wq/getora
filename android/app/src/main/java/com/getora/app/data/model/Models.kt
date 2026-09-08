@@ -119,7 +119,10 @@ data class Order(
     @SerialName("delivery_address") val deliveryAddress: Address,
     @SerialName("estimated_delivery") val estimatedDelivery: String = "20 mins",
     @SerialName("rider_name") val riderName: String? = "Rahul Sharma",
-    @SerialName("rider_phone") val riderPhone: String? = "+91 98765 43210"
+    @SerialName("rider_phone") val riderPhone: String? = "+91 98765 43210",
+    @SerialName("route_distance_km") val routeDistanceKm: Double? = null,
+    @SerialName("rider_payout") val riderPayout: Double? = null,
+    @SerialName("rider_payout_status") val riderPayoutStatus: String? = null
 )
 
 @Serializable

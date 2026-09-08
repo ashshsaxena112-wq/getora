@@ -1402,7 +1402,13 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           retailer: o.retailer,
           deliveryPartner: o.deliveryPartner,
           address: o.address,
-          items: o.items
+          items: o.items,
+          routeDistanceKm: o.route_distance_km ? Number(o.route_distance_km) : undefined,
+          riderPayout: o.rider_payout ? Number(o.rider_payout) : undefined,
+          riderPayoutStatus: o.rider_payout_status,
+          payoutCalculationVersion: o.payout_calculation_version,
+          distanceSource: o.distance_source,
+          routeCalculatedAt: o.route_calculated_at
         }));
 
         setOrders(mappedOrders);
@@ -1449,21 +1455,71 @@ export const GetoraProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       const summary = getCartSummary();
 
+      // Calculate actual route distance & rider payout via backend proxy
+      let routeDistanceKm: number | null = null;
+      let riderPayout: number | null = null;
+      let riderPayoutStatus: string = 'pending';
+
+      try {
+        const [retailerRes, addressRes] = await Promise.all([
+          supabase.from('retailers').select('latitude, longitude').eq('id', params.retailerId).maybeSingle(),
+          supabase.from('customer_addresses').select('latitude, longitude').eq('id', params.addressId).maybeSingle()
+        ]);
+
+        const rLat = retailerRes.data?.latitude;
+        const rLng = retailerRes.data?.longitude;
+        const aLat = addressRes.data?.latitude;
+        const aLng = addressRes.data?.longitude;
+
+        if (rLat != null && rLng != null && aLat != null && aLng != null) {
+          const calcRes = await fetch('/api/payout/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              origin: `${rLat},${rLng}`,
+              destination: `${aLat},${aLng}`
+            })
+          });
+
+          if (calcRes.ok) {
+            const calcData = await calcRes.json();
+            if (calcData.success && typeof calcData.distance_km === 'number') {
+              routeDistanceKm = calcData.distance_km;
+              riderPayout = calcData.rider_payout;
+              riderPayoutStatus = calcData.status || (calcData.rider_payout > 0 ? 'calculated' : 'out_of_range');
+            }
+          }
+        }
+      } catch (distErr) {
+        console.warn('Could not pre-calculate road distance for rider payout:', distErr);
+      }
+
       // 1. Create order record
+      const orderPayload: any = {
+        customer_id: profile.id,
+        retailer_id: params.retailerId,
+        address_id: params.addressId,
+        subtotal: summary.subtotal,
+        delivery_fee: summary.deliveryFee,
+        discount: summary.discount,
+        total_amount: summary.grandTotal,
+        payment_method: params.paymentMethod,
+        payment_status: params.paymentMethod === 'COD' ? 'pending' : 'paid',
+        order_status: 'placed'
+      };
+
+      if (routeDistanceKm !== null) {
+        orderPayload.route_distance_km = routeDistanceKm;
+        orderPayload.rider_payout = riderPayout;
+        orderPayload.rider_payout_status = riderPayoutStatus;
+        orderPayload.payout_calculation_version = 'v1.0';
+        orderPayload.distance_source = 'ola_maps';
+        orderPayload.route_calculated_at = new Date().toISOString();
+      }
+
       const { data: orderData, error: orderErr } = await supabase
         .from('orders')
-        .insert({
-          customer_id: profile.id,
-          retailer_id: params.retailerId,
-          address_id: params.addressId,
-          subtotal: summary.subtotal,
-          delivery_fee: summary.deliveryFee,
-          discount: summary.discount,
-          total_amount: summary.grandTotal,
-          payment_method: params.paymentMethod,
-          payment_status: params.paymentMethod === 'COD' ? 'pending' : 'paid',
-          order_status: 'placed'
-        })
+        .insert(orderPayload)
         .select()
         .single();
 

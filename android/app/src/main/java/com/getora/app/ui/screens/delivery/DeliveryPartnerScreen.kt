@@ -134,7 +134,35 @@ fun DeliveryPartnerScreen(
                             Spacer(modifier = Modifier.height(8.dp))
                             Text("📍 Pickup: ${ord.storeName}", fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold)
                             Text("🏠 Drop: ${ord.deliveryAddress.addressLine}, ${ord.deliveryAddress.city}", fontSize = 12.5.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(GetoraPrimaryGreen.copy(alpha = 0.1f))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.TwoWheeler, contentDescription = "Distance", modifier = Modifier.size(15.dp), tint = GetoraPrimaryGreen)
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = if (ord.routeDistanceKm != null) "${ord.routeDistanceKm} km road route" else "Road distance pending",
+                                        fontSize = 11.5.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                                Text(
+                                    text = if (ord.riderPayout != null) "₹${ord.riderPayout.toInt()} Payout" else if (ord.riderPayoutStatus == "out_of_range") "Out of Range" else "₹25 Est.",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = GetoraPrimaryGreen
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(10.dp))
 
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 Button(

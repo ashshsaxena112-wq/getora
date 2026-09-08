@@ -105,6 +105,8 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                   <th className="py-3 px-4">Merchant Retailer</th>
                   <th className="py-3 px-4">Items</th>
                   <th className="py-3 px-4">Amount</th>
+                  <th className="py-3 px-4">Distance</th>
+                  <th className="py-3 px-4">Rider Payout</th>
                   <th className="py-3 px-4">Payment</th>
                   <th className="py-3 px-4">Delivery Partner</th>
                   <th className="py-3 px-4">Status</th>
@@ -122,6 +124,18 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                     <td className="py-3 px-4 text-[#A7A7A7] font-medium">{o.retailer}</td>
                     <td className="py-3 px-4 text-[#A7A7A7]">{o.itemsCount} items</td>
                     <td className="py-3 px-4 font-bold text-white font-mono">{o.amount}</td>
+                    <td className="py-3 px-4 font-medium text-white">
+                      {o.routeDistanceKm != null ? `${o.routeDistanceKm} km` : '—'}
+                    </td>
+                    <td className="py-3 px-4">
+                      {o.riderPayout != null ? (
+                        <span className="font-bold text-[#1DB954] font-mono">₹{o.riderPayout}</span>
+                      ) : o.riderPayoutStatus === 'out_of_range' ? (
+                        <span className="text-[10px] text-red-400 font-semibold uppercase">Out of Range</span>
+                      ) : (
+                        <span className="text-[#A7A7A7]">—</span>
+                      )}
+                    </td>
                     <td className="py-3 px-4 text-[#A7A7A7]">{o.paymentMethod}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-1.5 text-white">
@@ -224,6 +238,39 @@ export const AdminOrdersView: React.FC<AdminOrdersViewProps> = ({ filterStatus }
                 <div className="flex items-center gap-2 text-white font-bold">
                   <Store className="w-4 h-4 text-[#1DB954]" />
                   <span>{selectedOrder.retailer}</span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[#121212] border border-[#292929] space-y-2 text-xs">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#1DB954]">Rider Payout (Automatic Distance Slabs)</p>
+                  <span className="text-[10px] font-mono text-[#6F6F6F]">v1.0</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-[#202020]">
+                  <span className="text-[#A7A7A7]">Road Driving Distance:</span>
+                  <span className="font-bold text-white font-mono">
+                    {selectedOrder.routeDistanceKm != null ? `${selectedOrder.routeDistanceKm} km` : 'Calculated on assignment'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-[#202020]">
+                  <span className="text-[#A7A7A7]">Rider Earnings Payout:</span>
+                  <span className="font-bold text-[#1DB954] font-mono text-sm">
+                    {selectedOrder.riderPayout != null
+                      ? `₹${selectedOrder.riderPayout}`
+                      : selectedOrder.riderPayoutStatus === 'out_of_range'
+                      ? 'Out of Range (>10 km)'
+                      : 'Pending'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] pt-0.5">
+                  <span className="text-[#6F6F6F]">Distance Engine:</span>
+                  <span className="text-[#A7A7A7]">Ola Maps Directions API</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="text-[#6F6F6F]">Payout Status:</span>
+                  <span className={`font-semibold ${selectedOrder.riderPayoutStatus === 'paid' ? 'text-[#1DB954]' : selectedOrder.riderPayoutStatus === 'out_of_range' ? 'text-red-400' : 'text-amber-400'}`}>
+                    {selectedOrder.riderPayoutStatus ? selectedOrder.riderPayoutStatus.toUpperCase() : 'PENDING'}
+                  </span>
                 </div>
               </div>
 

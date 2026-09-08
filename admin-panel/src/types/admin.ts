@@ -51,6 +51,32 @@ export interface AdminAuditLog {
   timestamp: string;
 }
 
+export interface AdminOrder {
+  id: string;
+  orderNumber: string;
+  customer: string;
+  phone: string;
+  address: string;
+  retailer: string;
+  retailerId?: string;
+  amount: string;
+  numericAmount: number;
+  status: string;
+  statusLabel: string;
+  statusColor: string;
+  paymentMethod: string;
+  deliveryPartner: string;
+  deliveryPhone: string;
+  itemsCount: number;
+  time: string;
+  createdAt: string;
+  routeDistanceKm?: number;
+  riderPayout?: number;
+  riderPayoutStatus?: string;
+  distanceSource?: string;
+  payoutCalculationVersion?: string;
+}
+
 export interface AdminDeliveryPartner {
   id: string;
   name: string;
@@ -62,6 +88,7 @@ export interface AdminDeliveryPartner {
   rating: number;
   totalDeliveries: number;
   earnings: number;
+  totalEarnings?: number;
   latitude: number;
   longitude: number;
   currentZone: string;

@@ -51,6 +51,7 @@ export interface DeliveryPartnerItem {
   isVerified: boolean;
   latitude?: number;
   longitude?: number;
+  totalEarnings?: number;
 }
 
 export interface ZoneItem {
@@ -398,7 +399,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             deliveryPhone: o.delivery_partner?.phone || '',
             itemsCount: 1,
             time: 'Live',
-            createdAt: o.created_at
+            createdAt: o.created_at,
+            routeDistanceKm: o.route_distance_km ? Number(o.route_distance_km) : undefined,
+            riderPayout: o.rider_payout ? Number(o.rider_payout) : undefined,
+            riderPayoutStatus: o.rider_payout_status || undefined,
+            distanceSource: o.distance_source || undefined,
+            payoutCalculationVersion: o.payout_calculation_version || undefined
           }))
         );
       }
@@ -439,7 +445,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             rating: Number(d.rating || 5.0),
             isVerified: d.is_verified ?? true,
             latitude: d.latitude,
-            longitude: d.longitude
+            longitude: d.longitude,
+            totalEarnings: Number(d.total_earnings || 0)
           }))
         );
       }

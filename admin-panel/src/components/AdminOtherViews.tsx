@@ -252,12 +252,71 @@ export const AdminDeliveryView: React.FC = () => {
                 🚗 {d.vehicle} &bull; <span className="font-mono text-white">{d.vehicleNumber}</span>
               </p>
               <div className="pt-2 border-t border-[#292929] flex items-center justify-between text-[11px]">
-                <span>Total Deliveries: <strong className="text-white font-mono">{d.deliveries}</strong></span>
+                <span>Deliveries: <strong className="text-white font-mono">{d.deliveries}</strong></span>
+                <span className="text-[#1DB954] font-semibold font-mono">
+                  Earnings: ₹{(d.totalEarnings || 0).toLocaleString('en-IN')}
+                </span>
                 <span className="text-[#F59E0B] font-bold">★ {d.rating}</span>
               </div>
             </div>
           ))
         )}
+      </div>
+
+      {/* Automatic Distance-Based Rider Payout Settings Card */}
+      <div className="p-5 rounded-2xl bg-[#181818] border border-[#292929] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#292929]">
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-base font-bold font-['Outfit',sans-serif] text-white">Rider Distance Payout Configuration</h3>
+              <span className="px-2 py-0.5 rounded-md bg-[#14532D] text-[#1DB954] text-[10px] font-extrabold tracking-wide">
+                ACTIVE (v1.0)
+              </span>
+            </div>
+            <p className="text-xs text-[#A7A7A7] mt-0.5">
+              Strict road-distance based payout calculated via Ola Maps Directions API. Fixed upon order placement, credited upon delivery.
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-[11px] text-[#6F6F6F]">Max Distance Cap:</span>
+            <span className="ml-1 text-xs font-bold text-white font-mono">10.0 km</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2">
+          {[
+            { range: '0–1 km', payout: '₹5' },
+            { range: '> 1–2 km', payout: '₹10' },
+            { range: '> 2–3 km', payout: '₹12' },
+            { range: '> 3–4 km', payout: '₹20' },
+            { range: '> 4–5 km', payout: '₹25' },
+            { range: '> 5–6 km', payout: '₹27' },
+            { range: '> 6–7 km', payout: '₹29' },
+            { range: '> 7–8 km', payout: '₹31' },
+            { range: '> 8–9 km', payout: '₹33' },
+            { range: '> 9–10 km', payout: '₹35' },
+          ].map((slab, idx) => (
+            <div key={idx} className="p-2.5 rounded-xl bg-[#121212] border border-[#292929] text-center hover:border-[#1DB954]/40 transition-colors">
+              <p className="text-[10px] text-[#A7A7A7] font-medium">{slab.range}</p>
+              <p className="text-sm font-extrabold text-[#1DB954] font-mono mt-0.5">{slab.payout}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-3 rounded-xl bg-[#121212] border border-[#292929] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#A7A7A7]">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#1DB954]"></span>
+            <span><strong>Road Route Engine:</strong> Ola Maps Directions Proxy</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#3B82F6]"></span>
+            <span><strong>Locking Policy:</strong> Immutable upon order acceptance</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#F59E0B]"></span>
+            <span><strong>Ledger Idempotency:</strong> Unique <code>order_id</code> constraint enforced in Supabase</span>
+          </div>
+        </div>
       </div>
 
       {/* Add Rider Modal */}

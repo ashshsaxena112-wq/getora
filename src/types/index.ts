@@ -325,6 +325,13 @@ export interface Order {
   cancelledAt?: string;
   createdAt: string;
   updatedAt: string;
+  // Automatic Distance-Based Rider Payout fields
+  routeDistanceKm?: number;
+  riderPayout?: number;
+  riderPayoutStatus?: 'calculated' | 'locked' | 'paid' | 'out_of_range';
+  payoutCalculationVersion?: string;
+  distanceSource?: string;
+  routeCalculatedAt?: string;
   // Joins & UI compatibility
   customer?: CustomerProfile;
   retailer?: Retailer;
