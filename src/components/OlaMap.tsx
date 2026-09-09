@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
+import { OlaMaps } from 'olamaps-web-sdk';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Navigation, Layers, Crosshair, RefreshCw } from 'lucide-react';
 import type { MapLayerStyle } from '../services/olaMapsService';
@@ -11,33 +12,59 @@ export interface OlaMapProps { center?: [number, number]; zoom?: number; markers
 const backendBase = typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_API_URL ? String(import.meta.env.VITE_BACKEND_API_URL).replace(/\/$/, '') : '';
 const clientOlaApiKey = typeof import.meta !== 'undefined' && import.meta.env?.VITE_OLA_MAPS_API_KEY ? String(import.meta.env.VITE_OLA_MAPS_API_KEY).trim() : '';
 
-// Browser map rendering uses the Ola Maps client API key. The credential must be
-// restricted to GETORA's allowed web domains in the Ola/Krutrim console.
-// Backend API calls (autocomplete/geocoding/directions) continue to use the
-// server-side OLA_MAPS_API_KEY and are never exposed to the browser.
+// GETORA website map: official Ola Maps Web SDK v2.
 const olaStyle = (theme: 'dark' | 'light') => {
   const styleName = theme === 'dark' ? 'default-dark-standard' : 'default-light-standard';
-  const directStyle = `https://api.olamaps.io/tiles/vector/v1/styles/${styleName}/style.json`;
-  return clientOlaApiKey
-    ? `${directStyle}?api_key=${encodeURIComponent(clientOlaApiKey)}`
-    : `${backendBase}/api/maps/tile-style?theme=${theme}`;
+  return `https://api.olamaps.io/tiles/vector/v1/styles/${styleName}/style.json`;
 };
 
 const satelliteStyle: maplibregl.StyleSpecification = { version: 8, sources: { satellite: { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, attribution: '© Esri, Maxar, Earthstar Geographics' } }, layers: [{ id: 'satellite', type: 'raster', source: 'satellite', minzoom: 0, maxzoom: 19 }] };
-
 function makeMarker(marker: MapMarkerItem): HTMLDivElement { const el = document.createElement('div'); const color = marker.type === 'rider' ? '#F59E0B' : marker.type === 'store' ? '#3B82F6' : '#1DB954'; el.style.cssText = `width:38px;height:38px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;color:#07100a;font-weight:800;cursor:${marker.isDraggable ? 'grab' : 'pointer'};`; el.textContent = marker.type === 'rider' ? 'R' : marker.type === 'store' ? 'S' : 'G'; if (marker.title) el.title = marker.title; return el; }
 
 export const OlaMap: React.FC<OlaMapProps> = ({ center = [26.9124, 75.7873], zoom = 14, markers = [], routeCoordinates = [], zones = [], interactive = true, height = '400px', className = '', theme = 'dark', defaultLayer = 'streets', showControls = true, showLayerSwitcher = true, showGpsButton = true, onMapClick, onLocationDetected }) => {
-  const containerRef = useRef<HTMLDivElement>(null); const mapRef = useRef<maplibregl.Map | null>(null); const markersRef = useRef<maplibregl.Marker[]>([]); const [loaded, setLoaded] = useState(false); const [layer, setLayer] = useState<MapLayerStyle>(defaultLayer); const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null); const mapRef = useRef<maplibregl.Map | null>(null); const markersRef = useRef<maplibregl.Marker[]>([]); const olaMapsRef = useRef<OlaMaps | null>(null); const [loaded, setLoaded] = useState(false); const [layer, setLayer] = useState<MapLayerStyle>(defaultLayer); const [error, setError] = useState<string | null>(null);
   const style = useMemo(() => layer === 'satellite' ? satelliteStyle : olaStyle(layer === 'dark' || theme === 'dark' ? 'dark' : 'light'), [layer, theme]);
 
-  useEffect(() => { if (!containerRef.current) return; let cancelled = false; setError(null); const map = new maplibregl.Map({ container: containerRef.current, style, center: [center[1], center[0]], zoom, interactive, attributionControl: true }); mapRef.current = map; if (interactive && showControls) map.addControl(new maplibregl.NavigationControl(), 'bottom-right'); map.on('load', () => { if (cancelled) return; setLoaded(true); if (onMapClick) map.on('click', e => onMapClick({ latitude: e.lngLat.lat, longitude: e.lngLat.lng })); }); map.on('error', e => { console.error('[GETORA OLA MAP]', e?.error || e); if (!cancelled) setError('Ola Maps load nahi ho pa raha. API key/domain restriction check karein.'); }); return () => { cancelled = true; markersRef.current.forEach(m => m.remove()); markersRef.current = []; map.remove(); mapRef.current = null; setLoaded(false); }; }, [style]);
+  useEffect(() => {
+    if (!containerRef.current) return;
+    let cancelled = false;
+    setError(null);
+    let map: maplibregl.Map | null = null;
+
+    const init = async () => {
+      if (style === satelliteStyle) {
+        map = new maplibregl.Map({ container: containerRef.current!, style, center: [center[1], center[0]], zoom, interactive, attributionControl: true });
+      } else {
+        if (!clientOlaApiKey) {
+          setError('Ola Maps API key missing. Production environment me VITE_OLA_MAPS_API_KEY set karein.');
+          return;
+        }
+        try {
+          const olaMaps = new OlaMaps({ apiKey: clientOlaApiKey });
+          olaMapsRef.current = olaMaps;
+          const sdkMap = await olaMaps.init({ style, container: containerRef.current!, center: [center[1], center[0]], zoom });
+          if (cancelled) { sdkMap.remove(); return; }
+          map = sdkMap as maplibregl.Map;
+        } catch (e) {
+          console.error('[GETORA OLA MAP SDK]', e);
+          if (!cancelled) setError('Ola Maps load nahi ho pa raha. API key/domain restriction check karein.');
+          return;
+        }
+      }
+      if (!map || cancelled) return;
+      mapRef.current = map;
+      if (interactive && showControls) map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+      map.on('load', () => { if (cancelled) return; setLoaded(true); if (onMapClick) map!.on('click', e => onMapClick({ latitude: e.lngLat.lat, longitude: e.lngLat.lng })); });
+      map.on('error', e => { console.error('[GETORA OLA MAP]', e?.error || e); if (!cancelled) setError('Ola Maps request fail ho rahi hai. Allowed Domain/API key check karein.'); });
+    };
+    void init();
+    return () => { cancelled = true; markersRef.current.forEach(m => m.remove()); markersRef.current = []; map?.remove(); mapRef.current = null; olaMapsRef.current = null; setLoaded(false); };
+  }, [style]);
 
   useEffect(() => { const map = mapRef.current; if (!map || !loaded) return; map.flyTo({ center: [center[1], center[0]], zoom, essential: true, duration: 500 }); }, [center[0], center[1], zoom, loaded]);
   useEffect(() => { const map = mapRef.current; if (!map || !loaded) return; markersRef.current.forEach(m => m.remove()); markersRef.current = markers.map(item => { const marker = new maplibregl.Marker({ element: makeMarker(item), draggable: Boolean(item.isDraggable) }).setLngLat([item.longitude, item.latitude]).addTo(map); if (item.onClick) marker.getElement().addEventListener('click', e => { e.stopPropagation(); item.onClick?.(); }); if (item.isDraggable && item.onDragEnd) marker.on('dragend', () => { const p = marker.getLngLat(); item.onDragEnd?.({ latitude: p.lat, longitude: p.lng }); }); return marker; }); }, [markers, loaded]);
   useEffect(() => { const map = mapRef.current; if (!map || !loaded || routeCoordinates.length < 2) return; const sourceId = 'getora-route'; const lineId = 'getora-route-line'; const data = { type: 'Feature' as const, properties: {}, geometry: { type: 'LineString' as const, coordinates: routeCoordinates.map(([lat, lng]) => [lng, lat]) } }; if (map.getSource(sourceId)) (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData(data as any); else { map.addSource(sourceId, { type: 'geojson', data: data as any }); map.addLayer({ id: lineId, type: 'line', source: sourceId, paint: { 'line-color': '#39D353', 'line-width': 5, 'line-opacity': 0.95 } }); } }, [routeCoordinates, loaded]);
   useEffect(() => { const map = mapRef.current; if (!map || !loaded) return; zones.forEach(z => { const sourceId = `zone-${z.id}`; if (map.getSource(sourceId)) return; const data = { type: 'Feature' as const, properties: {}, geometry: { type: 'Polygon' as const, coordinates: [z.coordinates.map(([lat, lng]) => [lng, lat])] } }; map.addSource(sourceId, { type: 'geojson', data: data as any }); map.addLayer({ id: `zone-fill-${z.id}`, type: 'fill', source: sourceId, paint: { 'fill-color': z.color || '#1DB954', 'fill-opacity': 0.10 } }); map.addLayer({ id: `zone-border-${z.id}`, type: 'line', source: sourceId, paint: { 'line-color': z.color || '#1DB954', 'line-width': 2 } }); }); }, [zones, loaded]);
-
   const locate = () => { if (!navigator.geolocation) return; navigator.geolocation.getCurrentPosition(pos => { const coords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude }; mapRef.current?.flyTo({ center: [coords.longitude, coords.latitude], zoom: 16, essential: true }); onLocationDetected?.(coords); }, () => setError('Location permission nahi mili.')); };
   return <div className={`relative overflow-hidden rounded-xl ${className}`} style={{ height, minHeight: 240, background: '#0B0B0B' }}><div ref={containerRef} className="absolute inset-0" />{error && <div className="absolute top-3 left-3 right-3 z-20 rounded-lg bg-black/85 px-3 py-2 text-xs text-white border border-red-500/40">{error}</div>}{showLayerSwitcher && <div className="absolute top-3 right-3 z-10 flex gap-1 rounded-lg bg-black/80 p-1"><button className="p-2 text-white" onClick={() => setLayer('streets')} title="Ola Streets"><Layers size={16}/></button><button className="p-2 text-white" onClick={() => setLayer('dark')} title="Ola Dark">D</button><button className="p-2 text-white" onClick={() => setLayer('satellite')} title="Satellite">S</button></div>}{(showGpsButton || showControls) && <div className="absolute bottom-3 left-3 z-10 flex gap-1 rounded-lg bg-black/80 p-1"><button className="p-2 text-white" onClick={locate} title="Current location"><Crosshair size={17}/></button><button className="p-2 text-white" onClick={() => mapRef.current?.resize()} title="Refresh map"><RefreshCw size={16}/></button></div>}{!loaded && !error && <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#0B0B0B]/70 text-sm text-white"><Navigation size={18} className="mr-2 animate-pulse"/> Ola Maps loading…</div>}</div>;
 };
