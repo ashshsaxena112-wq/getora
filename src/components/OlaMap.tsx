@@ -9,7 +9,20 @@ export interface MapZonePolygon { id: string; name?: string; coordinates: [numbe
 export interface OlaMapProps { center?: [number, number]; zoom?: number; markers?: MapMarkerItem[]; routeCoordinates?: [number, number][]; zones?: MapZonePolygon[]; interactive?: boolean; height?: string | number; className?: string; theme?: 'dark' | 'light'; defaultLayer?: MapLayerStyle; showControls?: boolean; showLayerSwitcher?: boolean; showGpsButton?: boolean; onMapClick?: (coords: { latitude: number; longitude: number }) => void; onLocationDetected?: (coords: { latitude: number; longitude: number }) => void; }
 
 const backendBase = typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_API_URL ? String(import.meta.env.VITE_BACKEND_API_URL).replace(/\/$/, '') : '';
-const olaStyle = (theme: 'dark' | 'light') => `${backendBase}/api/maps/tile-style?theme=${theme}`;
+const clientOlaApiKey = typeof import.meta !== 'undefined' && import.meta.env?.VITE_OLA_MAPS_API_KEY ? String(import.meta.env.VITE_OLA_MAPS_API_KEY).trim() : '';
+
+// Browser map rendering uses the Ola Maps client API key. The credential must be
+// restricted to GETORA's allowed web domains in the Ola/Krutrim console.
+// Backend API calls (autocomplete/geocoding/directions) continue to use the
+// server-side OLA_MAPS_API_KEY and are never exposed to the browser.
+const olaStyle = (theme: 'dark' | 'light') => {
+  const styleName = theme === 'dark' ? 'default-dark-standard' : 'default-light-standard';
+  const directStyle = `https://api.olamaps.io/tiles/vector/v1/styles/${styleName}/style.json`;
+  return clientOlaApiKey
+    ? `${directStyle}?api_key=${encodeURIComponent(clientOlaApiKey)}`
+    : `${backendBase}/api/maps/tile-style?theme=${theme}`;
+};
+
 const satelliteStyle: maplibregl.StyleSpecification = { version: 8, sources: { satellite: { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, attribution: '© Esri, Maxar, Earthstar Geographics' } }, layers: [{ id: 'satellite', type: 'raster', source: 'satellite', minzoom: 0, maxzoom: 19 }] };
 
 function makeMarker(marker: MapMarkerItem): HTMLDivElement { const el = document.createElement('div'); const color = marker.type === 'rider' ? '#F59E0B' : marker.type === 'store' ? '#3B82F6' : '#1DB954'; el.style.cssText = `width:38px;height:38px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;color:#07100a;font-weight:800;cursor:${marker.isDraggable ? 'grab' : 'pointer'};`; el.textContent = marker.type === 'rider' ? 'R' : marker.type === 'store' ? 'S' : 'G'; if (marker.title) el.title = marker.title; return el; }
@@ -18,7 +31,7 @@ export const OlaMap: React.FC<OlaMapProps> = ({ center = [26.9124, 75.7873], zoo
   const containerRef = useRef<HTMLDivElement>(null); const mapRef = useRef<maplibregl.Map | null>(null); const markersRef = useRef<maplibregl.Marker[]>([]); const [loaded, setLoaded] = useState(false); const [layer, setLayer] = useState<MapLayerStyle>(defaultLayer); const [error, setError] = useState<string | null>(null);
   const style = useMemo(() => layer === 'satellite' ? satelliteStyle : olaStyle(layer === 'dark' || theme === 'dark' ? 'dark' : 'light'), [layer, theme]);
 
-  useEffect(() => { if (!containerRef.current) return; let cancelled = false; setError(null); const map = new maplibregl.Map({ container: containerRef.current, style, center: [center[1], center[0]], zoom, interactive, attributionControl: true }); mapRef.current = map; if (interactive && showControls) map.addControl(new maplibregl.NavigationControl(), 'bottom-right'); map.on('load', () => { if (cancelled) return; setLoaded(true); if (onMapClick) map.on('click', e => onMapClick({ latitude: e.lngLat.lat, longitude: e.lngLat.lng })); }); map.on('error', e => { console.error('[GETORA OLA MAP]', e?.error || e); if (!cancelled) setError('Ola Maps load nahi ho pa raha. Backend map connection check karein.'); }); return () => { cancelled = true; markersRef.current.forEach(m => m.remove()); markersRef.current = []; map.remove(); mapRef.current = null; setLoaded(false); }; }, [style]);
+  useEffect(() => { if (!containerRef.current) return; let cancelled = false; setError(null); const map = new maplibregl.Map({ container: containerRef.current, style, center: [center[1], center[0]], zoom, interactive, attributionControl: true }); mapRef.current = map; if (interactive && showControls) map.addControl(new maplibregl.NavigationControl(), 'bottom-right'); map.on('load', () => { if (cancelled) return; setLoaded(true); if (onMapClick) map.on('click', e => onMapClick({ latitude: e.lngLat.lat, longitude: e.lngLat.lng })); }); map.on('error', e => { console.error('[GETORA OLA MAP]', e?.error || e); if (!cancelled) setError('Ola Maps load nahi ho pa raha. API key/domain restriction check karein.'); }); return () => { cancelled = true; markersRef.current.forEach(m => m.remove()); markersRef.current = []; map.remove(); mapRef.current = null; setLoaded(false); }; }, [style]);
 
   useEffect(() => { const map = mapRef.current; if (!map || !loaded) return; map.flyTo({ center: [center[1], center[0]], zoom, essential: true, duration: 500 }); }, [center[0], center[1], zoom, loaded]);
   useEffect(() => { const map = mapRef.current; if (!map || !loaded) return; markersRef.current.forEach(m => m.remove()); markersRef.current = markers.map(item => { const marker = new maplibregl.Marker({ element: makeMarker(item), draggable: Boolean(item.isDraggable) }).setLngLat([item.longitude, item.latitude]).addTo(map); if (item.onClick) marker.getElement().addEventListener('click', e => { e.stopPropagation(); item.onClick?.(); }); if (item.isDraggable && item.onDragEnd) marker.on('dragend', () => { const p = marker.getLngLat(); item.onDragEnd?.({ latitude: p.lat, longitude: p.lng }); }); return marker; }); }, [markers, loaded]);
